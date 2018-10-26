@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{url_for('static', filename='ClientHome.css')}}">
+
+</head>
+<body>
+
+<button class="tablink" onclick="openPage('RequestService', this, 'black')" id="defaultOpen">Request a service</button>
+<button class="tablink" onclick="openPage('ViewService', this, 'black')" >View status of services</button>
+<button class="tablink" onclick="openPage('Contact', this, 'black')">Contact</button>
+<button class="tablink" onclick="openPage('About', this, 'black')">About</button>
+
+<div id="RequestService" class="tabcontent">
+  <h3>Request for a Service with the firm</h3>
+  
+  <div >Username: </div>
+			<div >Token: </div>
+  			<form action="/" method="post">
+				<div class="formelement">
+				<label> Type of Service </label>
+				<select value = "abc" name = "services">
+					<option value='a'> a </option>
+					<option value='b'> b </option>
+					<option value='c'> c </option>
+					<option value='other'> others </option>
+				</select>
+				</div>
+				<br>
+				<br>
+				<label> Service Decription </label>
+				<div class="formelement">
+				<input type="text" style = "height:300px;width:500px" name="Description of service" id="description" placeholder="description" required/>
+    			</div>
+    			<br>
+				<label> Upload necessary document </label>
+				<div class="formelement">
+				<input type = file>
+				</div>
+				<br>
+				<div class="formelement">
+    			<input type="submit" class="button" value="Submit Request"/>
+				</div>
+  			</form>
+</div>
+
+<div id="ViewService" class="tabcontent">
+  <h3>News</h3>
+  <p>Some news this fine day!</p> 
+</div>
+
+<div id="Contact" class="tabcontent">
+  <h3>Contact</h3>
+  <p>contact</p>
+</div>
+
+<div id="About" class="tabcontent">
+  <h3>About</h3>
+  <p>about</p>
+</div>
+
+<script src="{{ url_for('static', filename='ClientHome.js') }}">
+
+</script>
+     
+</body>
+</html> 
