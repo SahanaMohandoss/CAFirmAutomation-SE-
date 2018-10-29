@@ -11,8 +11,8 @@ conn.execute('''CREATE TABLE CLIENT
             EMAIL_ID TEXT NOT NULL UNIQUE,
             COMPANY INTEGER NOT NULL CHECK (COMPANY >=0 AND COMPANY <2),
             CONTACT_NO TEXT NOT NULL,
-            AADHAR_NO UNIQUE,
-            PAN_NO NOT NULL UNIQUE);''')
+            AADHAR_NO TEXT UNIQUE,
+            PAN_NO TEXT NOT NULL UNIQUE);''')
 print("Table CLIENT created successfully")
 
 
