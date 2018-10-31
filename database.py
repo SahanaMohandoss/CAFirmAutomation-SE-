@@ -2,7 +2,7 @@ import sqlite3
 conn=sqlite3.connect('ca_firm.db')
 print("Connected successfully")
 
-#conn.execute('''DROP TABLE CLIENT;''')
+conn.execute('''DROP TABLE CLIENT;''')
 conn.execute('''CREATE TABLE CLIENT 
             (USERNAME TEXT PRIMARY KEY NOT NULL,
             PASSWORD TEXT NOT NULL,
@@ -16,7 +16,7 @@ conn.execute('''CREATE TABLE CLIENT
 print("Table CLIENT created successfully")
 
 
-#conn.execute('''DROP TABLE EMPLOYEE;''')
+conn.execute('''DROP TABLE EMPLOYEE;''')
 conn.execute('''CREATE TABLE EMPLOYEE 
             (USERNAME TEXT PRIMARY KEY NOT NULL,
             PASSWORD TEXT NOT NULL,
@@ -27,7 +27,7 @@ conn.execute('''CREATE TABLE EMPLOYEE
 print("Table EMPLOYEE created successfully")
 
 
-#conn.execute('''DROP TABLE PARTNER;''')
+conn.execute('''DROP TABLE PARTNER;''')
 conn.execute('''CREATE TABLE PARTNER 
             (USERNAME TEXT PRIMARY KEY NOT NULL,
             PASSWORD TEXT NOT NULL,
@@ -38,7 +38,7 @@ conn.execute('''CREATE TABLE PARTNER
 print("Table PARTNER created successfully")
 
 
-#conn.execute('''DROP TABLE CLIENT_FILES''')
+conn.execute('''DROP TABLE CLIENT_FILES''')
 conn.execute('''CREATE TABLE CLIENT_FILES
             (USER TEXT PRIMARY KEY NOT NULL,
             DOCUMENT BLOB,
@@ -47,7 +47,7 @@ conn.execute('''CREATE TABLE CLIENT_FILES
 print("Table CLIENT_FILES created successfully")
 
 
-#conn.execute('''DROP TABLE REMINDERS''')
+conn.execute('''DROP TABLE REMINDERS''')
 conn.execute('''CREATE TABLE REMINDERS
             (REMINDER_NAME TEXT NOT NULL,
             GENERATED_BY TEXT NOT NULL,
@@ -60,7 +60,8 @@ conn.execute('''CREATE TABLE REMINDERS
 print("Table REMINDERS created successfully")
 
 
-#conn.execute('''DROP TABLE SERVICE''')
+conn.execute('''DROP TABLE SERVICE''')
+
 conn.execute('''CREATE TABLE SERVICE
             (USER TEXT NOT NULL,
             TOKEN_NO INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -72,7 +73,7 @@ conn.execute('''CREATE TABLE SERVICE
 print("Table SERVICE created successfully")
 
 
-#conn.execute('''DROP TABLE MESSAGES''')
+conn.execute('''DROP TABLE MESSAGES''')
 conn.execute('''CREATE TABLE MESSAGES
             (SENDER TEXT NOT NULL,
             RECEPIENT TEXT NOT NULL,
@@ -88,10 +89,10 @@ conn.execute('''CREATE TABLE REQUEST_FILES
             (TOKEN INTEGER NOT NULL,
             REQUEST_MESSAGE TEXT NOT NULL,
             CURRENT_TIMESTAMP TIMESTAMP DEFAULT (DATETIME(CURRENT_TIMESTAMP,'localtime')),
-            PRIMARY KEY(TOKEN,CURRENT_TIMESTAMP),
+           
             FOREIGN KEY(TOKEN) REFERENCES SERVICE(TOKEN_NO));''')
 print("Table REQUEST_FILES created successfully")
-
+#Removed  PRIMARY KEY(TOKEN,CURRENT_TIMESTAMP),
 
 #conn.execute('''DROP TABLE SERVICE_DOCS''')
 conn.execute('''CREATE TABLE SERVICE_DOCS
