@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+   <body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='partner.js') }}"></script>
+       
+        <table border = 1>
+                <thead>
+                   <td>Name of employee</td>
+                   <td>Select</td>
+                </thead>
+                
+                {% for row in rows2 %}
+                   <tr>
+                      <td>{{row["Name"]}}</td>
+                      <td><input type="checkbox" name="select" value= {{row["Name"]}} onClick="checkbox(1);"></td>
+                   </tr>
+                {% endfor %}
+             </table>
+            <br>
+            <br>
+      <input type="text" id="show" name="select"><br>
+      <div class="uni"><span id="uni"></span></div>
+      <table border = 1>
+         <thead>
+            <td>Client Name</td>
+            <td>Taskkk</td>
+         </thead>
+         
+         {% for row in rows1 %}
+            <tr>
+               <td>{{row["client"]}}</td>
+               <td>{{row["task"]}}</td>
+               <td><input type="checkbox" name="selectTask" value={{row["task"]}} onClick="checkbox(2);"></td>
+            </tr>
+         {% endfor %}
+         <input type="button">
+      </table>
+      <input type="text" id="showTask" name="select"><br>
+      <a href = "/">Go back to home page</a>
+          <button class="btn btn-primary" name = "submit" id = "submit" onClick="callMe();">submit</button>
+
+   </body>
+</html>
