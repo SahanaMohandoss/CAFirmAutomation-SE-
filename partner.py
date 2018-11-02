@@ -31,8 +31,9 @@ def list():
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        asd = request.json
+        asd = request.get_json()
         print(asd)
+        return asd
     return render_template("partner.html")
 
 if __name__ == '__main__':
