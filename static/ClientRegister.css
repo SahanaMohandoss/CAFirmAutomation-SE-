@@ -202,3 +202,8 @@ textarea {
   margin-top: -20px;
   text-align: right;
 }
+ .error
+ {
+    font-size: 22px;
+    color: #ffffff;
+ }

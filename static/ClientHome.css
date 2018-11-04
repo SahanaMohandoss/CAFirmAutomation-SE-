@@ -29,7 +29,37 @@ body{margin:0}
     height: 100%;
 }
 
-#RequestService {background-color: #D3D3D3;}
-#ViewService {background-color: #D3D3D3;}
-#Contact {background-color: #D3D3D3;}
-#About {background-color: #D3D3D3;}
+
+
+
+            #bg
+            {
+                background-image: url("income.jpg");
+                height:100%;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-blend-mode: saturation;
+                background-size: cover;
+            }
+            #outer 
+            {
+                position: absolute;
+                border: 3px solid yellow;
+                border-radius: 10px;
+                width: 600px;
+                background-color: lightyellow;
+                color: #000000;
+                padding-top: 20px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: auto;
+                margin-bottom: auto;
+                padding-bottom: 20px;
+                padding-right: 10px;
+                padding-left: 50px;
+            }
+
+#RequestService {background-color: #000000;}
+#ViewService {background-color: #000000;}
+#TaxCalculator {background-color: #000000;}
+#About {background-color: #000000;}

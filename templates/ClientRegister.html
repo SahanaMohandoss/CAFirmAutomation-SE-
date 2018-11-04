@@ -4,7 +4,6 @@
     <title>Login & Register</title>
     <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
     
-    <link rel="stylesheet" href="css/normalize.css">
 
     
         <link rel="stylesheet" href="{{url_for('static', filename='ClientRegister.css')}}">
@@ -27,7 +26,7 @@
         <div id="signup">   
           <h1>Register!</h1>
           
-          <form action="/" method="post">
+          <form id ="RegisterForm" action="/register" method="post">
           
           <div class="top-row">
 			<div class="field-wrap">
@@ -46,12 +45,14 @@
                 Username <span class="req">*</span>
               </label>
               <input type="text" name ="username" id = "username" required autocomplete="off" />
+              <div class = "error" id="username_error"> </div>
             </div>
             <div class="field-wrap">
               <label>
                 First Name<span class="req">*</span>
               </label>
               <input type="text" name ="firstname" id = "firstname" required autocomplete="off" />
+              <div class = "error" id="firstname_error"> </div>
             </div>
         
             <div class="field-wrap">
@@ -59,6 +60,7 @@
                 Last Name<span class="req">*</span>
               </label>
               <input type="text" name ="lastname" id = "lastname" required autocomplete="off"/>
+              <div class = "error" id="lastname_error"> </div>
             </div>
           </div>
 
@@ -67,13 +69,25 @@
               Email<span class="req">*</span>
             </label>
             <input type="email" name ="email" id = "email" required autocomplete="off"/>
+            <div class = "error" id="email_error"> </div>
           </div>
-          
+
+          <div class="field-wrap">
+            <label>
+              Contact Number<span class="req">*</span>
+            </label>
+            <input type="number" name ="number" id = "number" required autocomplete="off"/>
+            <div class = "error" id="number_error"> </div>
+          </div>
+
+
+
           <div class="field-wrap">
             <label>
               Password<span class="req">*Minimum 6 characters!</span>
             </label>
             <input type="password" name ="password" id = "password" required autocomplete="off"/>
+            <div class = "error" id="password_error"> </div>
           </div>
 		  
 		  <div class="field-wrap">
@@ -81,6 +95,7 @@
               Confirm Password<span class="req"></span>
             </label>
             <input type="password" name ="confpassword" id = "confpassword" required autocomplete="off"/>
+            <div class = "error" id="confpassword_error"> </div>
           </div>
 		  
 		  <div id = "employee" class="field-wrap">
@@ -88,6 +103,7 @@
              Employee  ID <span class="req"></span>
             </label>
             <input type="text" name ="employeeID" id = "employeeID" required autocomplete="off"/>
+            <div class = "error" id="employeeID_error"> </div>
           </div>
 		  <div  id = "client">
 			  <div class="field-wrap">
@@ -105,15 +121,17 @@
 				 Aadhar Number <span class="req"></span>
 				</label>
 				<input type="text" name ="aadhar" id = "aadhar" required autocomplete="off"/>
+        <div class = "error" id="aadhar_error"> </div>
 			  </div>
 			  <div  class="field-wrap">
 				<label>
 				 PAN Number <span class="req"></span>
 				</label>
 				<input type="text" name ="pan" id = "pan" required autocomplete="off"/>
+        <div class = "error" id="pan_error"> </div>
 			  </div>
           </div>
-          <button type="submit" class="button button-block"/>Register</button>
+         <button id="btnSignUp" class="button button-block" type="button">Sign up</button>
           
           </form>
 
@@ -122,27 +140,27 @@
         <div id="login">   
           <h1>Welcome!</h1>
           
-          <form action="/" method="post">
+          <form id="LogInForm" action="/login" name = "LogInForm" method="post">
           
             <div class="field-wrap">
             <label>
               Username<span class="req"></span>
             </label>
-            <input type="email"required autocomplete="off"/>
+            <input id= "uname" name = "uname" type="text" required autocomplete="off"/>
           </div>
           
           <div class="field-wrap">
             <label>
               Password<span class="req"></span>
             </label>
-            <input type="password"required autocomplete="off"/>
+            <input id= "pwd" name = "pwd" type="password" required autocomplete="off"/>
           </div>
           
           <p class="forgot"><a href="#">Forgot Password?</a></p>
           <p class="forgot"><a href="#">Forgot Email?</a></p>
                
           
-          <button class="button button-block"/>Log In</button>
+          <button id="btnLogIn" class="button button-block" type="button">Log In</button>
           
           </form>
 

@@ -23,6 +23,7 @@ conn.execute('''CREATE TABLE EMPLOYEE
             FIRST_NAME TEXT NOT NULL,
             CONTACT_NO TEXT NOT NULL,
             LAST_NAME TEXT NOT NULL,
+            EMPLOYEE_ID TEXT NOT NULL,
             EMAIL_ID TEXT NOT NULL UNIQUE);''')
 print("Table EMPLOYEE created successfully")
 
@@ -33,6 +34,7 @@ conn.execute('''CREATE TABLE PARTNER
             PASSWORD TEXT NOT NULL,
             FIRST_NAME TEXT NOT NULL,
             LAST_NAME TEXT NOT NULL,
+            EMPLOYEE_ID TEXT NOT NULL,
             CONTACT_NO TEXT NOT NULL,
             EMAIL_ID TEXT NOT NULL UNIQUE);''')
 print("Table PARTNER created successfully")
@@ -84,7 +86,7 @@ conn.execute('''CREATE TABLE MESSAGES
 print("Table MESSAGES created successfully")
 
 
-#conn.execute('''DROP TABLE REQUEST_FILES''')
+conn.execute('''DROP TABLE REQUEST_FILES''')
 conn.execute('''CREATE TABLE REQUEST_FILES
             (TOKEN INTEGER NOT NULL,
             REQUEST_MESSAGE TEXT NOT NULL,
@@ -94,7 +96,7 @@ conn.execute('''CREATE TABLE REQUEST_FILES
 print("Table REQUEST_FILES created successfully")
 #Removed  PRIMARY KEY(TOKEN,CURRENT_TIMESTAMP),
 
-#conn.execute('''DROP TABLE SERVICE_DOCS''')
+conn.execute('''DROP TABLE SERVICE_DOCS''')
 conn.execute('''CREATE TABLE SERVICE_DOCS
             (TOKEN INTEGER NOT NULL,
             DOCUMENT BLOB,
@@ -104,7 +106,7 @@ conn.execute('''CREATE TABLE SERVICE_DOCS
 print("Table SERVICE_DOCS created successfully")
 
 
-#conn.execute('''DROP TABLE SERVICE_ALLOCATION''')
+conn.execute('''DROP TABLE SERVICE_ALLOCATION''')
 conn.execute('''CREATE TABLE SERVICE_ALLOCATION
             (TOKEN INTEGER NOT NULL,
             EMP TEXT NOT NULL,
@@ -118,7 +120,7 @@ conn.execute('''CREATE TABLE SERVICE_ALLOCATION
 print("Table SERVICE_ALLOCATION created successfully")
 
 
-#conn.execute('''DROP TABLE SERVICE_STATUS''')
+conn.execute('''DROP TABLE SERVICE_STATUS''')
 conn.execute('''CREATE TABLE SERVICE_STATUS
             (TOKEN INTEGER PRIMARY KEY NOT NULL,
             COMPLETED INTEGER NOT NULL CHECK (COMPLETED >=0 AND COMPLETED <2),
@@ -129,7 +131,7 @@ conn.execute('''CREATE TABLE SERVICE_STATUS
 print("Table SERVICE_STATUS created successfully")
 
 
-#conn.execute('''DROP TABLE COMPLETED_SERVICE_DOCS''')
+conn.execute('''DROP TABLE COMPLETED_SERVICE_DOCS''')
 conn.execute('''CREATE TABLE COMPLETED_SERVICE_DOCS
             (TOKEN INTEGER NOT NULL,
             DOCUMENT BLOB,
@@ -139,7 +141,7 @@ conn.execute('''CREATE TABLE COMPLETED_SERVICE_DOCS
 print("Table COMPLETED_SERVICE_DOCS created successfully")
 
 
-#conn.execute('''DROP TABLE COMPLETED_SERVICE_SUMMARY''')
+conn.execute('''DROP TABLE COMPLETED_SERVICE_SUMMARY''')
 conn.execute('''CREATE TABLE COMPLETED_SERVICE_SUMMARY
             (TOKEN INTEGER NOT NULL,
             SUMMARY TEXT,
@@ -148,7 +150,7 @@ conn.execute('''CREATE TABLE COMPLETED_SERVICE_SUMMARY
 print("Table COMPLETED_SERVICE_SUMMARY created successfully")
 
 
-#conn.execute('''DROP TABLE COMPLETED_SERVICE_INVOICE''')
+conn.execute('''DROP TABLE COMPLETED_SERVICE_INVOICE''')
 conn.execute('''CREATE TABLE COMPLETED_SERVICE_INVOICE
             (TOKEN INTEGER PRIMARY KEY NOT NULL,
             GENERATED_BY TEXT,
