@@ -8,7 +8,11 @@
     
         <link rel="stylesheet" href="{{url_for('static', filename='ClientRegister.css')}}">
 
-    
+  <script> history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+  </script>    
     
     
   </head>
@@ -174,7 +178,7 @@
         <script src="{{ url_for('static', filename='ClientRegister.js') }}"></script>
 
     
-    
+
     
   </body>
 </html>

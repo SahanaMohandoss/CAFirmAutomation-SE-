@@ -14,7 +14,7 @@ body{margin:0}
     cursor: pointer;
     padding: 14px 16px;
     font-size: 17px;
-    width: 25%;
+    width: 20%;
 }
 
 .tablink:hover {
@@ -59,7 +59,93 @@ body{margin:0}
                 padding-left: 50px;
             }
 
+
+.remove {cursor: pointer;}
+
+
 #RequestService {background-color: #000000;}
 #ViewService {background-color: #000000;}
 #TaxCalculator {background-color: #000000;}
-#About {background-color: #000000;}
+#contact {background-color: #000000;}
+
+
+#myInput {
+    background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+    background-position: 10px 12px; /* Position the search icon */
+    background-repeat: no-repeat; /* Do not repeat the icon image */
+    width: 100%; /* Full-width */
+    font-size: 16px; /* Increase font-size */
+    padding: 12px 20px 12px 40px; /* Add some padding */
+    border: 1px solid #ddd; /* Add a grey border */
+    margin-bottom: 12px; /* Add some space below the input */
+}
+
+#myUL {
+    /* Remove default list styling */
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#myUL li a {
+    border: 1px solid #ddd; /* Add a border to all links */
+    margin-top: -1px; /* Prevent double borders */
+    background-color: #f6f6f6; /* Grey background color */
+    padding: 12px; /* Add some padding */
+    text-decoration: none; /* Remove default text underline */
+    font-size: 18px; /* Increase the font-size */
+    color: black; /* Add a black text color */
+    display: block; /* Make it into a block element to fill the whole list */
+}
+
+#myUL li a:hover:not(.header) {
+    background-color: #eee; /* Add a hover effect 
+
+    to all links, except for headers */
+}
+
+
+a[href="#compose-mail"] {
+  padding: 10px; 
+  background: white;
+  color:black;
+  display: inline-block;
+  
+}
+#compose-mail-container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 500px;
+  perspective: 500px;
+  transform-style: preserve-3d;
+}
+
+
+fieldset {
+  border: none;
+}
+input, 
+textarea {
+  width: 100%;
+}
+
+#compose-mail {
+  
+  background: white;
+  border: 1px dashed;
+  color:black;
+  transition: 600ms;
+  transform-origin: 50% 50% -100px;
+  
+  backface-visibility: hidden;
+}
+#compose-mail.hidden {  
+  // transform: translate3d(0, 100%, 0);
+  transform: rotateY(120deg);
+  
+}
+#compose-mail.visible {
+  // transform: translate3d(0, 0, 0);
+  transform: rotateY(0deg);
+}

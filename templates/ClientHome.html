@@ -3,21 +3,22 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="{{url_for('static', filename='ClientHome.css')}}">
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
 
 <button class="tablink" onclick="openPage('RequestService', this, 'black')" id="defaultOpen">Request a service</button>
 <button class="tablink" onclick="openPage('ViewService', this, 'black')" >View status of services</button>
 <button class="tablink" onclick="openPage('TaxCalculator', this, 'black')">Tax Calculator</button>
-<button class="tablink" onclick="openPage('Contact', this, 'black')">Contact & Notifications</button>
+<button class="tablink" onclick="openPage('contact', this, 'black')">Contact & Notifications</button>
+<button class="tablink" onclick="logOut()">LogOut</button>
 
 <div id="RequestService" class="tabcontent">
   <h3>Request for a Service with the firm</h3>
   
   <div id="uname" >Username: {{username}} </div>
 			<div >Token: </div>
-  			<form action="/" method="post">
+  			<form name = "myForm" id = "myForm" method="post" >
 				<div class="formelement">
 				<label> Type of Service </label>
 				<select value = "abc" name = "services">
@@ -31,23 +32,45 @@
 				<br>
 				<label> Service Decription </label>
 				<div class="formelement">
-				<input type="text" style = "height:300px;width:500px" name="Description of service" id="description" placeholder="description" required/>
+				<input type="text" style = "height:300px;width:500px" name="Description of service" id="description" placeholder="description" />
     			</div>
     			<br>
 				<label> Upload necessary document </label>
+				<div id = "filesdiv">
+					<div class="formelement">
+					<input id = "files" type = file  name = "files[]" multiple="">
+					<img src='http://images.freescale.com/shared/images/x.gif' class='remove'>
+					</div>
+					<div class="formelement">
+					<input id = "files" type = file  name = "files[]" multiple="">
+					<img src='http://images.freescale.com/shared/images/x.gif' class='remove'>
+					</div>
+				</div>
 				<div class="formelement">
-				<input type = file>
+				<button name="upload" class = "button" id="btnUpload" value="Upload another document"> Upload another document
+				</button>
 				</div>
 				<br>
 				<div class="formelement">
-    			<input type="submit" class="button" value="Submit Request"/>
+    			<button name="submit" class="button" id= "btnSubmit" value="Submit Request"> Submit Request </button>
 				</div>
   			</form>
 </div>
 
 <div id="ViewService" class="tabcontent">
-  <h3>News</h3>
-  <p>Some news this fine day!</p> 
+  <input type="text" id="myInput" onkeyup="searchByToken()" placeholder="Search for service by Token number..">
+
+	<ul id="myUL">
+	  <li><a href="#">1</a></li>
+	  <li><a href="#">2</a></li>
+
+	  <li><a href="#">3</a></li>
+	  <li><a href="#">4</a></li>
+
+	  <li><a href="#">5</a></li>
+	  <li><a href="#">6</a></li>
+	  <li><a href="#">7</a></li>
+	</ul>
 </div>
 
 <div id="TaxCalculator" class="tabcontent">
@@ -71,12 +94,42 @@
 				<div id="out">
 				</div>
 			</div>
-		<div>
+	</div>
 
 </div>
 
-<div id="Contact" class="tabcontent">
+<div id="contact" class="tabcontent">
   <h3>Messages</h3>
+
+<div class = "Messages">	
+</div>
+<div>
+<a id="button-for-compose-mail" href="#compose-mail">Send New Message</a>
+</div>
+	<div id="compose-mail-container">
+	  <div id="compose-mail" class="hidden">
+	    <form action="example.com">
+	    	<fieldset>
+	        <label >Compose your message</label>
+	      </fieldset>
+	      <fieldset>
+	        <label for="to">To</label>
+	        <input type="text" id="to">
+	        <label for="from">From</label>
+	        <input type="text" id="from">
+	      </fieldset>
+	      <fieldset>
+	        <label for="content">Content</label>
+	        <textarea name="content" id="content" style="height:50px"></textarea>
+	      </fieldset>
+	      <fieldset>
+	        <input id="send-button" type="submit" value="Send Message">
+	      </fieldset>
+	    </form>
+	    <a id="close-button" href="#">Close Dialog</a>
+	  </div>
+	</div>
+
 </div>
 
 <script src="{{ url_for('static', filename='ClientHome.js') }}">

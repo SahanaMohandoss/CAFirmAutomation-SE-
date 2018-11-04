@@ -1,3 +1,11 @@
+
+
+
+    window.onpopstate = function () {
+        history.pushState(null, null, location.href);
+        history.go(1);
+    };
+
 function openPage(pageName,elmnt,color) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -196,3 +204,117 @@ function calc()
                 return res
             }
 
+
+
+
+$(document).ready(
+
+
+    function(){
+
+    $('form').on('submit', function(e){
+
+      e.preventDefault();
+    
+      });
+
+    $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+    });
+    $('.remove').click(function(){
+        console.log($(this).closest('div'))
+        $(this).closest('div').slideUp('slow', function(){$(this).remove();});
+    });     
+
+    $('#btnUpload').click(function(){
+        console.log("here")
+        var div = document.createElement("div")
+        div.className = "formelement"
+        var input =  document.createElement("input")
+        input.type = "file"
+        input.id = "files"
+        input.name = "files[]"
+        input.multiple = ""
+        div.appendChild(input)
+        var img =  document.createElement("img")
+        img.src =  'http://images.freescale.com/shared/images/x.gif'
+        img.className = "remove"
+        img.addEventListener('click', 
+            function(){
+        $(this).closest('div').slideUp('slow', function(){$(this).remove();})
+            }, false);
+        div.appendChild(img)
+        console.log(img.className)
+        var maindiv = document.getElementById("filesdiv")
+        maindiv.appendChild(div)
+        console.log(maindiv.id)
+    });
+}
+);
+
+
+
+function searchByToken() {
+    // Declare variables
+    var input, filter, ul, li, a, i;
+    input = document.getElementById('myInput');
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName('li');
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+
+
+
+function logOut()
+{
+    console.log("in logoutx")
+    window.location.href = "/logout"
+}
+
+
+function hideDialog() {
+  jQuery("#compose-mail").removeClass("visible").addClass("hidden");
+}
+
+// At the beginning, we hide the dialog:
+hideDialog();
+
+// jQuery("#button-for-compose-mail").on("click", showDialog);
+
+$("#button-for-compose-mail").on("click", function(){
+  $("#compose-mail").removeClass("hidden").addClass("visible");
+  
+  // focus on input.
+  $("input#to").focus();
+  
+  return false;
+});
+
+$("#close-button").on("click", function(){
+  hideDialog();
+});
+
+$("form").on("submit", function() {
+  hideDialog();
+  
+  $("input#to").val("")
+  $("textarea#content").val("");
+  
+  // stop browser default behavior.
+  // Don't return false if you really want to submit the form, unless you are using AJAX to send the form.
+  return false;
+});
+       

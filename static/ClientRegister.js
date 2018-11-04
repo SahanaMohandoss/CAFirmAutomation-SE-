@@ -1,3 +1,10 @@
+
+
+window.onpopstate = function () {
+        history.pushState(null, null, window.href);
+        history.go(0);
+    };
+
 $('.form').find('input, textarea').on('keyup blur focus', function (e) {
   
   var $this = $(this),
@@ -51,6 +58,7 @@ $('.tab a').on('click', function (e) {
 
 
 $(document).ready(function () {
+
     toggleFields(); //call this first so we start out with the correct visibility depending on the selected form values
     //this will call our toggleFields function every time the selection value of our underAge field changes
     $("#usertype").change(function () {
@@ -308,6 +316,7 @@ $(function() {
                 }
                 else
                 { 
+
                     if(response['type']==0){
                         window.location.href = "/clientHome"
                       }

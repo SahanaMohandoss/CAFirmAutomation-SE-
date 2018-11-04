@@ -146,6 +146,7 @@ def logIn():
 
 @app.route('/clientHome')
 def clientHome():
+    
     name = session['username']
     return render_template("ClientHome.html", username=name)
 
@@ -155,6 +156,7 @@ def clientHome():
 def logout():
    # remove the username from the session if it is there
    session.pop('username', None)
+   
    return render_template("ClientRegister.html")
 
 if __name__ == '__main__':
