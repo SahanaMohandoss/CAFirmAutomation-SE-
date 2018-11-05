@@ -165,10 +165,93 @@
 								out.innerHTML+="<br>Education cess = "+convert(edcess.toFixed(3));
 						}
 					}
+					else if(typ=="dom")
+					{
+						turn=document.getElementById("turn").value
+						if(val<0 || turn<0)
+							out.innerHTML="Please enter a positive number"
+						else
+						{
+							if(turn>500000000)
+							{
+								tax=0.3*val
+							}
+							else
+							{
+								tax=0.25*val
+							}
+							if(val>100000000)
+							{
+								sur=0.12*tax
+							}
+							else if(val>10000000 && val<=100000000)
+							{
+								sur=0.07*tax
+							}
+							else
+								sur=0;
+							edcess=0.03*(tax+sur)
+							out.innerHTML="Amount = "+convert(val)+"<br>Tax = "+convert(tax.toFixed(3));
+							out.innerHTML+="<br>Surcharge = "+convert(sur.toFixed(3));
+							out.innerHTML+="<br>Education cess = "+convert(edcess.toFixed(3));
+						}				
+					}
+					else if(typ=="for")
+					{
+						if(val<0)
+							out.innerHTML="Please enter a positive number"
+						else
+						{
+							tax=0.4*val
+							if(val>100000000)
+							{
+								sur=0.05*tax
+							}
+							else if(val>10000000 && val<=100000000)
+							{
+								sur=0.02*tax
+							}
+							else
+								sur=0;
+							edcess=0.03*(tax+sur)
+							out.innerHTML="Amount = "+convert(val)+"<br>Tax = "+convert(tax.toFixed(3));
+							out.innerHTML+="<br>Surcharge = "+convert(sur.toFixed(3));
+							out.innerHTML+="<br>Education cess = "+convert(edcess.toFixed(3));
+						}
+					}
+					else if(typ=="coop")
+					{
+						if(val<0)
+							out.innerHTML="Please enter a positive number"
+						else
+						{
+							if(val<=10000)
+								tax=0.1*val
+							else if(val>10000 && val<=20000)
+							{
+								tax=1000+(val-10000)*0.2
+							}
+							else if(val>20000)
+							{
+								tax=1000+2000+(val-20000)*0.3
+							}
+							if(val>10000000)
+							{
+								sur=0.12*tax
+							}
+							else
+								sur=0;
+							edcess=0.03*(tax+sur)
+							out.innerHTML="Amount = "+convert(val)+"<br>Tax = "+convert(tax.toFixed(3));
+							out.innerHTML+="<br>Surcharge = "+convert(sur.toFixed(3));
+							out.innerHTML+="<br>Education cess = "+convert(edcess.toFixed(3));
+						}
+					}
 					else
 					{
 						out.innerHTML="Not Calculated Yet"
 					}
+
 				}
 			}
 			function new_elem()
@@ -225,6 +308,8 @@
   					<option value="part">Partnership Firm</option>
   					<option value="local">Local Authority</option>
   					<option value="dom">Domestic Company</option>
+  					<option value="for">Foreign Company</option>
+  					<option value="coop">Co-operative Society</option>
 				</select><br><br>
 				<b>Enter Income Amount:&nbsp;&nbsp;&nbsp;&nbsp;</b> <input type="number" id="num" placeholder="Enter Income Amount" />
 				<div id="gross"></div><br>
