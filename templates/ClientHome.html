@@ -3,8 +3,17 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="{{url_for('static', filename='ClientHome.css')}}">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+	
+</script>
+
+<script> history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+  </script> 
 </head>
+
 <body>
 
 <button class="tablink" onclick="openPage('RequestService', this, 'black')" id="defaultOpen">Request a service</button>
@@ -13,73 +22,112 @@
 <button class="tablink" onclick="openPage('contact', this, 'black')">Contact & Notifications</button>
 <button class="tablink" onclick="logOut()">LogOut</button>
 
-<div id="RequestService" class="tabcontent">
-  <h3>Request for a Service with the firm</h3>
-  
-  <div id="uname" >Username: {{username}} </div>
-			<div >Token: </div>
-  			<form name = "myForm" id = "myForm" method="post" >
+<div  id="RequestService" class="tabcontent">
+ 
+<p align = "center" class="content" id="uname" >Hi {{username}} ! Now you can request for a service with the firm </p>
+			<br/> <br/>
+  			<form name = "myForm" id = "myForm" method="post" enctype=multipart/form-data>
 				<div class="formelement">
 				<label> Type of Service </label>
-				<select value = "abc" name = "services">
-					<option value='a'> a </option>
-					<option value='b'> b </option>
-					<option value='c'> c </option>
-					<option value='other'> others </option>
+				<br/> <br/><br/>
+				<select id = "service"  class = "select" name = "service">
+					<option  value='Statutory Audit'> Statutory Audit </option>
+					<option value='Internal Audit'> Internal Audit </option>
+					<option value='Tax Audit'> Tax Audit </option>
+					<option value='ITR Filing'> ITR Filing </option>
+					<option value='Registration'> Registration </option>
+					<option value='Accounting '> Accounting </option>
+					<option value='Other'> Other </option>
 				</select>
 				</div>
-				<br>
-				<br>
+				<br/>
+				<br/>
 				<label> Service Decription </label>
+				<br/><br/><br/>
 				<div class="formelement">
-				<input type="text" style = "height:300px;width:500px" name="Description of service" id="description" placeholder="description" />
+				<input type="text" style = "height:300px;width:500px" name="description" id="description" placeholder="Description of Service" />
     			</div>
-    			<br>
+    			<br/>
 				<label> Upload necessary document </label>
+				<br/><br/><br/>
 				<div id = "filesdiv">
-					<div class="formelement">
+					<div class="formelement" id = "onefile">
 					<input id = "files" type = file  name = "files[]" multiple="">
-					<img src='http://images.freescale.com/shared/images/x.gif' class='remove'>
+					<img src="{{url_for('static', filename='x.gif')}}" class='remove'>
+					<input type = "text" name = "filedesc" id="filedesc" placeholder = "Enter a file description">
 					</div>
-					<div class="formelement">
+					<br/>
+					<div class="formelement" id ="onefile">
 					<input id = "files" type = file  name = "files[]" multiple="">
-					<img src='http://images.freescale.com/shared/images/x.gif' class='remove'>
+					<img src="{{url_for('static', filename='x.gif')}}" class='remove'>
+					<input type = "text" name = "filedesc" id="filedesc" placeholder = "Enter a file description">
 					</div>
 				</div>
+				<br/><br/>
 				<div class="formelement">
-				<button name="upload" class = "button" id="btnUpload" value="Upload another document"> Upload another document
+				<p align="center">
+				<button name="upload" class = "button" id="btnUpload" value="Upload another document" style="margin-left:auto;margin-right:auto;"> Upload another document
 				</button>
+				</p>
 				</div>
-				<br>
+				<br/>
 				<div class="formelement">
+				<p align="center">
     			<button name="submit" class="button" id= "btnSubmit" value="Submit Request"> Submit Request </button>
+    			</p>
 				</div>
   			</form>
 </div>
 
 <div id="ViewService" class="tabcontent">
-  <input type="text" id="myInput" onkeyup="searchByToken()" placeholder="Search for service by Token number..">
+  <input type="text" id="myInput" class = "searchByToken" onkeyup="searchByToken()" placeholder="Search for service by Token number.."/>
+  <br/>
+  <br/>
+  <select id="filterByStatus">
+                    <option value='ALL' selected="selected">Select by status of service</option>
+                    <option value="Not Accepted">Not Accepted</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Need Action from client">Need Action from client</option>
+	</select>
+	<br/> <br/>
 
-	<ul id="myUL">
-	  <li><a href="#">1</a></li>
-	  <li><a href="#">2</a></li>
+	<table border = 1 id = "myTable">
+         <thead>
+            <th>Client Name</th>
+            <th>Token number</th>
+            <th>Quotation</th>
+            <th>Type of Service</th>
+            <th>Status</th>
+            <th>Employee Assigned</th>
+            <th>Estimated completion date</th>
+         </thead>
+         <tbody>
+         {% for row in items %}
+            <tr >
+               <td>{{row[0]}}</td>
+               <td  class = "tok">{{row[1]}}</td>
+               <td>{{row[3]}}</td>
+               <td>{{row[2]}}</td>
+               <td class = "status">Not Accepted</td>
+               <td>Not Assigned</td>
+               <td>Not available</td>
+            </tr>
+         {% endfor %}
+     </tbody>
+     </table>
 
-	  <li><a href="#">3</a></li>
-	  <li><a href="#">4</a></li>
-
-	  <li><a href="#">5</a></li>
-	  <li><a href="#">6</a></li>
-	  <li><a href="#">7</a></li>
-	</ul>
 </div>
 
-<div id="TaxCalculator" class="tabcontent">
-  <h3>Tax Calculator</h3>
- <div id="bg">
-			<div id="outer" style="font-family:verdana;">
+<div id="TaxCalculator"  class="tabcontent"   >
+ 
+
+ <div id="bg"  style="height:700px">
+ 			
+			<div  id="outer" style="font-family:verdana;">
 				<h1> Income Tax Calculator </h1>
 				<b>Choose your category:&nbsp;&nbsp;&nbsp;&nbsp;</b>
-				<select id="typ" onchange="new_elem()">
+				<select id="typ" onchange="new_elem()" style="color:black">
   					<option value="ind1">Individual < 60 years of Age</option>
   					<option value="ind2">Resident Individual between 60 and 80 years of age</option>
   					<option value="ind3">Resident Individual above 80 years of age</option>
@@ -90,12 +138,12 @@
 				</select><br><br>
 				<b>Enter Income Amount:&nbsp;&nbsp;&nbsp;&nbsp;</b> <input type="number" id="num" placeholder="Enter Income Amount" />
 				<div id="gross"></div><br>
-				<button onclick="calc()"> Calculate </button><br><br>
+				<button class="button" onclick="calc()"> Calculate </button><br><br>
 				<div id="out">
 				</div>
 			</div>
-	</div>
-
+	
+</div>
 </div>
 
 <div id="contact" class="tabcontent">

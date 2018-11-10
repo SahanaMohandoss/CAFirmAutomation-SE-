@@ -1,10 +1,14 @@
 
+window.onload = function() {
+    var reloading = sessionStorage.getItem("reloading");
+    if (reloading) {
+        sessionStorage.removeItem("reloading");
+        console.log("Reload")
+        window.location.href = "/clientHome"   
+    }
+}
 
-
-    window.onpopstate = function () {
-        history.pushState(null, null, location.href);
-        history.go(1);
-    };
+   
 
 function openPage(pageName,elmnt,color) {
     var i, tabcontent, tablinks;
@@ -15,9 +19,11 @@ function openPage(pageName,elmnt,color) {
     tablinks = document.getElementsByClassName("tablink");
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].style.backgroundColor = "";
+        tablinks[i].style.color = "black";
     }
     document.getElementById(pageName).style.display = "block";
     elmnt.style.backgroundColor = color;
+    elmnt.style.color = "white"
 
 }
 // Get the element with id="defaultOpen" and click on it
@@ -208,8 +214,6 @@ function calc()
 
 
 $(document).ready(
-
-
     function(){
 
     $('form').on('submit', function(e){
@@ -230,9 +234,11 @@ $(document).ready(
     });     
 
     $('#btnUpload').click(function(){
+       
         console.log("here")
         var div = document.createElement("div")
         div.className = "formelement"
+        var numItems = $('#onefile').length;
         var input =  document.createElement("input")
         input.type = "file"
         input.id = "files"
@@ -240,13 +246,21 @@ $(document).ready(
         input.multiple = ""
         div.appendChild(input)
         var img =  document.createElement("img")
-        img.src =  'http://images.freescale.com/shared/images/x.gif'
+        img.src =  "../static/x.gif"
         img.className = "remove"
         img.addEventListener('click', 
             function(){
         $(this).closest('div').slideUp('slow', function(){$(this).remove();})
             }, false);
         div.appendChild(img)
+        var text =  document.createElement("input")
+        text.type = "text"
+        text.name = "filedesc"
+        text.id =  "filedesc"
+        text.placeholder  = "Enter a file description"
+        var br =  document.createElement("br")
+         div.appendChild(text)
+        div.appendChild(br)
         console.log(img.className)
         var maindiv = document.getElementById("filesdiv")
         maindiv.appendChild(div)
@@ -257,24 +271,6 @@ $(document).ready(
 
 
 
-function searchByToken() {
-    // Declare variables
-    var input, filter, ul, li, a, i;
-    input = document.getElementById('myInput');
-    filter = input.value.toUpperCase();
-    ul = document.getElementById("myUL");
-    li = ul.getElementsByTagName('li');
-
-    // Loop through all list items, and hide those who don't match the search query
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-        }
-    }
-}
 
 
 
@@ -318,3 +314,77 @@ $("form").on("submit", function() {
   return false;
 });
        
+
+
+$(function() {
+    $('#btnSubmit').click(function() {
+        console.log("Here")
+        var form = document.querySelector('#myForm');
+        var formData = new FormData(form);
+        $.ajax({
+            url: '/submitRequest',
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log("ok")
+                response = JSON.parse(response)
+                var t = response["token"]
+                alert("YOUR REQUEST HAS BEEN SUBMITTED.\n YOU TOKEN NUMBER IS : "+t+" \nTHE PARTNER WILL BE IN TOUCH WITH YOU WITH THE QUOTATION \nYou can track the status in the view services tab!")
+                document.getElementById("myForm").reset();
+            },
+            error: function(error) {
+                    console.log("error")
+                
+               
+            }
+        });
+    });
+});
+
+
+$('#filterByStatus').change(function(){
+    var criteria = $(this).val();
+    if(criteria == 'ALL'){
+        $('.status').each(function(i,option){
+        $(this).parent().show();
+        });
+        return;
+    }
+    else
+    {
+    $('.status').each(function(i,option){
+        console.log(($(this).html()), criteria)
+        if($(this).html() == criteria){
+            $(this).parent().show();
+        }else {
+            $(this).parent().hide();
+        }
+    });
+    }
+});
+
+
+$('.searchByToken').keyup(function(){
+    console.log("IT CHANGED")
+    var criteria = $(this).val();
+    if(criteria == ''){
+        $('.tok').each(function(i,option){
+        $(this).parent().show();
+        });
+        return;
+    }
+    else
+    {
+    $('.tok').each(function(i,option){
+        console.log(($(this).html()), criteria)
+        if($(this).html() == criteria){
+            $(this).parent().show();
+        }else {
+            $(this).parent().hide();
+        }
+    });
+    }
+});
+

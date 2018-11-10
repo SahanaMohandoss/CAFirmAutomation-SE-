@@ -78,6 +78,12 @@ h1 {
   margin: 0 0 40px;
 }
 
+.content
+{
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 22px;
+}
+
 label {
   position: absolute;
   -webkit-transform: translateY(6px);
@@ -101,6 +107,10 @@ label.active {
   left: 2px;
   font-size: 14px;
 }
+
+
+
+
 label.active .req {
   opacity: 0;
 }
@@ -124,6 +134,11 @@ input, textarea {
   transition: border-color .25s ease, box-shadow .25s ease;
 }
 
+.remove
+{
+  height:20px;
+  width:20px;
+}
 
 .select{
 	font-size: 22px;

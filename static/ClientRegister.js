@@ -134,10 +134,15 @@ function toggleFields() {
 $(function() {
     $('#btnSignUp').click(function() {
         console.log("Here")
+        var f = document.querySelector('#RegisterForm');
+        var formData = new FormData(f);
         $.ajax({
             url: '/signUp',
-            data: $('form').serialize(),
+            data: formData,
             type: 'POST',
+            cache: false,
+            processData: false,
+            contentType: false,
             success: function(response) {
                 response = JSON.parse(response)
                 console.log(response["status"]);
@@ -333,3 +338,59 @@ $(function() {
         });
     });
 });
+
+
+
+
+$(document).ready(
+    function(){
+
+    
+
+    $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+    });
+    $('.remove').click(function(){
+        console.log($(this).closest('div'))
+        $(this).closest('div').slideUp('slow', function(){$(this).remove();});
+    });     
+
+    $('#btnUpload').click(function(){
+       
+
+        console.log("here")
+        var div = document.createElement("div")
+        div.className = "formelement"
+        var numItems = $('#onefile').length;
+        var input =  document.createElement("input")
+        input.type = "file"
+        //input.id = "files"
+        input.name = "files[]"
+        input.multiple = ""
+        div.appendChild(input)
+        var img =  document.createElement("img")
+        img.src =  "../static/x.gif"
+        img.className = "remove"
+        img.addEventListener('click', 
+            function(){
+        $(this).closest('div').slideUp('slow', function(){$(this).remove();})
+            }, false);
+        div.appendChild(img)
+        var text =  document.createElement("input")
+        text.type = "text"
+        text.name = "filedesc"
+        text.id =  "filedesc"
+        text.placeholder  = "Enter a file description"
+        var br =  document.createElement("br")
+         div.appendChild(text)
+        div.appendChild(br)
+        console.log(img.className)
+        var maindiv = document.getElementById("filesdiv")
+        maindiv.appendChild(div)
+        console.log(maindiv.id)
+    });
+}
+);

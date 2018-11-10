@@ -6,15 +6,19 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 body{margin:0}
 /* Style tab links */
 .tablink {
-    background-color: #555;
-    color: white;
+     
+    
+    background: lightblue;
+  color: #000000;
     float: left;
     border: none;
     outline: none;
     cursor: pointer;
     padding: 14px 16px;
-    font-size: 17px;
+    font-size: 22px;
     width: 20%;
+    font-weight: 600;
+
 }
 
 .tablink:hover {
@@ -31,39 +35,40 @@ body{margin:0}
 
 
 
-
-            #bg
-            {
-                background-image: url("income.jpg");
-                height:100%;
-                background-repeat: no-repeat;
-                background-position: center;
-                background-blend-mode: saturation;
-                background-size: cover;
-            }
-            #outer 
-            {
-                position: absolute;
-                border: 3px solid yellow;
-                border-radius: 10px;
-                width: 600px;
-                background-color: lightyellow;
-                color: #000000;
-                padding-top: 20px;
-                margin-left: auto;
-                margin-right: auto;
-                margin-top: auto;
-                margin-bottom: auto;
-                padding-bottom: 20px;
-                padding-right: 10px;
-                padding-left: 50px;
-            }
-
-
-.remove {cursor: pointer;}
+#bg
+{
+    background-image: none;
+    height:100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-blend-mode: saturation;
+    background-size: cover;
+}
+#outer 
+{
+    position: absolute;
+    left:30%;
+    top:40%;
+    border: 3px solid yellow;
+    border-radius: 10px;
+    width: 600px;
+    background-color: lightyellow;
+    color: #000000;
+    padding-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    padding-left: 50px;
+}
 
 
-#RequestService {background-color: #000000;}
+.remove {cursor: pointer; height:30px;}
+
+
+#RequestService { background-color: #000000;}
 #ViewService {background-color: #000000;}
 #TaxCalculator {background-color: #000000;}
 #contact {background-color: #000000;}
@@ -80,14 +85,14 @@ body{margin:0}
     margin-bottom: 12px; /* Add some space below the input */
 }
 
-#myUL {
+#myTable {
     /* Remove default list styling */
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-#myUL li a {
+#myTable li a {
     border: 1px solid #ddd; /* Add a border to all links */
     margin-top: -1px; /* Prevent double borders */
     background-color: #f6f6f6; /* Grey background color */
@@ -98,11 +103,90 @@ body{margin:0}
     display: block; /* Make it into a block element to fill the whole list */
 }
 
-#myUL li a:hover:not(.header) {
+#myTable li a:hover:not(.header) {
     background-color: #eee; /* Add a hover effect 
 
     to all links, except for headers */
 }
+
+
+table {
+  border-collapse: separate;
+  background:#fff;
+  @include border-radius(5px);
+  margin:50px auto;
+  @include box-shadow(0px 0px 5px rgba(0,0,0,0.3));
+}
+
+thead {
+  @include border-radius(5px);
+}
+
+thead th {
+  font-family: 'Patua One', cursive;
+  font-size: 20px;
+  font-weight: 600;
+
+  font-weight:400;
+  color:white; 
+  background:black; 
+  text-shadow(1px 1px 0px rgba(0,0,0,0.5));
+  text-align:left;
+  padding:20px;
+  border-top:1px solid #858d99;
+  
+  &:first-child {
+   @include border-top-left-radius(5px); 
+  }
+
+  &:last-child {
+    @include border-top-right-radius(5px); 
+  }
+}
+
+tbody tr td {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+
+  color:#5f6062;
+  font-size:13px;
+  padding:20px 20px 20px 20px;
+  border-bottom:1px solid #e0e0e0;
+  
+}
+
+tbody tr:nth-child(2n) {
+  background:#f0f3f5;
+}
+
+tbody tr:last-child td {
+  border-bottom:none;
+  &:first-child {
+    @include border-bottom-left-radius(5px);
+  }
+  &:last-child {
+    @include border-bottom-right-radius(5px);
+  }
+}
+
+tbody:hover > tr td {
+  @include opacity(0.5);
+  
+  /* uncomment for blur effect */
+  /* color:transparent;
+  @include text-shadow(0px 0px 2px rgba(0,0,0,0.8));*/
+}
+
+tbody:hover > tr:hover td {
+  @include text-shadow(none);
+  color:#2d2d2d;
+  @include opacity(1.0);
+}
+
+
+
+
 
 
 a[href="#compose-mail"] {
@@ -148,4 +232,100 @@ textarea {
 #compose-mail.visible {
   // transform: translate3d(0, 0, 0);
   transform: rotateY(0deg);
+}
+
+.content
+{
+  color: rgba(255, 255, 255, 0.5);
+   font-size: 22px;
+}
+
+label {
+  position: absolute;
+  -webkit-transform: translateY(6px);
+          transform: translateY(6px);
+  left: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+  -webkit-backface-visibility: hidden;
+  pointer-events: none;
+  font-size: 22px;
+}
+label .req {
+  margin: 2px;
+  color: #1ab188;
+}
+
+label.active {
+  -webkit-transform: translateY(50px);
+          transform: translateY(50px);
+  left: 2px;
+  font-size: 14px;
+}
+label.active .req {
+  opacity: 0;
+}
+
+label.highlight {
+  color: #ffffff;
+}
+
+input, textarea {
+  font-size: 22px;
+  display: block;
+  width: 100%;
+  height: 50px;
+  padding: 5px 10px;
+  background: none;
+  background-image: none;
+  border: 1px solid #a0b3b0;
+  color: #ffffff;
+  border-radius: 0;
+  -webkit-transition: border-color .25s ease, box-shadow .25s ease;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+select{
+  font-size: 22px;
+  display: block;
+  width: 100%;
+  height: 50px;
+  padding: 5px 10px;
+  background: none;
+  background-image: none;
+  border: 1px solid #a0b3b0;
+  color: #ffffff;
+  border-radius: 0;
+  -webkit-transition: border-color .25s ease, box-shadow .25s ease;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+option{
+  background-color: none;
+  color: black;
+}
+
+.button {
+  border: 0;
+  outline: none;
+  border-radius: 0;
+  padding: 15px 0;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  background: lightblue;
+  color: #000000;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  -webkit-appearance: none;
+}
+.button:hover, .button:focus {
+  background: #179b77;
+}
+
+.button-block {
+  display: block;
+  width: 100%;
 }

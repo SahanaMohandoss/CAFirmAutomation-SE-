@@ -42,9 +42,10 @@ print("Table PARTNER created successfully")
 
 conn.execute('''DROP TABLE CLIENT_FILES''')
 conn.execute('''CREATE TABLE CLIENT_FILES
-            (USER TEXT PRIMARY KEY NOT NULL,
+            (USER TEXT  NOT NULL,
             DOCUMENT BLOB,
             DESCRIPTION TEXT,
+            PRIMARY KEY(USER,DOCUMENT,DESCRIPTION),
             FOREIGN KEY(USER) REFERENCES CLIENT(USERNAME));''')
 print("Table CLIENT_FILES created successfully")
 

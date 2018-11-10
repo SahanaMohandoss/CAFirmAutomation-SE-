@@ -30,51 +30,54 @@
         <div id="signup">   
           <h1>Register!</h1>
           
-          <form id ="RegisterForm" action="/register" method="post">
+          <form id ="RegisterForm" action="/register" enctype=multipart/form-data method="post">
           
           <div class="top-row">
-			<div class="field-wrap">
-              <label>
+			       <div class="field-wrap">
+                <label>
                 Which one are you? <span class="req">*</span>
               </label>
-			  <br><br>
+               <br><br>
               <select class ="select" name ="usertype" id = "usertype" required autocomplete="off" />
-				<option class ="opt" value="0">Client</option>
-				<option class ="opt" value="1">Employee</option>
-				<option class ="opt" value="2">Partner</option>
-			  </select>
-            </div>
-			<div class="field-wrap">
+                <option class ="opt" value="0">Client</option>
+                <option class ="opt" value="1">Employee</option>
+                <option class ="opt" value="2">Partner</option>
+               </select>
+
+              </div>
+
+			       <div class="field-wrap">
               <label>
                 Username <span class="req">*</span>
               </label>
               <input type="text" name ="username" id = "username" required autocomplete="off" />
               <div class = "error" id="username_error"> </div>
-            </div>
-            <div class="field-wrap">
-              <label>
-                First Name<span class="req">*</span>
-              </label>
-              <input type="text" name ="firstname" id = "firstname" required autocomplete="off" />
-              <div class = "error" id="firstname_error"> </div>
-            </div>
-        
-            <div class="field-wrap">
-              <label>
-                Last Name<span class="req">*</span>
-              </label>
-              <input type="text" name ="lastname" id = "lastname" required autocomplete="off"/>
-              <div class = "error" id="lastname_error"> </div>
-            </div>
-          </div>
+              </div>
 
-          <div class="field-wrap">
-            <label>
-              Email<span class="req">*</span>
-            </label>
-            <input type="email" name ="email" id = "email" required autocomplete="off"/>
-            <div class = "error" id="email_error"> </div>
-          </div>
+              <div class="field-wrap">
+                <label>
+                  First Name<span class="req">*</span>
+                </label>
+                <input type="text" name ="firstname" id = "firstname" required autocomplete="off" />
+                <div class = "error" id="firstname_error"> </div>
+              </div>
+        
+              <div class="field-wrap">
+                <label>
+                  Last Name<span class="req">*</span>
+                </label>
+                <input type="text" name ="lastname" id = "lastname" required autocomplete="off"/>
+                <div class = "error" id="lastname_error"> </div>
+              </div>
+            </div>
+
+            <div class="field-wrap">
+              <label>
+                Email<span class="req">*</span>
+              </label>
+              <input type="email" name ="email" id = "email" required autocomplete="off"/>
+              <div class = "error" id="email_error"> </div>
+            </div>
 
           <div class="field-wrap">
             <label>
@@ -84,8 +87,6 @@
             <div class = "error" id="number_error"> </div>
           </div>
 
-
-
           <div class="field-wrap">
             <label>
               Password<span class="req">*Minimum 6 characters!</span>
@@ -94,58 +95,99 @@
             <div class = "error" id="password_error"> </div>
           </div>
 		  
-		  <div class="field-wrap">
-            <label>
-              Confirm Password<span class="req"></span>
-            </label>
-            <input type="password" name ="confpassword" id = "confpassword" required autocomplete="off"/>
-            <div class = "error" id="confpassword_error"> </div>
+    		  <div class="field-wrap">
+                <label>
+                  Confirm Password<span class="req"></span>
+                </label>
+                <input type="password" name ="confpassword" id = "confpassword" required autocomplete="off"/>
+                <div class = "error" id="confpassword_error"> </div>
           </div>
 		  
-		  <div id = "employee" class="field-wrap">
+		      <div id = "employee" class="field-wrap">
             <label>
              Employee  ID <span class="req"></span>
             </label>
-            <input type="text" name ="employeeID" id = "employeeID" required autocomplete="off"/>
+            <input type="text" name ="employeeID" id = "employeeID"  autocomplete="off"/>
             <div class = "error" id="employeeID_error"> </div>
           </div>
-		  <div  id = "client">
-			  <div class="field-wrap">
-				  <label>
-					Which one are you? <span class="req">*</span>
-				  </label>
-				  <br><br>
-				  <select class ="select" name ="clientType" id = "clientType" required autocomplete="off" />
-					<option class ="opt" value="0">Individual</option>
-					<option class ="opt" value="1">Company</option>
-				  </select>
-				</div>
-			  <div  class="field-wrap">
-				<label>
-				 Aadhar Number <span class="req"></span>
-				</label>
-				<input type="text" name ="aadhar" id = "aadhar" required autocomplete="off"/>
-        <div class = "error" id="aadhar_error"> </div>
-			  </div>
-			  <div  class="field-wrap">
-				<label>
-				 PAN Number <span class="req"></span>
-				</label>
-				<input type="text" name ="pan" id = "pan" required autocomplete="off"/>
-        <div class = "error" id="pan_error"> </div>
-			  </div>
+
+    		  <div  id = "client">
+    			      <div class="field-wrap">
+              <label>
+              Which one are you? <span class="req">*</span>
+              </label>
+              <br><br>
+              <select class ="select" name ="clientType" id = "clientType"  autocomplete="off" />
+              <option class ="opt" value="0">Individual</option>
+              <option class ="opt" value="1">Company</option>
+              </select>
+            </div>
+            <div  class="field-wrap">
+            <label>
+             Aadhar Number <span class="req"></span>
+            </label>
+            <input type="text" name ="aadhar" id = "aadhar"  autocomplete="off"/>
+            <div class = "error" id="aadhar_error"> </div>
+            </div>
+            <div  class="field-wrap">
+            <label>
+             PAN Number <span class="req"></span>
+            </label>
+            <input type="text" name ="pan" id = "pan"  autocomplete="off"/>
+            <div class = "error" id="pan_error"> </div>
+            </div>
+            <div class="field-wrap">
+            <label> Upload necessary document </label>
+            </div>
+
+            <br/><br/><br/>
+            <div id = "filesdiv">
+              <div class="formelement" id = "onefile">
+                <input  type = file  name = "files[]" multiple="">
+                <img src="{{url_for('static', filename='x.gif')}}" class='remove'>
+                <input type = "text" name = "filedesc"  placeholder = "Enter a file description">
+              </div>
+
+              <br>
+              <div class="formelement" id ="onefile">
+                <input id = "files" type = file  name = "files[]" multiple="">
+                <img src="{{url_for('static', filename='x.gif')}}"  class='remove'>
+                <input type = "text" name = "filedesc"  placeholder = "Enter a file description">
+              </div>
+              <br><br>
+              </div>
+                <div class="formelement">
+                <button type="button" name="upload" class = "button" id="btnUpload" value="Upload another document"> Upload another document
+                </button>
+                </div>
+              <br/><br/>
+            
           </div>
-         <button id="btnSignUp" class="button button-block" type="button">Sign up</button>
-          
-          </form>
+        <button id="btnSignUp" class="button button-block" type="button">Sign up</button>
+          <br>
+        </form>
 
         </div>
-        
         <div id="login">   
           <h1>Welcome!</h1>
           
           <form id="LogInForm" action="/login" name = "LogInForm" method="post">
           
+
+
+            <div class="field-wrap">
+                <label>
+                Which one are you? <span class="req">*</span>
+              </label>
+               <br><br>
+              <select class ="select" name ="typeofuser" id = "typeofuser" required autocomplete="off" />
+                <option class ="opt" value="0">Client</option>
+                <option class ="opt" value="1">Employee</option>
+                <option class ="opt" value="2">Partner</option>
+               </select>
+
+            </div>
+
             <div class="field-wrap">
             <label>
               Username<span class="req"></span>
