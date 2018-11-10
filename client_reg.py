@@ -4,6 +4,7 @@ from flask import request
 import sqlite3
 from flask import json, session
 from validate_email import validate_email
+import re
 import flask
 app = Flask(__name__)
 
@@ -131,8 +132,9 @@ def signUp():
             print(file)
             for f in file:
                 print(f)
-                cols = ("user" , "document", "description")
-                vals = (_name , f.read() , desc[i])
+                filename = secure_filename(f.filename)
+                cols = ("user" , "document", "description" , "filename")
+                vals = (_name , sqlite3.Binary(f.read()) , desc[i], filename)
                 i+=1
                 insert("client_files" , cols, vals)
             print(file)
@@ -244,9 +246,18 @@ def clientHome():
             x =list(x)
             x[6]="Not allocated yet"
             s[i] = tuple(x)
-
-    
-    return render_template("ClientHome.html", username=name, items = s)
+    m = query_db("SELECT sender , current_timestamp ,message  FROM messages  \
+         WHERE recepient = ? ORDER BY current_timestamp DESC", [name])
+    print(m)
+    files = query_db("SELECT token , filename , completed_service_docs.description   FROM completed_service_docs  \
+                JOIN service ON token = token_no \
+         WHERE user = ? ", [name])
+    print(files)
+    invoice = query_db("SELECT token, generated_by , current_timestamp ,filename, invoice_amount  FROM completed_service_invoice  \
+         JOIN service ON token = token_no \
+         WHERE user = ? ORDER BY current_timestamp DESC", [name])
+    print(invoice)
+    return render_template("ClientHome.html", username=name, items = s, messages= m, files=files, invoice=invoice)
 
 
 @app.route('/submitFeedback', methods=['POST'])
@@ -266,6 +277,89 @@ def submitFeedback():
     print(s)
 
     return json.dumps({'status':2})
+
+@app.route('/serviceFileUpload', methods=['POST'])
+def serviceFileUpload():
+    #data = request.json
+    d= request.form['serv_desc']
+    t= request.form['serv_token']
+    print(d)
+    f = request.files.getlist('serv_file')[0]
+    filename =f.filename
+    print(filename)
+    cols = ("token" , "document", "description" , "filename")
+    vals = (t , sqlite3.Binary(f.read()), d, filename)
+    insert("service_docs" , cols, vals)
+    print("Uploaded")
+    return json.dumps({'status':2})
+
+
+
+@app.route('/sendMessage', methods=['POST'])
+def sendMessage():
+    data = request.json
+    print("Submitting feedback")
+    print(data)
+    c = data["content"]
+    t = data["to"]
+    f = data["from"]
+
+    z = query_db("SELECT * from client where username = ?", [t])
+    print(z)
+    if(not(z)):
+        z = query_db("SELECT * from employee where username = ?",[t])
+
+    if(not(z)):
+        z = query_db("SELECT * from partner where username = ?", [t])
+    if (not(z)):
+            print("To username not there")
+            return json.dumps({'status':0})
+    else:
+        print(t,f,c)
+        cols = ("sender" , "recepient", "message")
+        vals = (f,t,c)
+        #insert("messages" , cols, vals)
+
+        return json.dumps({'status':2})
+
+
+@app.route('/fileDownload', methods=['POST'])
+def fileDownload():
+    data = request.json
+    print("Downloading file...")
+    print(data)
+    f = data["filename"]
+    f = f.strip()
+    t = int(data["token"])
+    d = data["desc"]
+    file = query_db("SELECT document   FROM completed_service_docs  \
+               WHERE token = ? AND filename LIKE ? AND description LIKE ? ", [t,f,d])
+    print(file)
+    with open("files/"+str(t)+"_"+f, 'wb') as output_file:
+           output_file.write(file[0][0])
+    return json.dumps("{'status':2}")
+
+@app.route('/invoiceFileDownload', methods=['POST'])
+def invoiceFileDownload():
+    data = request.json
+    print("Downloading file...")
+    print(data)
+    f = data["filename"]
+    f = f.strip()
+    t = int(data["token"])
+    g = data["gen"]
+    regex = re.compile(r'[\n\r\t]')
+    g = regex.sub("", g)
+    a = float(data["amt"])
+    print(f,t,g,a)
+    file = query_db("SELECT invoice_document   FROM completed_service_invoice  \
+               WHERE token = ? AND filename LIKE ?", [t,f])
+    print(file)
+    with open("invoice/"+str(t)+"_"+f, 'wb') as output_file:
+           output_file.write(file[0][0])
+    return json.dumps({'status':2})
+
+
 
 @app.route('/logout')
 def logout():
@@ -316,8 +410,9 @@ def submitRequest():
     i = 0
     for f in file:
         print(f)
-        cols = ("token" , "document", "description")
-        vals = (token , f.read() , desc[i])
+        filename = secure_filename(f.filename)
+        cols = ("token" , "document", "description" , "filename")
+        vals = (token , sqlite3.Binary(f.read()) , desc[i], filename)
         i+=1
         insert("service_docs" , cols, vals)
     print(file)

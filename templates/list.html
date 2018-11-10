@@ -1,19 +1,21 @@
 <!doctype html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='partner.js') }}"></script>
+  
+</head>
 <html>
-   <body>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='partner.js') }}"></script>
+   <body onload ="onLoad()">   
        
         <table border = 1>
                 <thead>
                    <td>Name of employee</td>
-                   <td>Select</td>
                 </thead>
                 
                 {% for row in rows2 %}
                    <tr>
-                      <td>{{row["Name"]}}</td>
-                      <td><input type="checkbox" name="select" value= {{row["Name"]}} onClick="checkbox(1);"></td>
+                      <td>{{row["USERNAME"]}}</td>
+                      <!--<td><input type="checkbox" name="select" value= {{row["Name"]}} onClick="checkbox(1);"></td>-->
                    </tr>
                 {% endfor %}
              </table>
@@ -21,24 +23,124 @@
             <br>
       <input type="text" id="show" name="select"><br>
       <div class="uni"><span id="uni"></span></div>
+      <button class="btn btn-primary" name = "submit" onClick="ente(this);">submit</button>
+      Services not accepted
       <table border = 1>
          <thead>
-            <td>Client Name</td>
-            <td>Taskkk</td>
+            <td>Token Number</td>
+            <td>Type of Service</td>
+            <td>Description</td>
+            <td>Quotation</td>
+            <td>Estimated time</td>
+            <td>Submit</td>
          </thead>
          
          {% for row in rows1 %}
             <tr>
-               <td>{{row["client"]}}</td>
-               <td>{{row["task"]}}</td>
-               <td><input type="checkbox" name="selectTask" value={{row["task"]}} onClick="checkbox(2);"></td>
+               <td>{{row["TOKEN_NO"]}}</td>
+               <td>{{row["TYPE_OF_SERVICE"]}}</td>
+               <td>{{row["DESCRIPTION"]}}</td>
+               <td><input type="text" name="quotation"></td>
+               <td><input type="text" name="time"></td>
+               <td><button class="btn btn-primary" name = "submit" onClick="enter(this);">submit</button></td>
+               <!--<td><input type="checkbox" name="selectTask" value={{row["task"]}} onClick="checkbox(2);"></td>-->
             </tr>
          {% endfor %}
-         <input type="button">
       </table>
+
+      Services not allocated
+      <table border = 1>
+         <thead>
+            <td>Token Number</td>
+            <td>Type of Service</td>
+            <td>Description</td>
+            <td>Select Employee</td>
+            <td>Allocate</td>
+            
+         </thead>
+         
+         {% for row in rows3 %}
+            <tr>
+               <td>{{row["TOKEN_NO"]}}</td>
+               <td>{{row["TYPE_OF_SERVICE"]}}</td>
+               <td>{{row["DESCRIPTION"]}}</td>
+               
+               <td><select>
+                  {% for row in rows2 %}
+                  <option value={{row["USERNAME"]}}>{{row["USERNAME"]}}</option>
+                  {% endfor %}
+                </select></td>
+                <td><button class="btn btn-primary" name = "submit" onClick="allocate(this);">submit</button></td>
+               <!--<td><input type="checkbox" name="selectTask" value={{row["task"]}} onClick="checkbox(2);"></td>-->
+            </tr>
+         {% endfor %}
+      </table>
+      <!--
       <input type="text" id="showTask" name="select"><br>
       <a href = "/">Go back to home page</a>
           <button class="btn btn-primary" name = "submit" id = "submit" onClick="callMe();">submit</button>
+          <input type="text" id="showTask" name="select"><br>
+
+
+
+          <table border = 1>
+            <thead>
+               <td>Client Name</td>
+               <td>Taskkk</td>
+               <td>Quotation</td>
+            </thead>
+            
+            {% for row in rows1 %}
+               <tr>
+                  <td>{{row["client"]}}</td>
+                  <td>{{row["task"]}}</td>
+                  <td><button class="btn btn-primary" name = "sendQuotation" class = "okay" onClick="quotation(this)">Enter quotation</button></td>
+               </tr>
+            {% endfor %}
+        </table>
+      -->
+        <br>
+        <br>
+        <div id="writeContent" >Enter Quotation Here
+            <textarea id="writeQuotation" name="writeQuotation"></textarea>
+            <br>
+            Estimated Time: <input type="text" id="enterTime" name="enterTime">
+            <br>
+            <button class="btn btn-primary" id="sendContent" name = "sendQuotation" onClick="sendInfo();">send quotation</button>
+         </div>
+
+
+        
+         <button class="btn btn-primary" id="getCompletedServices" name = "getComService" onClick="getComService();">Get Completed Services</button>
+         <!--
+         <div>
+          <table border = 1>
+            <thead>
+               <td>Token_No</td>
+               <td>Description</td>
+               <td>Document</td>
+               <td>Verify</td>
+            </thead>
+            
+            {% for row in rows3 %}
+               <tr>
+                  <td>{{row["Token_No"]}}</td>
+                  <td>{{row["Description"]}}</td>
+                  <td>{{row["Document"]}}</td>
+                  <td><button class="btn btn-primary" id="Verify" name = "Verify" onClick="verify(this);">Verify</button></td>
+    
+               </tr>
+            {% endfor %}
+         </table>
+        <br>
+        <br>
+         </div>
+        -->
+         
+
+
+
+    
 
    </body>
 </html>

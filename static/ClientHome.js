@@ -306,6 +306,147 @@ $(function() {
 
 
 
+$(function() {
+    $('#btnSendMessage').click(function() {
+        console.log("Here in send message")
+        var data={}
+        data["content"]= $('#content').val()
+         data["from"]= uname
+          data["to"]= $('#to').val()
+        console.log(data)
+        $.ajax({
+            url: '/sendMessage',
+            data: JSON.stringify(data),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                console.log(response.responseText)
+                response = JSON.stringify(response)
+                response = JSON.parse(response.toString())
+                console.log(response["status"]);
+                if(response["status"]==0)
+                {
+                    alert("The username you want to message doesnt exist!")
+                }
+                else
+                {
+                console.log("ok")
+                alert("Your message has been sent")
+                $('#from').val(uname) 
+                $('#to').val('') 
+                $('#content').val('') 
+                }
+            },
+            error: function(error) {
+                    console.log("error")
+                
+               
+            }
+        });
+    });
+});
+
+
+
+$(function() {
+    $('.file-download').click(function() {
+        console.log("Here in download file")
+        var data={}
+        data["filename"]= $(this).text()
+        var row= $(this).parent().parent()[0]
+        console.log(row)
+        var Cells = row.getElementsByTagName("td");
+        var token = Cells[0].innerText;
+        data["token"] = token
+        data["desc"]= Cells[2].innerText;
+        console.log(data)
+        console.log(data)
+        $.ajax({
+            url: '/fileDownload',
+            data: JSON.stringify(data),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                console.log("ok")
+                alert("Your file is dowloaded in the FILES folder")
+            },
+            error: function(error) {
+                    console.log("error")
+                
+               
+            }
+        });
+    });
+});
+
+$(function() {
+    $('.invoice-file-download').click(function() {
+        console.log("Here in download file")
+        var data={}
+        data["filename"]= $(this).text()
+        var row= $(this).parent().parent()[0]
+        console.log(row)
+        var Cells = row.getElementsByTagName("td");
+        var token = Cells[0].innerText;
+        data["token"] = token
+        data["gen"]= Cells[1].innerText;
+        data["amt"]= Cells[4].innerText;
+        console.log(data)
+        console.log(data)
+        $.ajax({
+            url: '/invoiceFileDownload',
+            data: JSON.stringify(data),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                console.log("ok")
+                alert("Your file is dowloaded in the INVOICE folder")
+            },
+            error: function(error) {
+                    console.log("error")
+                
+               
+            }
+        });
+    });
+});
+
+
+
+$(function() {
+    $('.btnServiceFile').click(function() {
+        var data={}
+        var form = $(this).parent()
+        console.log(form[0])
+        var formData = new FormData(form[0]);
+        console.log(formData)
+    $.ajax({
+        url: '/serviceFileUpload',
+        type: 'POST',
+        data: formData,
+        success: function (data) {
+            alert("The file has been uploaded")
+            form[0].reset()
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+    });
+});
+
+
+
+
+
+
+
+
+
+
 function logOut()
 {
     console.log("in logoutx")
@@ -327,7 +468,25 @@ $("#button-for-compose-mail").on("click", function(){
   
   // focus on input.
   $("input#to").focus();
-  
+   $("input#from").val(uname);
+   $("input#from").prop('readonly', true);
+  return false;
+});
+
+
+$("#compose-mail-reply").on("click", function(){
+  $("#compose-mail").removeClass("hidden").addClass("visible");
+  console.log("Inreply")
+  var row= $(this).parent().parent()[0]
+    console.log(row)
+    var Cells = row.getElementsByTagName("td");
+    var sender = Cells[0].innerText;
+  // focus on input.
+  sender = sender.trim()
+  $("input#message").focus();
+  $("input#to").val(sender);
+  $("input#from").val(uname);
+  $("input#from").prop('readonly', true);
   return false;
 });
 
