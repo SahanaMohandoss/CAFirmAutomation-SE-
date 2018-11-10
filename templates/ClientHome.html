@@ -96,6 +96,7 @@
          <thead>
             <th>Client Name</th>
             <th>Token number</th>
+            <th>Date Requested</th>
             <th>Quotation</th>
             <th>Type of Service</th>
             <th>Status</th>
@@ -105,13 +106,14 @@
          <tbody>
          {% for row in items %}
             <tr >
-               <td>{{row[0]}}</td>
-               <td  class = "tok">{{row[1]}}</td>
-               <td>{{row[3]}}</td>
+               <td>{{username}}</td>
+               <td  class = "tok">{{row[0]}}</td>
+               <td >{{row[1]}}</td>
                <td>{{row[2]}}</td>
-               <td class = "status">Not Accepted</td>
-               <td>Not Assigned</td>
-               <td>Not available</td>
+               <td>{{row[3]}}</td>
+               <td class = "status">{{row[4]}}</td>
+               <td>{{row[5]}}</td>
+               <td>{{row[6]}}</td>
             </tr>
          {% endfor %}
      </tbody>

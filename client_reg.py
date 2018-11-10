@@ -111,6 +111,8 @@ def signUp():
             exists[1] = 1  
 
 
+
+
     print(_name, _lname, validate_email(_email) , (_password == _confpassword), flag)
     if _name and _lname and _num and _fname and  _email and _password and validate_email(_email) and (_password == _confpassword) and flag and not(exists[0]==1 or exists[1]==1 or exists[2] ==1 or exists[3] == 1):
         print("ALL OK")
@@ -222,9 +224,26 @@ def logIn():
 @app.route('/clientHome')
 def clientHome():
     
-    name = session['username']
-    s = query_db("SELECT * FROM service WHERE user = ?", [name])
+    name = session['username'] 
+    s = query_db("SELECT token_no ,current_timestamp, quotation, type_of_service,  status_for_client, emp, estimated_time_of_completion  FROM service  \
+        JOIN service_status ON token_no = service_status.token \
+        JOIN service_allocation ON token_no = service_allocation.token \
+         WHERE user = ?", [name])
     print(s)
+    for i in range(len(s)):
+        x = s[i]
+        print(x[5])
+        print(x[6])
+        if(x[5]  is None):
+            x =list(x)
+            x[5]="Not updated yet"
+            s[i] = tuple(x)
+        if(x[6]  is None):
+            x =list(x)
+            x[6]="Not allocated yet"
+            s[i] = tuple(x)
+
+    
     return render_template("ClientHome.html", username=name, items = s)
 
 
@@ -248,18 +267,28 @@ def cover_str(cvr):
 def submitRequest():
     print("IN SUBMIT")
     
+
+
     username =session['username']
     description = request.form['description']
     service = request.form['service']
 
-    cols = ("user", "type_of_service", "description" , "quotation" , "accepted")
-    vals = (username , service , description, 0.0 , 0)
+    cols = ("user", "type_of_service", "description" , "quotation" , "accepted" , "allocated")
+    vals = (username , service , description, 0.0 , 0, 0)
     print(username , service, description)
     insert("service" , cols, vals)
-
     token = query_db("SELECT * FROM service WHERE user = ? AND type_of_service LIKE ? AND description LIKE ?", [username , service, description], one=True)
     token = token[1]
     print(token)
+
+    cols = ("token" , "completed", "verified", "remarks", "status_for_partner", "status_for_client")
+    vals = (token , 0 , 0 , "", "" , "Not Accepted" )
+    insert("service_status" , cols, vals)
+
+    cols = tuple(["token"])
+    vals = tuple([token])
+    insert("service_allocation" , cols, vals)
+
     print("here in submit")
     print(service, description)
     desc = request.form.getlist('filedesc')
