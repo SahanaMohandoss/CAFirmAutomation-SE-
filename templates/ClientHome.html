@@ -102,6 +102,7 @@
             <th>Status</th>
             <th>Employee Assigned</th>
             <th>Estimated completion date</th>
+            <th>Feedback</th>
          </thead>
          <tbody>
          {% for row in items %}
@@ -114,6 +115,7 @@
                <td class = "status">{{row[4]}}</td>
                <td>{{row[5]}}</td>
                <td>{{row[6]}}</td>
+               <td><input type="text" style="color:black" id="feedback" class="feedback" placeholder="Enter feedback"/> <button id="btnFeedback" type="button"> Add Feedback </button></td>
             </tr>
          {% endfor %}
      </tbody>
@@ -162,20 +164,26 @@
 	    	<fieldset>
 	        <label >Compose your message</label>
 	      </fieldset>
+	      <br/><br/>
 	      <fieldset>
 	        <label for="to">To</label>
+	        <br/><br/>
 	        <input type="text" id="to">
 	        <label for="from">From</label>
+	        <br/><br/>
 	        <input type="text" id="from">
 	      </fieldset>
 	      <fieldset>
 	        <label for="content">Content</label>
+	        <br/><br/>
 	        <textarea name="content" id="content" style="height:50px"></textarea>
 	      </fieldset>
 	      <fieldset>
+	      	<br/><br/>
 	        <input id="send-button" type="submit" value="Send Message">
 	      </fieldset>
 	    </form>
+	    <br/><br/>
 	    <a id="close-button" href="#">Close Dialog</a>
 	  </div>
 	</div>

@@ -202,6 +202,7 @@ a[href="#compose-mail"] {
   right: 0;
   width: 500px;
   perspective: 500px;
+  height:75%;
   transform-style: preserve-3d;
 }
 
@@ -216,9 +217,10 @@ textarea {
 
 #compose-mail {
   
-  background: white;
-  border: 1px dashed;
-  color:black;
+  background: black;
+  border: 1px dashed white;
+  color:white;
+  height: 100%;
   transition: 600ms;
   transform-origin: 50% 50% -100px;
   

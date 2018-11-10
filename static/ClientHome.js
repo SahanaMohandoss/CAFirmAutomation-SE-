@@ -271,6 +271,38 @@ $(document).ready(
 
 
 
+$(function() {
+    $('#btnFeedback').click(function() {
+        console.log("Here")
+        var data={}
+        data["feedback"]= $('#feedback').val()
+        
+        var row= $(this).parent().parent()[0]
+        console.log(row)
+        var Cells = row.getElementsByTagName("td");
+        var token = Cells[1].innerText;
+        data["token"] = token
+        console.log(token)
+        console.log(data)
+        $.ajax({
+            url: '/submitFeedback',
+            data: JSON.stringify(data),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                console.log("ok")
+                alert("Feedback added")
+                $('#feedback').val('') 
+            },
+            error: function(error) {
+                    console.log("error")
+                
+               
+            }
+        });
+    });
+});
 
 
 

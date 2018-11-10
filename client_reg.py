@@ -15,27 +15,29 @@ def home():
 
 def insert(table, fields=(), values=()):
     # g.db is the database connection
-	con = sqlite3.connect(Database)
+    con = sqlite3.connect(Database)
 
-	cur = con.cursor()
-	print("connected")
-	query = 'INSERT INTO %s (%s) VALUES (%s)' % (
+    cur = con.cursor()
+    print("connected")
+    query = 'INSERT INTO %s (%s) VALUES (%s)' % (
         table,
         ', '.join(fields),
         ', '.join(['?'] * len(values))
     )
-	cur.execute(query, values)
-	con.commit()
-	id = cur.lastrowid
-	cur.close()
-	return id
+    cur.execute(query, values)
+
+    id = cur.lastrowid
+    cur.close()
+    con.commit()
+    return id
 
 def query_db(query, args=(), one=False):
-	con = sqlite3.connect(Database)
-	cur = con.execute(query, args)
-	rv = cur.fetchall()
-	cur.close()
-	return (rv[0] if rv else None) if one else rv
+    con = sqlite3.connect(Database)
+    cur = con.execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    con.commit()
+    return (rv[0] if rv else None) if one else rv
 
 @app.route('/signUp',methods=['POST'])
 def signUp():
@@ -247,6 +249,23 @@ def clientHome():
     return render_template("ClientHome.html", username=name, items = s)
 
 
+@app.route('/submitFeedback', methods=['POST'])
+def submitFeedback():
+    data = request.json
+    print("Submitting feedback")
+    print(data)
+    f = data["feedback"]
+    print(f)
+    t = int(data["token"])
+    print(t)
+    s = query_db("UPDATE service SET feedback = ? \
+         WHERE token_no = ?",[data['feedback'], data['token']])
+    print(s)
+    s= query_db("SELECT feedback FROM service  \
+         WHERE token_no = ?",[ data['token']])
+    print(s)
+
+    return json.dumps({'status':2})
 
 @app.route('/logout')
 def logout():
