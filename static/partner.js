@@ -63,19 +63,42 @@ function allocate(ele)
     }
     });   
 }
-function sendInfo()
+
+function verify(ele)
 {
-    sendCon.content = document.getElementById("writeQuotation").value;
-    sendCon.time = document.getElementById("enterTime").value;
-    console.log(sendCon);
-    var divDoc = document.getElementById("writeContent");
-    divDoc.style.visibility = 'hidden';
+    var data = new Object();
+    data.token = $(ele).parent().prev().prev().prev().prev().text();
     $.ajax({
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(sendCon),
+        data: JSON.stringify(data),
         dataType: 'json',
-        url: '/quotation',
+        url: '/verify',
+        success: function (data) {
+            console.log(data);
+        },
+        error: function(error) {
+        console.log(error);
+    }
+    }); 
+    
+}
+function sendMes(ele)
+{
+    var data = new Object();
+    data.token = $(ele).parent().prev().prev().prev().prev().prev().prev().text();
+    console.log(data.token)
+    data.sender = "Simran"
+    data.message = $(ele).parent().prev().children(":first").val();
+    /*
+    var divDoc = document.getElementById("writeContent");
+    divDoc.style.visibility = 'hidden';*/
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        url: '/message',
         success: function (data) {
             console.log(data);
         },
@@ -123,6 +146,29 @@ function verify(ele)
     }
     });
 
+}
+
+function viewDocs(ele)
+{
+    var data = new Object();
+    data.token = $(ele).parent().prev().prev().prev().text();
+    console.log(data.token)
+    
+    var divDoc = document.getElementById("writeContent");
+    divDoc.style.visibility = "visible";
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        url: '/getDocs',
+        success: function (data) {
+            console.log(data);
+        },
+        error: function(error) {
+        console.log(error);
+    }
+    }); 
 }
 function checkbox(valuee){
     if(valuee==2)
