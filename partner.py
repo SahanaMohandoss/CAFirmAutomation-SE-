@@ -28,12 +28,12 @@ def list():
     print("hereeeeeeeeeee")
     cur.execute("select TOKEN_NO,DESCRIPTION,TYPE_OF_SERVICE FROM SERVICE WHERE ACCEPTED=1 AND ALLOCATED=0")
     rows3 = cur.fetchall()
-    #cur.execute("select Token_No, Document,Description from service where Completed='Yes' AND Verified='No'")
-    #print("andddddd")
-    #rows3 = cur.fetchall()
-    #print(rows3)
+    cur.execute("select S.TOKEN_NO,S.DESCRIPTION,S.TYPE_OF_SERVICE FROM SERVICE S JOIN SERVICE_STATUS SS ON S.TOKEN_NO = SS.TOKEN WHERE SS.COMPLETED=0")
+    rows4 = cur.fetchall()
+    cur.execute("select S.TOKEN_NO,S.DESCRIPTION,S.TYPE_OF_SERVICE FROM SERVICE S JOIN SERVICE_STATUS SS ON S.TOKEN_NO = SS.TOKEN WHERE SS.COMPLETED=1 AND SS.VERIFIED=0")
+    rows5 = cur.fetchall()
     con.close()
-    return render_template("list.html",rows1=rows1,rows2=rows2,rows3=rows3)
+    return render_template("list.html",rows1=rows1,rows2=rows2,rows3=rows3,rows4=rows4,rows5=rows5)
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -47,7 +47,6 @@ def index():
 @app.route('/quotation', methods=['GET', 'POST'])
 def quotation():
     if request.method == 'POST':
-        print("ummmmmm yeah?")
         enterDetail = request.get_json()
         print(enterDetail)
         Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
@@ -82,13 +81,57 @@ def allocate():
 def verify():
     if request.method == 'POST':
         toVerify = request.get_json()
+   
         print(toVerify)
-        Database = '/Users/simrandhinwa/data.db'
+        Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
         con = sql.connect(Database)
         con.row_factory = sql.Row 
         cur = con.cursor()
-        print(toVerify['token'])
+        exe = "UPDATE SERVICE_STATUS SET VERIFIED=1 WHERE TOKEN= %s" % (toVerify["token"])
+        cur.execute(exe)
+        con.commit()
         return "cutes"
+
+@app.route('/message', methods=['GET', 'POST'])
+def message():
+    if request.method == 'POST':
+        mess = request.get_json()
+        Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        con = sql.connect(Database)
+        con.row_factory = sql.Row 
+        cur = con.cursor()
+        token = mess["token"]
+        exe = "select EMP from SERVICE_ALLOCATION where TOKEN=?"
+        para = (token,)
+        cur.execute(exe,para)
+        emp = cur.fetchall()
+        print("here")
+        print(token)
+        print(emp[0][0])
+        params =  (mess["sender"],emp[0][0],mess["message"],mess["token"])
+        exe = "INSERT INTO MESSAGES (SENDER,RECEPIENT,MESSAGE,TOKEN) VALUES(?,?,?,?)"
+        cur.execute(exe,params)
+        con.commit()
+        return "cutes"
+
+
+@app.route('/getDocs', methods=['GET', 'POST'])
+def getDocs():
+    if request.method == 'POST':
+        mess = request.get_json()
+        Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        con = sql.connect(Database,detect_types=sql.PARSE_DECLTYPES)
+        con.row_factory = sql.Row 
+        cur = con.cursor()
+        token = mess["token"]
+        exe = "select token,description from completed_service_docs where token=%s" % token
+        cur.execute(exe)
+        rows7 = cur.fetchall()
+        print("right")
+        print(rows7)
+        return render_template("list.html",rows7=rows7)
+        return "happy"
+
 '''
         cur.execute("ALTER TABLE service Verified='Yes' where Token_No=%s",(toVerify.token,))
 query_string = "SELECT * FROM p_shahr WHERE os = %s"
