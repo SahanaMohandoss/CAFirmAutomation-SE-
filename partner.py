@@ -3,8 +3,16 @@ from flask import g
 from flask import Flask
 from flask import render_template
 from flask import request
-app = Flask(__name__,template_folder='templates')
+from regression import regModel
+from openpyxl import load_workbook
 
+app = Flask(__name__,template_folder='templates')
+app.config['TEMPLATES_AUTO_RELOAD']=True
+
+@app.before_request
+def before_request():
+    if 'localhost' in request.host_url or '0.0.0.0' in request.host_url:
+        app.jinja_env.cache={}
 '''
 @app.route('/', methods=['POST', 'GET'])
 def home():
@@ -13,12 +21,21 @@ def home():
 
 @app.route('/')
 def list():
-    Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+    #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+    Database = 'ca_firm.db'
     con = sql.connect(Database)
     con.row_factory = sql.Row
   
     cur = con.cursor()
     
+    exe = 'INSERT INTO CLIENT(USERNAME,PASSWORD,FIRST_NAME,LAST_NAME,EMAIL_ID,COMPANY,CONTACT_NO,PAN_NO) VALUES (?,?,?,?,?,?,?,?)'
+    params =  ("sidvin97","pass","Sid","Vin","sid.fpl@gmail.com",1,"8971864700","dummy")
+    cur.execute(exe,params)
+    exe = 'INSERT INTO SERVICE(USER,TYPE_OF_SERVICE,DESCRIPTION,ACCEPTED,ALLOCATED) VALUES (?,?,?,?,?)'
+    params =  ("sidvin97","Audit","This is service A",0,0)
+    cur.execute(exe,params)
+    
+
     cur.execute("select USERNAME from EMPLOYEE")
     rows2 = cur.fetchall()
     
@@ -44,20 +61,50 @@ def index():
         return "hey"
     #return render_template("partner.html")
 
+@app.route('/quot', methods=['GET', 'POST'])
+def quot():
+    print("Here")
+    if request.method == 'POST':
+        enterDetail = request.get_json()
+        print(enterDetail)
+        #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        type_of_service=enterDetail["type"]
+        est_hrs=int(enterDetail["time"])
+        ob=regModel()
+        amt=round(ob.model(type_of_service,est_hrs))
+        out_txt="The quotation is: Rs. "+str(amt)
+        print(out_txt)
+        return out_txt
+
 @app.route('/quotation', methods=['GET', 'POST'])
 def quotation():
     if request.method == 'POST':
         enterDetail = request.get_json()
         print(enterDetail)
-        Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        Database = 'ca_firm.db'
         con = sql.connect(Database)
         con.row_factory = sql.Row
         cur = con.cursor()
         print(enterDetail["quotation"])
         exe = 'UPDATE SERVICE SET QUOTATION=%s WHERE TOKEN_NO = %s' % (enterDetail["quotation"],enterDetail["token"])
         cur.execute(exe)
+        exe = 'UPDATE SERVICE SET ESTIMATED_HOURS=%f WHERE TOKEN_NO = %s' % (float(enterDetail["time"]),enterDetail["token"])
+        cur.execute(exe)
+        exe = "select * from SERVICE"
+        cur.execute(exe)
+        rows = cur.fetchall()
+        print(rows)
         con.commit()
         con.close()
+        '''
+        wb=load_workbook("regression_dataset.xlsx")
+        ws=wb.worksheets[0]
+        new_row_data=[enterDetail["type"],"No Description Available",float(enterDetail["time"]),float(enterDetail["quotation"])]
+        print("Adding to the xlsx", new_row_data)
+        ws.append(new_row_data)
+        wb.save("regression_dataset.xlsx")
+        '''
         return "done"
 
 @app.route('/allocate', methods=['GET', 'POST'])
@@ -66,7 +113,8 @@ def allocate():
         allocateSer = request.get_json()
         print(allocateSer)
         
-        Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        Database = 'ca_firm.db'
         con = sql.connect(Database)
         con.row_factory = sql.Row
         cur = con.cursor()
@@ -83,7 +131,8 @@ def verify():
         toVerify = request.get_json()
    
         print(toVerify)
-        Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        Database = 'ca_firm.db'
         con = sql.connect(Database)
         con.row_factory = sql.Row 
         cur = con.cursor()
@@ -96,7 +145,8 @@ def verify():
 def message():
     if request.method == 'POST':
         mess = request.get_json()
-        Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        Database = 'ca_firm.db'
         con = sql.connect(Database)
         con.row_factory = sql.Row 
         cur = con.cursor()
@@ -119,7 +169,8 @@ def message():
 def getDocs():
     if request.method == 'POST':
         mess = request.get_json()
-        Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        Database = 'ca_firm.db'
         con = sql.connect(Database,detect_types=sql.PARSE_DECLTYPES)
         con.row_factory = sql.Row 
         cur = con.cursor()
@@ -139,6 +190,8 @@ query_string = "SELECT * FROM p_shahr WHERE os = %s"
 '''
 
 if __name__ == '__main__':
+    app.jinja_env.auto_reload=True
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(debug=False)
 
 #select Token_No, Document, Description from Service JOIN Service_Docs ON select * from Service, Service_Status where Service_Status.Completed = Yes
