@@ -4,7 +4,6 @@
   <script type="text/javascript" src="{{ url_for('static', filename='partner.js') }}"></script>
   
 </head>
-<html>
    <body onload ="onLoad()">   
 
             <br>
@@ -16,8 +15,10 @@
             <td>Token Number</td>
             <td>Type of Service</td>
             <td>Description</td>
-            <td>Quotation</td>
-            <td>Estimated time</td>
+            <td>Estimated Time</td>
+            <td>Get Suggested Quotation</td>
+            <td>Suggested Quotation</td>
+            <td>Input Quotation</td>
             <td>Submit</td>
          </thead>
          
@@ -26,9 +27,12 @@
                <td>{{row["TOKEN_NO"]}}</td>
                <td>{{row["TYPE_OF_SERVICE"]}}</td>
                <td>{{row["DESCRIPTION"]}}</td>
-               <td><input type="text" name="quotation"></td>
-               <td><input type="text" name="time"></td>
-               <td><button class="btn btn-primary" name = "submit" onClick="enter(this);">submit</button></td>
+               <td><input type="number" name="time" placeholder="Enter Estimated Hours"></td>
+               <td><button class="btn btn-primary" name = "regression_button" value = "Get Recommended Quotation" onClick="quot(this);">submit</button></td>
+               <td id="reg_val">The quotation is: </td>
+               <td><input type="number" name="quotation" placeholder="Enter Quotation"></td>
+               <td><button class="btn btn-primary" name = "submit" onClick="enter(this);">submit</button></td> 
+
                <!--<td><input type="checkbox" name="selectTask" value={{row["task"]}} onClick="checkbox(2);"></td>-->
             </tr>
          {% endfor %}
@@ -114,9 +118,6 @@
       <a href = "/">Go back to home page</a>
           <button class="btn btn-primary" name = "submit" id = "submit" onClick="callMe();">submit</button>
           <input type="text" id="showTask" name="select"><br>
-
-
-
           <table border = 1>
             <thead>
                <td>Client Name</td>
