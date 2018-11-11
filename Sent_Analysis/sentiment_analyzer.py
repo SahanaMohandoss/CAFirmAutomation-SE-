@@ -34,6 +34,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from keras import regularizers
 from keras.layers import Dropout
+from nltk import pos_tag
 
 
 
@@ -50,8 +51,18 @@ class SentimentAnalyzer:
 		#Removing stopwords
 		text1=[str.lower(word) for word in text1]
 		filtered_words = [word for word in text1 if word not in nltk.corpus.stopwords.words('english') and not word.isdigit()]
-		stemmer=nltk.stem.porter.PorterStemmer()
-		singles = [stemmer.stem(word) for word in filtered_words]
+		lemmatizer=nltk.stem.WordNetLemmatizer()
+		singles=[]
+		for word,tag in pos_tag(filtered_words):
+			wntag = tag[0].lower()
+			wntag = wntag if wntag in ['a', 'r', 'n', 'v'] else None
+			if not wntag:
+			        lemma = word
+			else:
+			        lemma = lemmatizer.lemmatize(word, wntag)
+			singles.append(lemma)
+		#singles = [lemmatizer.lemmatize(word,"a") for word in filtered_words]
+		#word_list=filtered_words+singles
 		return singles
 
 	def preprocess(self):
@@ -247,7 +258,7 @@ class SentimentAnalyzer:
 			pickle.dump(clf, file)
 
 	def check(self,test_list):
-		#tfidf=self.preprocess()
+		#self.preprocess()
 		#unseen_tfidf = tfidf.transform("This is a sample unseen description, which is very happy that this works")
 		transformer = TfidfTransformer()
 		#loaded_vec = CountVectorizer(decode_error="replace",vocabulary=pickle.load(open("Sent_Analysis/feature.pkl", "rb")))
@@ -279,16 +290,125 @@ class SentimentAnalyzer:
 			scores.append("{}".format(str(snt)))
 		return scores
 
+	def emotion_indicators(self,test_list):
+		words=[]
+		for i in test_list:
+			words.append(self.tokenize(i))
+		#print(words)
+		#Loading the NRC-emotion-lexicon
+		nrc_lex = pd.read_csv( "NRC-emotion-lexicon-wordlevel-alphabetized-v0.92.txt",sep='\t', names=['word','emotion','association'])
+		#nrc_lex.head()
+		#print ("\n NRC Emotion lexicon loaded...")
+		emotion_words=[]
+		ctr=1
+		l=list()
+		for i in words:
+			#global ctr
+			#print(ctr)
+			anger = 0
+			fear = 0
+			anticipation = 0
+			trust = 0
+			surprise = 0
+			sadness = 0
+			joy = 0
+			disgust = 0
+			list1=[]
+			emotion_word=[]
+			freq_dist=nltk.FreqDist(i)
+			for w1,w2 in freq_dist.items():
+				if nrc_lex['word'].str.contains(w1).any():
+					#print ("Found",w1)
+					#print w1,w2
+					#Change here ..every line is getting printed
+					#print (nrc_lex.loc[nrc_lex['word'] == w1])
+					anger_list = nrc_lex[nrc_lex['word']==w1][nrc_lex['emotion']=='anger'].index.tolist()
+					if len(anger_list) == 1:
+					    anger += w2*int(nrc_lex.iloc[int(anger_list[0])]['association'])
+					fear_list = nrc_lex[nrc_lex['word']==w1][nrc_lex['emotion']=='fear'].index.tolist()
+					if len(fear_list) == 1:
+					    fear += w2*int(nrc_lex.iloc[int(fear_list[0])]['association'])
+					anticipation_list = nrc_lex[nrc_lex['word']==w1][nrc_lex['emotion']=='anticipation'].index.tolist()
+					if len(anticipation_list) == 1:
+					    anticipation += w2*int(nrc_lex.iloc[int(anticipation_list[0])]['association'])
+					trust_list = nrc_lex[nrc_lex['word']==w1][nrc_lex['emotion']=='trust'].index.tolist()
+					if len(trust_list) == 1:
+					    trust += w2*int(nrc_lex.iloc[int(trust_list[0])]['association'])
+					surprise_list = nrc_lex[nrc_lex['word']==w1][nrc_lex['emotion']=='surprise'].index.tolist()
+					if len(surprise_list) == 1:
+					    surprise += w2*int(nrc_lex.iloc[int(surprise_list[0])]['association'])
+					sadness_list = nrc_lex[nrc_lex['word']==w1][nrc_lex['emotion']=='sadness'].index.tolist()
+					if len(sadness_list) == 1:
+					    sadness += w2*int(nrc_lex.iloc[int(sadness_list[0])]['association'])
+					joy_list = nrc_lex[nrc_lex['word']==w1][nrc_lex['emotion']=='joy'].index.tolist()
+					if len(joy_list) == 1:
+					    joy += w2*int(nrc_lex.iloc[int(joy_list[0])]['association'])
+					disgust_list = nrc_lex[nrc_lex['word']==w1][nrc_lex['emotion']=='disgust'].index.tolist()
+					if len(disgust_list) == 1:
+					    disgust += w2*int(nrc_lex.iloc[int(disgust_list[0])]['association'])
+					#print ("emotion word: ", w1)
+					if w1 not in emotion_word:
+					    emotion_word.append(w1)
+			if(anger>1):
+				list1.append("anger")
+			if(fear>1):
+				list1.append("anger")
+			if(anticipation>1):
+				list1.append("anticipation")
+			if(trust>1):
+				list1.append("trust")
+			if(surprise>1):
+				list1.append("surprise")
+			if(sadness>1):
+				list1.append("sadness")
+			if(joy>1):
+				list1.append("joy")
+			if(disgust>1):
+				list1.append("disgust")
+			#list1=[anger,fear,anticipation,trust,surprise,sadness,joy,disgust]
+			#l.append(list1)
+			#emotion_words.append(emotion_word)
+			l1=[list1,emotion_word]
+			l.append(l1)
+			ctr+=1
 
+		return l
+		#print(emotion_words)
+
+	def get_string(self,test_list):
+		output=self.check(test_list)
+		vader=self.vader_scores(test_list)
+		emotions=self.emotion_indicators(test_list)
+		list_of_outputs=[]
+		for i in range(len(test_list)):
+			iter_str="The sentiment is "+output[i]+"\n"
+			iter_str+="The sentiment scores are "+vader[i]+"\n"
+			sent_emotions=", ".join(emotions[i][0])
+			iter_str+="The indicative sentiments are "+sent_emotions+"\n"
+			sent_words=", ".join(emotions[i][1])
+			iter_str+="The emotion conveying words are "+sent_words+"\n"
+			list_of_outputs.append(iter_str)
+		return list_of_outputs
 
 if __name__ == '__main__':
-	test_list=["This is a test example, which is very happy and joyous and I am glad that this works","This is a second test case example that is sad and in fact, sucks."]
+	test_list=["This is a test example, which is very happy and joyous and I am glad that this works","This is a second test case example that is sad, poor, unfortunate and in fact, sucks."]
 	ob=SentimentAnalyzer()
+	'''
+	emotions=ob.emotion_indicators(test_list)
 	output=ob.check(test_list)
 	vader=ob.vader_scores(test_list)
 	#print(nltk.word_tokenize('This is a sentence'))
 	for i in range(len(test_list)):
-		print(test_list[i],"\t",output[i],"\t",vader[i])
+		print("The sentence is ",test_list[i])
+		print("The sentiment is ",output[i])
+		print("The sentiment scores are ")
+		print(test_list[i],"\t",output[i],"\t",vader[i],"\t",emotions[i][0],"\t",emotions[i][1])
+	'''
+	output_sentences=ob.get_string(test_list)
+	for i in range(len(test_list)):
+		print(test_list[i])
+		print(output_sentences[i])
+		print("\n\n\n")
 	#df=pd.read_csv('dataset.csv')
 	#print(df.head())
 
