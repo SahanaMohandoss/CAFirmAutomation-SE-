@@ -1,16 +1,23 @@
 <!doctype html>
 <head>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='partner.js') }}"></script>
-  
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  .container{
+    width:95%;
+    margin:2.5%;
+  }
+</style>
 </head>
    <body onload ="onLoad()">   
 
             <br>
             <br>
-
-      Services not accepted
-      <table border = 1>
+      <div class="container">
+      Services not accepted<br><br>
+      <table border = 1 class="table table-hover" >
          <thead>
             <td>Token Number</td>
             <td>Type of Service</td>
@@ -28,7 +35,7 @@
                <td>{{row["TYPE_OF_SERVICE"]}}</td>
                <td>{{row["DESCRIPTION"]}}</td>
                <td><input type="number" name="time" placeholder="Enter Estimated Hours"></td>
-               <td><button class="btn btn-primary" name = "regression_button" value = "Get Recommended Quotation" onClick="quot(this);">submit</button></td>
+               <td><button class="btn btn-primary" name = "regression_button" value = "Get Recommended Quotation" onClick="quot(this);">Get Quotation</button></td>
                <td id="reg_val">The quotation is: </td>
                <td><input type="number" name="quotation" placeholder="Enter Quotation"></td>
                <td><button class="btn btn-primary" name = "submit" onClick="enter(this);">submit</button></td> 
@@ -39,8 +46,8 @@
       </table>
 <br>
 <br>
-      Services not allocated
-      <table border = 1>
+      Services not allocated<br><br>
+      <table border = 1 class="table table-hover">
          <thead>
             <td>Token Number</td>
             <td>Type of Service</td>
@@ -68,8 +75,8 @@
       </table>
 <br>
 <br>
-      Services not Completed
-      <table border = 1>
+      Services not Completed<br><br>
+      <table border = 1 class="table table-hover">
           <thead>
              <td>Token Number</td>
              <td>Type of Service</td>
@@ -88,8 +95,8 @@
 
        <br>
 <br>
-      Services Completed but not Verified
-      <table border = 1>
+      Services Completed but not Verified<br><br>
+      <table border = 1 class="table table-hover">
           <thead>
              <td>Token Number</td>
              <td>Type of Service</td>
@@ -137,7 +144,7 @@
         <br>
         <br>
         <div id="writeContent" >
-            <table border = 1>
+            <table border = 1 class="table table-hover">
                 <thead>
                    <td>Token</td>
                    <td>Description</td>
@@ -184,7 +191,7 @@
          
 
 
-
+        </div>
     
 
    </body>
