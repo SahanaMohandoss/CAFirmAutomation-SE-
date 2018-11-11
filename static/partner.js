@@ -18,16 +18,56 @@ function quotation(ele)
     document.getElementById("writeQuotation").value = '';
     document.getElementById("writeContent").style.visibility = "visible";
 }
+
 function ente(ele)
 {
     console.log("lolol");
 }
+
+function quot(ele)
+{
+    console.log("Inside quot")
+    var data = new Object();
+    data.type = $(ele).parent().prev().prev().prev().text();
+    data.time = $(ele).parent().prev().children(":first").val();
+    console.log(data.type);
+    console.log(data.time);
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        url: '/quot',
+        success: function (data) 
+        {
+            console.log("Inside success")
+            document.getElementById("reg_val").innerHTML=data.responseText
+            /*
+            response = JSON.parse(data)
+            document.getElementById("reg_val").innerHTML+=response.responseText
+            txt=response.responseText
+            console.log("--------------------------")
+            console.log(txt)
+            console.log("--------------------------")
+            console.log(data.state);
+            */
+        },
+        error: function(error) 
+        {
+            console.log("Inside error")
+            console.log(error.responseText);
+            document.getElementById("reg_val").innerHTML=error.responseText
+        }
+    });
+}
+
 function enter(ele)
 {
     var data = new Object();
-    data.token = $(ele).parent().prev().prev().prev().prev().prev().text();
-    data.quotation = $(ele).parent().prev().prev().children(":first").val();
-    data.time = $(ele).parent().prev().children(":first").val();
+    data.type = $(ele).parent().prev().prev().prev().prev().prev().prev().text();
+    data.token = $(ele).parent().prev().prev().prev().prev().prev().prev().prev().text();
+    data.quotation = $(ele).parent().prev().children(":first").val();
+    data.time = $(ele).parent().prev().prev().prev().prev().children(":first").val();
     $.ajax({
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
@@ -221,4 +261,3 @@ function checkbox(valuee){
        }
        });
    }
-  
