@@ -39,10 +39,11 @@ def send_reminders():
 	con = sql.connect(Database)
 	con.row_factory = sql.Row
 	cur = con.cursor()
-	MY_ADDRESS="sidvin97@gmail.com"
+	MY_ADDRESS="enter-username"
+	MY_PASSWORD="enter-password"
 	s = smtplib.SMTP(host='smtp.gmail.com', port=587)
 	s.starttls()
-	s.login("sidvin97@gmail.com", "Lenovolaptops12!@")
+	s.login(MY_ADDRESS, MY_PASSWORD)
 	exe='SELECT * FROM REMINDERS WHERE SENT=0 ORDER BY REMINDER_TIMESTAMP ASC'
 	cur.execute(exe)
 	rows3 = cur.fetchall()
@@ -50,7 +51,7 @@ def send_reminders():
 		reminders_id=i[0]
 		#print(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7])
 		subject=i[1]
-		curr_time=i[4]
+		curr_time=get_time()
 		rem_time=i[3]
 		message=i[5]
 		mailing_list=i[6].split(";")
