@@ -1,4 +1,6 @@
 
+
+//On reload send new data from database
 window.onload = function() {
     var reloading = sessionStorage.getItem("reloading");
     if (reloading) {
@@ -9,7 +11,7 @@ window.onload = function() {
 }
 
    
-
+//Form main tabs control
 function openPage(pageName,elmnt,color) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -29,7 +31,7 @@ function openPage(pageName,elmnt,color) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 
-
+//Tax calculator
 
 function calc()
             {
@@ -164,10 +166,93 @@ function calc()
                                 out.innerHTML+="<br>Education cess = "+convert(edcess.toFixed(3));
                         }
                     }
+                    else if(typ=="dom")
+                    {
+                        turn=document.getElementById("turn").value
+                        if(val<0 || turn<0)
+                            out.innerHTML="Please enter a positive number"
+                        else
+                        {
+                            if(turn>500000000)
+                            {
+                                tax=0.3*val
+                            }
+                            else
+                            {
+                                tax=0.25*val
+                            }
+                            if(val>100000000)
+                            {
+                                sur=0.12*tax
+                            }
+                            else if(val>10000000 && val<=100000000)
+                            {
+                                sur=0.07*tax
+                            }
+                            else
+                                sur=0;
+                            edcess=0.03*(tax+sur)
+                            out.innerHTML="Amount = "+convert(val)+"<br>Tax = "+convert(tax.toFixed(3));
+                            out.innerHTML+="<br>Surcharge = "+convert(sur.toFixed(3));
+                            out.innerHTML+="<br>Education cess = "+convert(edcess.toFixed(3));
+                        }               
+                    }
+                    else if(typ=="for")
+                    {
+                        if(val<0)
+                            out.innerHTML="Please enter a positive number"
+                        else
+                        {
+                            tax=0.4*val
+                            if(val>100000000)
+                            {
+                                sur=0.05*tax
+                            }
+                            else if(val>10000000 && val<=100000000)
+                            {
+                                sur=0.02*tax
+                            }
+                            else
+                                sur=0;
+                            edcess=0.03*(tax+sur)
+                            out.innerHTML="Amount = "+convert(val)+"<br>Tax = "+convert(tax.toFixed(3));
+                            out.innerHTML+="<br>Surcharge = "+convert(sur.toFixed(3));
+                            out.innerHTML+="<br>Education cess = "+convert(edcess.toFixed(3));
+                        }
+                    }
+                    else if(typ=="coop")
+                    {
+                        if(val<0)
+                            out.innerHTML="Please enter a positive number"
+                        else
+                        {
+                            if(val<=10000)
+                                tax=0.1*val
+                            else if(val>10000 && val<=20000)
+                            {
+                                tax=1000+(val-10000)*0.2
+                            }
+                            else if(val>20000)
+                            {
+                                tax=1000+2000+(val-20000)*0.3
+                            }
+                            if(val>10000000)
+                            {
+                                sur=0.12*tax
+                            }
+                            else
+                                sur=0;
+                            edcess=0.03*(tax+sur)
+                            out.innerHTML="Amount = "+convert(val)+"<br>Tax = "+convert(tax.toFixed(3));
+                            out.innerHTML+="<br>Surcharge = "+convert(sur.toFixed(3));
+                            out.innerHTML+="<br>Education cess = "+convert(edcess.toFixed(3));
+                        }
+                    }
                     else
                     {
                         out.innerHTML="Not Calculated Yet"
                     }
+
                 }
             }
             function new_elem()
@@ -211,8 +296,7 @@ function calc()
             }
 
 
-
-
+//To submit request ajax
 $(document).ready(
     function(){
 
@@ -270,7 +354,7 @@ $(document).ready(
 );
 
 
-
+//To submit feedback ajax
 $(function() {
     $('#btnFeedback').click(function() {
         console.log("Here")
@@ -304,7 +388,7 @@ $(function() {
     });
 });
 
-
+//To send a message ajax
 
 $(function() {
     $('#btnSendMessage').click(function() {
@@ -347,7 +431,7 @@ $(function() {
     });
 });
 
-
+//To download a file ajax
 
 $(function() {
     $('.file-download').click(function() {
@@ -381,6 +465,8 @@ $(function() {
     });
 });
 
+
+//To download invoice ajax
 $(function() {
     $('.invoice-file-download').click(function() {
         console.log("Here in download file")
@@ -415,7 +501,7 @@ $(function() {
 });
 
 
-
+//To uplaod a service document file
 $(function() {
     $('.btnServiceFile').click(function() {
         var data={}
@@ -445,7 +531,7 @@ $(function() {
 
 
 
-
+//Logging out
 
 function logOut()
 {
@@ -453,7 +539,7 @@ function logOut()
     window.location.href = "/logout"
 }
 
-
+//To add the compose message dialog
 function hideDialog() {
   jQuery("#compose-mail").removeClass("visible").addClass("hidden");
 }
@@ -473,8 +559,9 @@ $("#button-for-compose-mail").on("click", function(){
   return false;
 });
 
-
-$("#compose-mail-reply").on("click", function(){
+//To reply to a message (To is fixed)
+$(".compose-mail-reply").on("click", function(){
+    console.log("Inreply")
   $("#compose-mail").removeClass("hidden").addClass("visible");
   console.log("Inreply")
   var row= $(this).parent().parent()[0]
@@ -506,7 +593,7 @@ $("form").on("submit", function() {
 });
        
 
-
+//To submit request
 $(function() {
     $('#btnSubmit').click(function() {
         console.log("Here")
@@ -578,4 +665,14 @@ $('.searchByToken').keyup(function(){
     });
     }
 });
+
+//Smaller tabs in messages
+function openTab(cityName) {
+    var i;
+    var x = document.getElementsByClassName("tabtype");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none"; 
+    }
+    document.getElementById(cityName).style.display = "block"; 
+}
 

@@ -61,12 +61,22 @@
 				<label> Type of Service </label>
 				<br/> <br/><br/>
 				<select id = "service"  class = "select" name = "service">
-					<option  value='Statutory Audit'> Statutory Audit </option>
+					<option  value='GST Registration'> GST Registration </option>
+					<option value='Projections'> Projections </option>
 					<option value='Internal Audit'> Internal Audit </option>
-					<option value='Tax Audit'> Tax Audit </option>
-					<option value='ITR Filing'> ITR Filing </option>
+					<option value='Certification'> Certification </option>
 					<option value='Registration'> Registration </option>
-					<option value='Accounting '> Accounting </option>
+					<option value='Audit'> Audit </option>
+          <option value='Representation'> Representation </option>
+          <option value='TDS'> TDS </option>
+          <option value='Profession tax'> Profession tax </option>
+          <option value='Accounting'> Accounting </option>
+          <option value='Annual Return'> Annual Return </option>
+          <option value='Financials'> Financials </option>
+          <option value='GST Audit'> GST Audit </option>
+          <option value='GST Return'> GST Return </option>
+          <option value='Income Tax'> Income Tax </option>
+          <option value='Project Report'> Project Report </option>
 					<option value='Other'> Other </option>
 				</select>
 				</div>
@@ -166,30 +176,28 @@
 </div>
 
 <div id="TaxCalculator"  class="tabcontent"   >
- 
-
- <div id="bg"  style="height:700px">
- 			
-			<div  id="outer" style="font-family:verdana;">
-				<h1> Income Tax Calculator </h1>
-				<b>Choose your category:&nbsp;&nbsp;&nbsp;&nbsp;</b>
-				<select id="typ" onchange="new_elem()" style="color:black">
-  					<option value="ind1">Individual < 60 years of Age</option>
-  					<option value="ind2">Resident Individual between 60 and 80 years of age</option>
-  					<option value="ind3">Resident Individual above 80 years of age</option>
-  					<option value="jud">HUF/AOP/BOI/Any other Artifical Judicial Person</option>
-  					<option value="part">Partnership Firm</option>
-  					<option value="local">Local Authority</option>
-  					<option value="dom">Domestic Company</option>
-				</select><br><br>
-				<b>Enter Income Amount:&nbsp;&nbsp;&nbsp;&nbsp;</b> <input type="number" id="num" placeholder="Enter Income Amount" />
-				<div id="gross"></div><br>
-				<button class="button" onclick="calc()"> Calculate </button><br><br>
-				<div id="out">
-				</div>
-			</div>
-	
-</div>
+ <div id="bg">
+      <div id="outer" style="font-family:verdana;">
+        <h1> Income Tax Calculator </h1>
+        <b>Choose your category:&nbsp;&nbsp;&nbsp;&nbsp;</b>
+        <select id="typ" onchange="new_elem()">
+            <option value="ind1">Individual < 60 years of Age</option>
+            <option value="ind2">Resident Individual between 60 and 80 years of age</option>
+            <option value="ind3">Resident Individual above 80 years of age</option>
+            <option value="jud">HUF/AOP/BOI/Any other Artifical Judicial Person</option>
+            <option value="part">Partnership Firm</option>
+            <option value="local">Local Authority</option>
+            <option value="dom">Domestic Company</option>
+            <option value="for">Foreign Company</option>
+            <option value="coop">Co-operative Society</option>
+        </select><br><br>
+        <b>Enter Income Amount:&nbsp;&nbsp;&nbsp;&nbsp;</b> <input type="number" id="num" placeholder="Enter Income Amount" />
+        <div id="gross"></div><br>
+        <button onclick="calc()"> Calculate </button><br><br>
+        <div id="out">
+        </div>
+      </div>
+    <div>
 </div>
 
 <div id="contact" class="tabcontent" style="height:100%">
@@ -211,7 +219,7 @@
          {% for row in messages %}
             <tr >
             	<td>{{row[0]}}</td>
-               <td>{{row[2]}}  <a id = "compose-mail-reply" href="#compose-mail"> Reply</a></td>
+               <td>{{row[2]}}  <a class="compose-mail-reply" href="#compose-mail"> Reply</a></td>
                <td >{{row[1]}}</td>
             </tr>
          {% endfor %}

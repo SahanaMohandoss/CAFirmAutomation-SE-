@@ -8,12 +8,16 @@ import re
 import flask
 app = Flask(__name__)
 
+#Connect to database
 Database = 'ca_firm.db'
 
+#On start go to registration page
 @app.route('/', methods=['POST', 'GET'])
 def home():
 			return render_template("ClientRegister.html")
 
+
+#To insert  values to a table in a db
 def insert(table, fields=(), values=()):
     # g.db is the database connection
     con = sqlite3.connect(Database)
@@ -32,6 +36,7 @@ def insert(table, fields=(), values=()):
     con.commit()
     return id
 
+#To query a table in db
 def query_db(query, args=(), one=False):
     con = sqlite3.connect(Database)
     cur = con.execute(query, args)
@@ -40,6 +45,7 @@ def query_db(query, args=(), one=False):
     con.commit()
     return (rv[0] if rv else None) if one else rv
 
+#Sign up code with validation of the fields
 @app.route('/signUp',methods=['POST'])
 def signUp():
     print("here")
@@ -172,7 +178,7 @@ def signUp():
     else:
         return json.dumps({'html':'<span>Enter the required fields</span>','status':1})
 
-
+#Login and check type of user to redirect to correct page
 @app.route('/logIn',methods=['POST'])
 def logIn():
     #print(request.form)
@@ -225,6 +231,7 @@ def logIn():
                 return json.dumps({'status':2})
 
 
+#To render client page and get the necessary data to display
 @app.route('/clientHome')
 def clientHome():
     
@@ -234,6 +241,7 @@ def clientHome():
         JOIN service_allocation ON token_no = service_allocation.token \
          WHERE user = ?", [name])
     print(s)
+    #Handle null values in tables
     for i in range(len(s)):
         x = s[i]
         print(x[5])
@@ -260,6 +268,8 @@ def clientHome():
     return render_template("ClientHome.html", username=name, items = s, messages= m, files=files, invoice=invoice)
 
 
+#To submit feedbak of service on click of button
+
 @app.route('/submitFeedback', methods=['POST'])
 def submitFeedback():
     data = request.json
@@ -278,6 +288,9 @@ def submitFeedback():
 
     return json.dumps({'status':2})
 
+
+#To upload files for a service for a user
+
 @app.route('/serviceFileUpload', methods=['POST'])
 def serviceFileUpload():
     #data = request.json
@@ -293,7 +306,7 @@ def serviceFileUpload():
     print("Uploaded")
     return json.dumps({'status':2})
 
-
+#To send messages from one user to another
 
 @app.route('/sendMessage', methods=['POST'])
 def sendMessage():
@@ -322,7 +335,7 @@ def sendMessage():
 
         return json.dumps({'status':2})
 
-
+#To download files and invoice documents
 @app.route('/fileDownload', methods=['POST'])
 def fileDownload():
     data = request.json
@@ -360,7 +373,7 @@ def invoiceFileDownload():
     return json.dumps({'status':2})
 
 
-
+#Logout
 @app.route('/logout')
 def logout():
    # remove the username from the session if it is there
@@ -376,6 +389,7 @@ def cover_str(cvr):
         cvr = cvr.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return cvr
 
+#To submit a request from client
 @app.route('/submitRequest',methods=['POST'])
 def submitRequest():
     print("IN SUBMIT")
@@ -401,7 +415,7 @@ def submitRequest():
     cols = tuple(["token"])
     vals = tuple([token])
     insert("service_allocation" , cols, vals)
-
+    #Handling file uploads
     print("here in submit")
     print(service, description)
     desc = request.form.getlist('filedesc')
@@ -425,4 +439,4 @@ def submitRequest():
 
 if __name__ == '__main__':
     app.secret_key = 'super secret key'
-    app.run(debug=True)
+    app.run(debug=True, port = 5002)
