@@ -318,7 +318,7 @@ def sendMessage():
         print(t,f,c)
         cols = ("sender" , "recepient", "message")
         vals = (f,t,c)
-        #insert("messages" , cols, vals)
+        insert("messages" , cols, vals)
 
         return json.dumps({'status':2})
 
