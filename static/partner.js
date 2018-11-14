@@ -41,7 +41,7 @@ function quot(ele)
         success: function (data) 
         {
             console.log("Inside success")
-            document.getElementById("reg_val").innerHTML=data.responseText
+            //document.getElementById("reg_val").innerHTML=data.responseText
             /*
             response = JSON.parse(data)
             document.getElementById("reg_val").innerHTML+=response.responseText
@@ -51,12 +51,17 @@ function quot(ele)
             console.log("--------------------------")
             console.log(data.state);
             */
+            el=this.parent().next();
+            el.innerHTML=error.responseText
+            
         },
         error: function(error) 
         {
             console.log("Inside error")
             console.log(error.responseText);
-            document.getElementById("reg_val").innerHTML=error.responseText
+            //document.getElementById("reg_val").innerHTML=error.responseText
+            el=this.parent().next();
+            el.innerHTML=error.responseText
         }
     });
 }

@@ -8,14 +8,26 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">-->
 	
-</script>
-
-<script> history.pushState(null, null, location.href);
+<script> 
+    
+    history.pushState(null, null, location.href);
     window.onpopstate = function () {
         history.go(1);
     };
-    var uname = '{{username}}'
+    
+    var uname = '{{username}}';
+    var acc = '{{accepted}}';
+    console.log("In html")
+    console.log(acc)
+    var Quotation = '{{quotation}}'
+
+    function getData()
+    {
+      return acc;
+    }
   </script> 
+
+
 </head>
 
 <body style="height: 100%;">
@@ -120,7 +132,7 @@
 </div>
 
 <div id="ViewService" class="tabcontent">
-  <input type="text" id="myInput" class = "searchByToken" onkeyup="searchByToken()" placeholder="Search for service by Token number.."/>
+  <input type="text" id="myInput" class = "searchByToken" placeholder="Search for service by Token number.."/>
   <br/>
   <br/>
   <select id="filterByStatus">
@@ -149,14 +161,14 @@
          {% for row in items %}
             <tr >
             	<td>{{username}}</td>
-               <td>{{row[0]}}</td>
-               <td  class = "tok">{{row[1]}}</td>
-               <td>{{row[2]}}</td>
-               <td>{{row[3]}}</td>
+               <td  span class = "tok">{{row[0]}} </td>
+               <td >{{row[1]}}</td>
+               <td>{{row[2]}} <button class="accept" display="block" type="button">Accept Service </button></td>
+               <td>{{row[3]}} </td>
                <td class = "status">{{row[4]}}</td>
                <td>{{row[5]}}</td>
                <td>{{row[6]}}</td>
-               <td><input type="text" style="color:black" id="feedback" class="feedback" placeholder="Enter feedback"/> <button id="btnFeedback" type="button"> Add Feedback </button></td>
+               <td><input type="text" style="color:black" id="feedback" class="feedback" placeholder="Enter feedback"/> <button class="btnFeedback" type="button"> Add Feedback </button></td>
 
                <td>
                	<form class="data" method="post" enctype="multipart/form-data">
@@ -323,6 +335,8 @@
 <script src="{{ url_for('static', filename='ClientHome.js') }}">
 
 </script>
+
      
 </body>
+
 </html> 

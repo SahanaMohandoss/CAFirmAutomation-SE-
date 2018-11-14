@@ -6,7 +6,14 @@ from flask import json, session
 from validate_email import validate_email
 import re
 import flask
+from sentiment_analyzer import SentimentAnalyzer
 app = Flask(__name__)
+
+
+#one logged in instance
+
+#integrate
+
 
 #Connect to database
 Database = 'ca_firm.db'
@@ -236,11 +243,13 @@ def logIn():
 def clientHome():
     
     name = session['username'] 
-    s = query_db("SELECT token_no ,current_timestamp, quotation, type_of_service,  status_for_client, emp, estimated_time_of_completion  FROM service  \
+    s = query_db("SELECT token_no ,current_timestamp, quotation, type_of_service,  status_for_client, emp, estimated_time_of_completion, accepted  FROM service  \
         JOIN service_status ON token_no = service_status.token \
         JOIN service_allocation ON token_no = service_allocation.token \
          WHERE user = ?", [name])
     print(s)
+    accepted=[]
+    quotation=[]
     #Handle null values in tables
     for i in range(len(s)):
         x = s[i]
@@ -254,18 +263,26 @@ def clientHome():
             x =list(x)
             x[6]="Not allocated yet"
             s[i] = tuple(x)
+        if(x[2]==0.0):
+            accepted.append(1) 
+        else: 
+            accepted.append(x[7])
+        quotation.append(x[2])
     m = query_db("SELECT sender , current_timestamp ,message  FROM messages  \
          WHERE recepient = ? ORDER BY current_timestamp DESC", [name])
     print(m)
-    files = query_db("SELECT token , filename , completed_service_docs.description   FROM completed_service_docs  \
-                JOIN service ON token = token_no \
-         WHERE user = ? ", [name])
+    files = query_db("SELECT token_no , filename , completed_service_docs.description   FROM completed_service_docs  \
+                JOIN service ON completed_service_docs.token = token_no \
+         JOIN service_status ON service_status.token = token_no\
+         WHERE user = ? AND verified = ? ", [name, 1])
     print(files)
-    invoice = query_db("SELECT token, generated_by , current_timestamp ,filename, invoice_amount  FROM completed_service_invoice  \
-         JOIN service ON token = token_no \
-         WHERE user = ? ORDER BY current_timestamp DESC", [name])
+    invoice = query_db("SELECT token_no, generated_by , current_timestamp ,filename, invoice_amount  FROM completed_service_invoice  \
+         JOIN service ON completed_service_invoice.token = token_no \
+         JOIN service_status ON service_status.token = token_no\
+         WHERE user = ?  AND verified = ? ORDER BY current_timestamp DESC", [name,1])
     print(invoice)
-    return render_template("ClientHome.html", username=name, items = s, messages= m, files=files, invoice=invoice)
+    print(accepted)
+    return render_template("ClientHome.html", username=name, items = s, messages= m, files=files, invoice=invoice, accepted=accepted, quotation=quotation)
 
 
 #To submit feedbak of service on click of button
@@ -279,8 +296,13 @@ def submitFeedback():
     print(f)
     t = int(data["token"])
     print(t)
+    ob=SentimentAnalyzer()
+    sentiment=ob.get_string([f])
+    print(sentiment)
     s = query_db("UPDATE service SET feedback = ? \
          WHERE token_no = ?",[data['feedback'], data['token']])
+    s = query_db("UPDATE service SET sentiment = ? \
+         WHERE token_no = ?",[sentiment[0], data['token']])
     print(s)
     s= query_db("SELECT feedback FROM service  \
          WHERE token_no = ?",[ data['token']])
@@ -351,6 +373,17 @@ def fileDownload():
     with open("files/"+str(t)+"_"+f, 'wb') as output_file:
            output_file.write(file[0][0])
     return json.dumps("{'status':2}")
+
+@app.route('/acceptService', methods=['POST'])
+
+def acceptService():
+    data = request.json
+    t = int(data["token"][0])
+    s = query_db("UPDATE service SET accepted = ? \
+         WHERE token_no = ?",[1, t])
+    print("updated")
+    return json.dumps("{'status':2}")
+
 
 @app.route('/invoiceFileDownload', methods=['POST'])
 def invoiceFileDownload():

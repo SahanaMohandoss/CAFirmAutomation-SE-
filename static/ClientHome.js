@@ -1,13 +1,21 @@
 
 
 //On reload send new data from database
-window.onload = function() {
+
+
+
+window.onload =function () {
+    acc = getData()
+    console.log(acc)
+    var acc = JSON.parse(acc)
+    console.log(acc)
     var reloading = sessionStorage.getItem("reloading");
     if (reloading) {
         sessionStorage.removeItem("reloading");
         console.log("Reload")
         window.location.href = "/clientHome"   
     }
+
 }
 
    
@@ -298,8 +306,10 @@ function calc()
 
 //To submit request ajax
 $(document).ready(
+
     function(){
 
+        
     $('form').on('submit', function(e){
 
       e.preventDefault();
@@ -350,22 +360,28 @@ $(document).ready(
         maindiv.appendChild(div)
         console.log(maindiv.id)
     });
+
+
+
 }
 );
 
 
 //To submit feedback ajax
 $(function() {
-    $('#btnFeedback').click(function() {
+    $('.btnFeedback').click(function() {
         console.log("Here")
         var data={}
-        data["feedback"]= $('#feedback').val()
-        
+        var f= $(this).parent()[0]
+        console.log(f)
         var row= $(this).parent().parent()[0]
-        console.log(row)
+        var input = f.getElementsByTagName("input");
+        console.log(input[0].value)
+
         var Cells = row.getElementsByTagName("td");
         var token = Cells[1].innerText;
         data["token"] = token
+        data["feedback"] = input[0].value
         console.log(token)
         console.log(data)
         $.ajax({
@@ -377,7 +393,7 @@ $(function() {
             success: function(response) {
                 console.log("ok")
                 alert("Feedback added")
-                $('#feedback').val('') 
+                $('.feedback').val('') 
             },
             error: function(error) {
                     console.log("error")
@@ -547,9 +563,31 @@ function hideDialog() {
 // At the beginning, we hide the dialog:
 hideDialog();
 
+
+function hide_accept()
+{
+    acc = getData()
+    var acc = JSON.parse(acc)
+    var elems = document.getElementsByClassName("accept")
+    console.log(elems)
+    var i=0
+    for ( i=0; i<elems.length; i+=1){
+        console.log(acc[i], elems[i])
+        if(acc[i]==1)
+        {
+            console.log(elems[i].style.display)
+            elems[i].style.display = "none";
+        }
+        
+    }
+
+}
+
+hide_accept();
 // jQuery("#button-for-compose-mail").on("click", showDialog);
 
 $("#button-for-compose-mail").on("click", function(){
+
   $("#compose-mail").removeClass("hidden").addClass("visible");
   
   // focus on input.
@@ -576,6 +614,11 @@ $(".compose-mail-reply").on("click", function(){
   $("input#from").prop('readonly', true);
   return false;
 });
+
+
+
+
+
 
 $("#close-button").on("click", function(){
   hideDialog();
@@ -622,6 +665,44 @@ $(function() {
 });
 
 
+
+
+//To accept a service 
+$(function() {
+    $('.accept').click(function() {
+        var data={}
+        var t = $(this);
+        console.log("Here")
+        var row= $(this).parent().parent()[0]
+        console.log(row )
+         var Cells = row.getElementsByTagName("td");
+         var token = Cells[1].innerText;
+         data["token"] = token;
+        console.log(data);
+        $.ajax({
+            url: '/acceptService',
+            data: JSON.stringify(data),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            context: this,
+            success: function(response) {
+                console.log("ok")
+                alert("You have accepted the service! We will keep you updated!")
+                t.style.display = "none";
+            },
+            error: function(error) {
+                    console.log("error")
+                
+               
+            }
+        });
+    });
+});
+
+
+
+
 $('#filterByStatus').change(function(){
     var criteria = $(this).val();
     if(criteria == 'ALL'){
@@ -646,9 +727,11 @@ $('#filterByStatus').change(function(){
 
 $('.searchByToken').keyup(function(){
     console.log("IT CHANGED")
+    console.log($(this).parent())
     var criteria = $(this).val();
     if(criteria == ''){
         $('.tok').each(function(i,option){
+            
         $(this).parent().show();
         });
         return;
@@ -656,9 +739,10 @@ $('.searchByToken').keyup(function(){
     else
     {
     $('.tok').each(function(i,option){
-        console.log(($(this).html()), criteria)
-        if($(this).html() == criteria){
+        console.log(($(this).html()), (criteria), $(this).html().toString().trim() == criteria.toString().trim())
+        if($(this).html().toString().trim() == criteria.toString().trim()){
             $(this).parent().show();
+            
         }else {
             $(this).parent().hide();
         }
