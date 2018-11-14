@@ -2,15 +2,15 @@
 <html>
 <head><title>Client Page</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="{{url_for('static', filename='ClientHome.css')}}">
+<!--<link rel="stylesheet" href="{{url_for('static', filename='ClientHome.css')}}">-->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">-->
-	
-<script> 
-    
-    history.pushState(null, null, location.href);
+
+	<script type="text/javascript" src="http://output71.rssinclude.com/output?type=js&amp;id=1198760&amp;hash=8f510fe9ecc18bb3735668dfd1e48b5f"></script>
+
+<script> history.pushState(null, null, location.href);
     window.onpopstate = function () {
         history.go(1);
     };
@@ -29,49 +29,46 @@
 
 
 </head>
+<!--<img src="{{url_for('static', filename='income.jpg')}} width='100%'' height='100%'" >-->
+<body style="height: 100%;background-color:white;">
 
-<body style="height: 100%;">
-
-<button class="tablink" onclick="openPage('RequestService', this, 'black')" id="defaultOpen">Request a service</button>
+<!--<button class="tablink" onclick="openPage('RequestService', this, 'black')" id="defaultOpen">Request a service</button>
 <button class="tablink" onclick="openPage('ViewService', this, 'black')" >View status of services</button>
 <button class="tablink" onclick="openPage('TaxCalculator', this, 'black')">Tax Calculator</button>
 <button class="tablink" onclick="openPage('contact', this, 'black')">Messages & Documents</button>
-<button class="tablink" onclick="logOut()">LogOut</button>
+<button class="tablink" onclick="logOut()">LogOut</button>-->
 
 
 
-<!--<nav class="navbar navbar-inverse" style="background-color: black">
+<nav class="navbar navbar-inverse" style="background-color:grey">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Client Page</a>
+      <a class="navbar-brand" href="#" style="color:white">CLIENT</a>
     </div>
     <ul class="nav navbar-nav">
-      <li class="active"><button class="btn btn-lg" onclick="openPage('RequestService', this, 'black')" id="defaultOpen">Request a service</button></li>
-      <li><button class="btn btn-lg" onclick="openPage('ViewService', this, 'black')" >View status of services</button></li>
-      <li><button class="btn btn-lg" onclick="openPage('TaxCalculator', this, 'black')">Tax Calculator</button></li>
-      <li><button class="btn btn-lg" onclick="openPage('contact', this, 'black')">Contact & Notifications</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('RequestService', this, 'grey')" id="defaultOpen">REQUEST A SERVICE</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('ViewService', this, 'grey')" >VIEW STATUS OF SERVICE</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('TaxCalculator', this, 'grey')">TAX CALCULATOR</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('contact', this, 'grey')">CONTACTS</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('contact', this, 'grey')">NOTIFICATIONS	</button></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       
-      <li><button class="btn btn-lg" onclick="logOut()">LogOut</button><span class="glyphicon glyphicon-log-in"></span>Logout</li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="logOut()">LogOut</button></li>
     </ul>
   </div>
-</nav>-->
-
-
-
-
-
+</nav>
 
 
 <div  id="RequestService" class="tabcontent">
+
  
-<p align = "center" class="content" id="uname" >Hi {{username}} ! Now you can request for a service with the firm </p>
+<p align = "center" class="content" id="uname" ><h2 align="center">Hi {{username}} ! Now you can request for a service with the firm </h2></p>
 			<br/> <br/>
   			<form name = "myForm" id = "myForm" method="post" enctype=multipart/form-data>
 				<div class="formelement">
-				<label> Type of Service </label>
-				<br/> <br/><br/>
+				<label class="col-sm-2" style="font-size:18px"> Type of Service </label>
+				<!--<br/> <br/><br/>-->
 				<select id = "service"  class = "select" name = "service">
           <option  value='GST Registration'> GST Registration </option>
           <option value='Projections'> Projections </option>
@@ -94,26 +91,39 @@
 				</div>
 				<br/>
 				<br/>
-				<label> Service Decription </label>
-				<br/><br/><br/>
+				<label class="col-sm-2" style="font-size:18px"> Service Decription </label>
+				<!--<br/><br/>-->
 				<div class="formelement">
-				<input type="text" style = "height:300px;width:500px" name="description" id="description" placeholder="Description of Service" />
+				<div class="form-group">
+		
+  				<textarea  class="form-control" rows="5" style="width:50%" name="description" id="description" placeholder="Description of Service" ></textarea>
+				</div>
+				<!--<input type="text" style = "height:300px;width:500px" name="description" id="description" placeholder="Description of Service" />-->
+
+
     			</div>
     			<br/>
-				<label> Upload necessary document </label>
+				<label class="col-sm-4" style="font-size:18px"> Upload necessary document </label>
 				<br/><br/><br/>
 				<div id = "filesdiv">
 					<div class="formelement" id = "onefile">
-					<input id = "files" type = file  name = "files[]" multiple="">
+					<input class="col-sm-2" id = "files" type = file  name = "files[]" multiple="">
 					<img src="{{url_for('static', filename='x.gif')}}" class='remove'>
-					<input type = "text" name = "filedesc" id="filedesc" placeholder = "Enter a file description">
+					<input type = "text" class="col-sm-2" name = "filedesc" id="filedesc" placeholder = "Enter a file description">
 					</div>
 					<br/>
 					<div class="formelement" id ="onefile">
-					<input id = "files" type = file  name = "files[]" multiple="">
+					<input class="col-sm-2" id = "files" type = file  name = "files[]" multiple="">
 					<img src="{{url_for('static', filename='x.gif')}}" class='remove'>
-					<input type = "text" name = "filedesc" id="filedesc" placeholder = "Enter a file description">
+					<input type = "text" class="col-sm-2" name = "filedesc" id="filedesc" placeholder = "Enter a file description">
 					</div>
+					<br/>
+					<div class="formelement" id ="onefile">
+					<input class="col-sm-2" id = "files" type = file  name = "files[]" multiple="">
+					<img src="{{url_for('static', filename='x.gif')}}" class='remove'>
+					<input type = "text" class="col-sm-2" name = "filedesc" id="filedesc" placeholder = "Enter a file description">
+					</div>
+
 				</div>
 				<br/><br/>
 				<div class="formelement">
@@ -132,10 +142,11 @@
 </div>
 
 <div id="ViewService" class="tabcontent">
-  <input type="text" id="myInput" class = "searchByToken" placeholder="Search for service by Token number.."/>
+
+  <input type="text" id="myInput" class="col-sm-4" class = "searchByToken" placeholder="Search for service by Token number.."/>
   <br/>
   <br/>
-  <select id="filterByStatus">
+  <select class="col-sm-4" id="filterByStatus">
                     <option value='ALL' selected="selected">Select by status of service</option>
                     <option value="Not Accepted">Not Accepted</option>
                     <option value="In Progress">In Progress</option>
@@ -144,7 +155,7 @@
 	</select>
 	<br/> <br/>
 
-	<table border = 1 id = "myTable">
+	<table class="table table-bordered" id = "myTable">
          <thead>
             <th>Client Name</th>
             <th>Token number</th>
@@ -191,8 +202,10 @@
  
 <div id="bg" style="height:700px">
       <div id="outer" style="font-family:verdana;">
-        <h1> Income Tax Calculator </h1>
-        <b>Choose your category:&nbsp;&nbsp;&nbsp;&nbsp;</b>
+        <h1 class="col-sm-4"> Income Tax Calculator </h1>
+        <br/><br/><br/><br/><br/>
+        <b class="col-sm-4">Choose your category:&nbsp;&nbsp;&nbsp;&nbsp;</b>
+       
         <select id="typ" onchange="new_elem()">
             <option value="ind1">Individual < 60 years of Age</option>
             <option value="ind2">Resident Individual between 60 and 80 years of age</option>
@@ -204,9 +217,9 @@
             <option value="for">Foreign Company</option>
             <option value="coop">Co-operative Society</option>
         </select><br><br>
-        <b>Enter Income Amount:&nbsp;&nbsp;&nbsp;&nbsp;</b> <input type="number" id="num" placeholder="Enter Income Amount" />
+        <b class="col-sm-4">Enter Income Amount:&nbsp;&nbsp;&nbsp;&nbsp;</b> <input type="number" id="num" placeholder="Enter Income Amount" />
         <div id="gross"></div><br>
-        <button onclick="calc()"> Calculate </button><br><br>
+        <button style="position: relative;left:450px;" onclick="calc()"> Calculate </button><br><br>
         <div id="out">
         </div>
       </div>
@@ -230,7 +243,7 @@
 	<a id="button-for-compose-mail" href="#compose-mail">Send New Message</a>
 	</div>
 	<div class = "Messages">
-	<table border = 1 id = "myTable">
+	<table class="table table-bordered" id = "myTable">
          <thead>
             <th>From</th>
             <th>Message</th>
@@ -259,6 +272,7 @@
 		        <label for="to">To</label>
 		        <br/><br/>
 		        <input type="text" id="to">
+		        <br/><br/>
 		        <label for="from">From</label>
 		        <br/><br/>
 		        <input type="text" id="from">
@@ -285,7 +299,7 @@
     <h3>Completed Service Documents</h3> 
   	
   	<br/><br/>
-	<table border = 1 id = "myTable">
+	<table class="table table-bordered" id = "myTable">
          <thead>
             <th>Token</th>
             <th>Filename</th>
@@ -307,7 +321,7 @@
      <br/><br/><br/>  
   	<h3>Completed Invoice Documents</h3> 
   	<br/><br/>
-	<table border = 1 id = "myTable" >
+	<table class="table table-bordered" id = "myTable" >
          <thead>
             <th>Token</th>
             <th>Filename</th>
