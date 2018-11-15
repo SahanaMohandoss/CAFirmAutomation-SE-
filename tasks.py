@@ -50,8 +50,8 @@ def send_reminders():
 	con = sql.connect(Database)
 	con.row_factory = sql.Row
 	cur = con.cursor()
-	MY_ADDRESS="enter-email-id"
-	MY_PASSWORD="enter-password"
+	MY_ADDRESS="se.cafirm@gmail.com"
+	MY_PASSWORD="seaccount"
 	s = smtplib.SMTP(host='smtp.gmail.com', port=587)
 	s.starttls()
 	s.login(MY_ADDRESS, MY_PASSWORD)

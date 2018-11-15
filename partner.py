@@ -8,6 +8,7 @@ import json
 import datetime
 from regression import regModel
 from invoicemailer import mailTo
+
 app = Flask(__name__,template_folder='templates')
 
 '''
