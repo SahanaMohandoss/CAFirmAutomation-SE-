@@ -1,0 +1,230 @@
+<!doctype html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='partner.js') }}"></script>
+  
+</head>
+   <body onload ="onLoad()">   
+
+            <br>
+            <br>
+
+      Services not accepted
+      <table border = 1>
+         <thead>
+            <td>Token Number</td>
+            <td>Type of Service</td>
+            <td>Description</td>
+            <td>Estimated Time</td>
+            <td>Get Suggested Quotation</td>
+            <td>Suggested Quotation</td>
+            <td>Input Quotation</td>
+            <td>Submit</td>
+         </thead>
+         
+         {% for row in rows1 %}
+            <tr>
+               <td>{{row["TOKEN_NO"]}}</td>
+               <td>{{row["TYPE_OF_SERVICE"]}}</td>
+               <td>{{row["DESCRIPTION"]}}</td>
+               <td><input type="number" name="time" placeholder="Enter Estimated Hours"></td>
+               <td><button class="btn btn-primary" name = "regression_button" value = "Get Recommended Quotation" onClick="quot(this);">submit</button></td>
+               <td id="reg_val">The quotation is: </td>
+               <td><input type="number" name="quotation" placeholder="Enter Quotation"></td>
+               <td><button class="btn btn-primary" name = "submit" onClick="enter(this);">submit</button></td> 
+
+               <!--<td><input type="checkbox" name="selectTask" value={{row["task"]}} onClick="checkbox(2);"></td>-->
+            </tr>
+         {% endfor %}
+      </table>
+<br>
+<br>
+      Services not allocated
+      <table border = 1>
+         <thead>
+            <td>Token Number</td>
+            <td>Type of Service</td>
+            <td>Description</td>
+            <td>Select Employee</td>
+            <td>Allocate</td>
+            
+         </thead>
+         
+         {% for row in rows3 %}
+            <tr>
+               <td>{{row["TOKEN_NO"]}}</td>
+               <td>{{row["TYPE_OF_SERVICE"]}}</td>
+               <td>{{row["DESCRIPTION"]}}</td>
+               
+               <td><select>
+                  {% for row in rows2 %}
+                  <option value={{row["USERNAME"]}}>{{row["USERNAME"]}}</option>
+                  {% endfor %}
+                </select></td>
+                <td><button class="btn btn-primary" name = "submit" onClick="allocate(this);">submit</button></td>
+               <!--<td><input type="checkbox" name="selectTask" value={{row["task"]}} onClick="checkbox(2);"></td>-->
+            </tr>
+         {% endfor %}
+      </table>
+<br>
+<br>
+      Services not Completed
+      <table border = 1>
+          <thead>
+             <td>Token Number</td>
+             <td>Type of Service</td>
+             <td>Description</td>
+         
+          </thead>
+          
+          {% for row in rows4 %}
+             <tr>
+                <td>{{row["TOKEN_NO"]}}</td>
+                <td>{{row["TYPE_OF_SERVICE"]}}</td>
+                <td>{{row["DESCRIPTION"]}}</td>
+             </tr>
+          {% endfor %}
+       </table>
+
+       <br>
+<br>
+      Services Completed but not Verified
+      <table border = 1>
+          <thead>
+             <td>Token Number</td>
+             <td>Type of Service</td>
+             <td>Description</td>
+             <td>View Documents</td>
+             <td>Verify</td>
+             <td>Type message</td>
+             <td>Send</td>
+          </thead>
+          
+          {% for row in rows5 %}
+             <tr>
+                <td>{{row["TOKEN_NO"]}}</td>
+                <td>{{row["TYPE_OF_SERVICE"]}}</td>
+                <td>{{row["DESCRIPTION"]}}</td>
+                <td><button class="btn btn-primary" name = "submit" onClick="viewDocs(this)">View documents</button></td>
+                <td><button class="btn btn-primary" name = "submit" onClick="verify(this)">Verify</button></td>
+                <td><textarea rows="10" cols="40" name="message"></textarea></td>
+                <td><button class="btn btn-primary" name = "submit" onClick="sendMes(this)">Send</button></td>
+             </tr>
+          {% endfor %}
+       </table>
+
+       <!--Completed and verified services table-->
+       <br>
+      Services Completed and Verified
+      <table border = 1>
+          <thead>
+             <td>Token Number</td>
+             <td>Type of Service</td>
+             <td>Description</td>
+             <td>View Documents</td>
+             <td>Invoice Amount</td>
+             <td>Upload Invoice Document</td>
+             <td>Fill Invoice Details</td>
+             <td>Send Completed Service</td>
+          </thead>
+          
+          {% for row in rows6 %}<!--change rows5 to rows6 function (done!) -->
+             <tr> <!-- !IMPORTANT - ANY CHANGES IN CELL POSITIONS TO BE REFLECTED APPROPRIATELY IN partner.js FUNCTION
+            DOM ELEMENT ACCESS-->
+                <td>{{row["TOKEN_NO"]}}</td>
+                <td>{{row["TYPE_OF_SERVICE"]}}</td>
+                <td>{{row["DESCRIPTION"]}}</td>
+                <td><button class="btn btn-primary" name = "submit" onClick="viewDocs(this)">View documents</button></td>
+                <!-- <td><input type="number" name="InvoiceAmount" placeholder="Enter Invoice"></td> -->
+                <td>
+                    <form class = "data" method="post" enctype="multipart/form-data">
+                        <input type = "hidden" name="inv_tok" value="{{row["TOKEN_NO"]}}">
+                        <input type = "text" name="inv_amt" placeholder="Enter invoice amount">
+                        <input type="file" name="inv_doc" class= "inv_file" id="invDoc" name="Invoice Document"/>
+                        <button class="btnInvoiceFile" type="button" onClick="genInvoice(this)"> Add a invoice file </button>
+                        <button class="btnMailFile" type="button" onClick="sendMail(this)"> Send Mail </button>
+                    </form>
+                    
+                </td> <!--invioce doc upload path (done)-->
+                <td><button class="btn btn-primary" name = "submit" onClick="genInvoice(this)">Generate Invoice Details</button></td> <!--change onclick function (done)-->
+                <td><button class="btn btn-primary" name = "submit" onClick="sendMail(this)">Send Mail</button></td><!--change onclick function (done)-->
+             </tr>
+          {% endfor %}
+       </table>
+
+      <!--
+      <input type="text" id="showTask" name="select"><br>
+      <a href = "/">Go back to home page</a>
+          <button class="btn btn-primary" name = "submit" id = "submit" onClick="callMe();">submit</button>
+          <input type="text" id="showTask" name="select"><br>
+          <table border = 1>
+            <thead>
+               <td>Client Name</td>
+               <td>Taskkk</td>
+               <td>Quotation</td>
+            </thead>
+            
+            {% for row in rows1 %}
+               <tr>
+                  <td>{{row["client"]}}</td>
+                  <td>{{row["task"]}}</td>
+                  <td><button class="btn btn-primary" name = "sendQuotation" class = "okay" onClick="quotation(this)">Enter quotation</button></td>
+               </tr>
+            {% endfor %}
+        </table>
+      -->
+        <br>
+        <br>
+        <div id="writeContent" >
+            <table border = 1>
+                <thead>
+                   <td>Token</td>
+                   <td>Description</td>
+                </thead>
+                <tbody>
+                {% for row in rows7 %}
+                   <tr>
+                      <td>{{row["token"]}}</td>
+                      <td>{{row["description"]}}</td>
+              
+                   </tr>
+                {% endfor %}
+                </tbody>
+            </table>  
+         </div>
+
+
+        
+         <button class="btn btn-primary" id="getCompletedServices" name = "getComService" onClick="getComService();">Get Completed Services</button>
+         <!--
+         <div>
+          <table border = 1>
+            <thead>
+               <td>Token_No</td>
+               <td>Description</td>
+               <td>Document</td>
+               <td>Verify</td>
+            </thead>
+            
+            {% for row in rows3 %}
+               <tr>
+                  <td>{{row["Token_No"]}}</td>
+                  <td>{{row["Description"]}}</td>
+                  <td>{{row["Document"]}}</td>
+                  <td><button class="btn btn-primary" id="Verify" name = "Verify" onClick="verify(this);">Verify</button></td>
+    
+               </tr>
+            {% endfor %}
+         </table>
+        <br>
+        <br>
+         </div>
+        -->
+         
+
+
+
+    
+
+   </body>
+</html>
