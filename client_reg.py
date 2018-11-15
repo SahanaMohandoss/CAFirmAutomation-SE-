@@ -8,7 +8,8 @@ import re
 import flask
 from sentiment_analyzer import SentimentAnalyzer
 app = Flask(__name__)
-from partner import *
+#from partner import *
+
 
 #one logged in instance
 
@@ -41,6 +42,7 @@ def insert(table, fields=(), values=()):
     id = cur.lastrowid
     cur.close()
     con.commit()
+    con.close()
     return id
 
 #To query a table in db
@@ -50,6 +52,7 @@ def query_db(query, args=(), one=False):
     rv = cur.fetchall()
     cur.close()
     con.commit()
+    con.close()
     return (rv[0] if rv else None) if one else rv
 
 #Sign up code with validation of the fields
@@ -243,6 +246,8 @@ def logIn():
 def clientHome():
     
     name = session['username'] 
+    print(name)
+    name = name.strip()
     s = query_db("SELECT token_no ,current_timestamp, quotation, type_of_service,  status_for_client, emp, estimated_time_of_completion, accepted  FROM service  \
         JOIN service_status ON token_no = service_status.token \
         JOIN service_allocation ON token_no = service_allocation.token \
@@ -256,6 +261,7 @@ def clientHome():
         print(x[5])
         print(x[6])
         if(x[5]  is None):
+            print(list(x))
             x =list(x)
             x[5]="Not updated yet"
             s[i] = tuple(x)
@@ -418,7 +424,7 @@ def logout():
 def cover_str(cvr):
     cvr = request.files['cover']
     if cvr and allowed_file(cvr.filename):
-        filename = secure_filename(cvr.filename)
+        filename = (cvr.filename)
         cvr = cvr.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return cvr
 
@@ -443,7 +449,7 @@ def submitRequest():
 
     cols = ("token" , "completed", "verified", "remarks", "status_for_partner", "status_for_client")
     vals = (token , 0 , 0 , "", "" , "Not Accepted" )
-
+    insert("service_status" , cols, vals)
     cols = tuple(["token"])
     vals = tuple([token])
     insert("service_allocation" , cols, vals)
@@ -457,7 +463,7 @@ def submitRequest():
     i = 0
     for f in file:
         print(f)
-        filename = secure_filename(f.filename)
+        filename = (f.filename)
         cols = ("token" , "document", "description" , "filename")
         vals = (token , sqlite3.Binary(f.read()) , desc[i], filename)
         i+=1

@@ -11,6 +11,7 @@ window.onload =function () {
     console.log(acc)
     var reloading = sessionStorage.getItem("reloading");
     if (reloading) {
+        console.log("Here in reloading")
         sessionStorage.removeItem("reloading");
         console.log("Reload")
         window.location.href = "/clientHome"   

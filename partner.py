@@ -6,6 +6,7 @@ from flask import request
 from flask import session
 import json
 import datetime
+from regression import regModel
 app = Flask(__name__,template_folder='templates')
 
 '''
@@ -15,7 +16,7 @@ def home():
 '''
 Database = "ca_firm.db"
 @app.route('/partner')
-def list():
+def partner():
     #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
 
     partner_name = session['username'] 
@@ -119,6 +120,23 @@ def reminder():
         return "hey"
     #return render_template("partner.html")
 
+
+@app.route('/quot', methods=['GET', 'POST'])
+def quot():
+    print("Here")
+    if request.method == 'POST':
+        enterDetail = request.get_json()
+        print(enterDetail)
+        #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+        type_of_service=enterDetail["type"]
+        est_hrs=int(enterDetail["time"])
+        ob=regModel()
+        amt=round(ob.model(type_of_service,est_hrs))
+        out_txt="The quotation is: Rs. "+str(amt)
+        print(out_txt)
+        return out_txt
+
+
 @app.route('/quotation', methods=['GET', 'POST'])
 def quotation():
     if request.method == 'POST':
@@ -133,6 +151,14 @@ def quotation():
         cur.execute(exe)
         con.commit()
         con.close()
+        '''
+        wb=load_workbook("regression_dataset.xlsx")
+        ws=wb.worksheets[0]
+        new_row_data=[enterDetail["type"],"No Description Available",float(enterDetail["time"]),float(enterDetail["quotation"])]
+        print("Adding to the xlsx", new_row_data)
+        ws.append(new_row_data)
+        wb.save("regression_dataset.xlsx")
+        '''
         return "done"
 
 @app.route('/allocate', methods=['GET', 'POST'])
