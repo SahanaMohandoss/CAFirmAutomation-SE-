@@ -25,6 +25,11 @@ class regModel:
 			models.append(regr)
 		ctr=0
 		min_amt=0
+		'''
+		for key,value in type_split.items():
+			print(key)
+		'''
+		#print("\n\n")
 		for key,value in type_split.items():
 		#print(key)
 			if(service.strip().lower() == key.strip().lower()):
@@ -33,15 +38,18 @@ class regModel:
 			else:
 				ctr=ctr+1
 		#print(ctr)
-		mod=models[ctr]
-		val=mod.predict([[hrs]])[0]
-		if(val<0.75*min_amt):
-			val=min_amt
-		#print(val)
-		return val
+		if(ctr==len(type_split)):
+			return 0
+		else:
+			mod=models[ctr]
+			val=mod.predict([[hrs]])[0]
+			if(val<0.75*min_amt):
+				val=min_amt
+			#print(val)
+			return val
 
 if __name__ == '__main__':
-	service="Audit"
+	service="Income Tax"
 	hours=4
 	ob=regModel()
 	amt=round(ob.model(service,hours))

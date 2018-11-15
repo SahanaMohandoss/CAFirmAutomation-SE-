@@ -27,11 +27,22 @@ def get_time():
 def isSame(curr_time,rem_time):
 	curr_toks=[int(i) for i in curr_time.split("-")]
 	rem_toks=[int(i) for i in rem_time.split("-")]
+	'''
 	if(curr_toks[0]==rem_toks[0] and curr_toks[1]==rem_toks[1] and curr_toks[2]==rem_toks[2]):
 		return 1
 	else:
 		return 0
-
+	'''
+	if(curr_toks[0]<rem_toks[0]):
+		return 1
+	else:
+		if(curr_toks[1]<rem_toks[1]):
+			return 1
+		else:
+			if(rem_toks[2]<=curr_toks[2]):
+				return 1
+			else: 
+				return 0
 
 @app.task
 def send_reminders():
@@ -39,7 +50,7 @@ def send_reminders():
 	con = sql.connect(Database)
 	con.row_factory = sql.Row
 	cur = con.cursor()
-	MY_ADDRESS="enter-username"
+	MY_ADDRESS="enter-email-id"
 	MY_PASSWORD="enter-password"
 	s = smtplib.SMTP(host='smtp.gmail.com', port=587)
 	s.starttls()
@@ -70,8 +81,11 @@ def send_reminders():
 				msg['To']=j
 				msg['Subject']=subject
 				msg.attach(MIMEText(message, 'plain'))
-				s.send_message(msg)
-				del msg
+				try:
+					s.send_message(msg)
+					del msg
+				except:
+					continue
 			exe = "UPDATE REMINDERS SET SENT=1 WHERE REMINDER_ID= %d" % (reminders_id)
 			cur.execute(exe)
 			con.commit()	    
