@@ -11,6 +11,10 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	
+<!--adding the client side javascript.It will listen for any click on notification link, prevent the default action, 
+send xhr async request to nodejs server asking to scrape the data from cbic website-->
+<script src="client.js"></script>
 
 <script> history.pushState(null, null, location.href);
     window.onpopstate = function () {
@@ -51,7 +55,7 @@
       <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('ViewService', this, 'grey')" >VIEW STATUS OF SERVICE</button></li>
       <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('TaxCalculator', this, 'grey')">TAX CALCULATOR</button></li>
       <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('contact', this, 'grey')">MESSAGES AND DOCS</button></li>
-      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('Notifications', this, 'grey')">NOTIFICATIONS	</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="obj.linkclick(event)">NOTIFICATIONS</button></li><!--added link click function defined in client.js-->
     </ul>
     <ul class="nav navbar-nav navbar-right">
       
