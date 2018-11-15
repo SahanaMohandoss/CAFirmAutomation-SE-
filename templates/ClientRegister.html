@@ -12,6 +12,33 @@
     window.onpopstate = function () {
         history.go(1);
     };
+   function myfunc(){
+     var x=document.getElementById("number").value;
+     if(x.length<10 || x.length>10){
+      alert("please provide proper number");
+      document.getElementById("number").focus();
+     }
+    }
+    function checkpass(){
+    	var x=document.getElementById("password").value;
+    	if(x.length<6){
+    		alert("length should be atleast 6");
+    		document.getElementById("password").focus();
+    	}
+    }
+
+    function checkcpass(){
+    	var x=document.getElementById("password").value;
+    	var y=document.getElementById("confpassword").value;
+    	if(x!=y){
+    		alert("Password and Confirm password dont match!");
+    		document.getElementById("confpassword").innerHTML="";
+    		document.getElementById("password").focus();
+    	}
+
+    }
+	  
+   
   </script>    
     
     
@@ -83,7 +110,7 @@
             <label>
               Contact Number<span class="req">*</span>
             </label>
-            <input type="text" name ="number" id = "number" required autocomplete="off"/>
+            <input type="text" name ="number" id = "number" onchange="myfunc()" required autocomplete="off"/>
             <div class = "error" id="number_error"> </div>
           </div>
 
@@ -91,7 +118,7 @@
             <label>
               Password<span class="req">*Minimum 6 characters!</span>
             </label>
-            <input type="password" name ="password" id = "password" required autocomplete="off"/>
+            <input type="password" name ="password" id = "password" onchange="checkpass()" required autocomplete="off"/>
             <div class = "error" id="password_error"> </div>
           </div>
 		  
@@ -99,7 +126,7 @@
                 <label>
                   Confirm Password<span class="req"></span>
                 </label>
-                <input type="password" name ="confpassword" id = "confpassword" required autocomplete="off"/>
+                <input type="password" name ="confpassword" id = "confpassword" onchange="checkpass()"  required autocomplete="off"/>
                 <div class = "error" id="confpassword_error"> </div>
           </div>
 		  
