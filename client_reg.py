@@ -8,7 +8,7 @@ import re
 import flask
 from sentiment_analyzer import SentimentAnalyzer
 app = Flask(__name__)
-#from partner import *
+from partner import *
 
 
 #one logged in instance
