@@ -9,7 +9,7 @@ import flask
 from sentiment_analyzer import SentimentAnalyzer
 app = Flask(__name__)
 from partner import *
-
+from employee_reg import *
 
 #one logged in instance
 
