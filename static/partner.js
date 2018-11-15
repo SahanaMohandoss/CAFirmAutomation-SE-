@@ -3,10 +3,35 @@ var emp;
 var sendCon = new Object();
 //when document loads
 
+
+$(document).ready(function() {
+    $('.display').DataTable();
+} );
+function openPage(pageName,elmnt,color) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].style.backgroundColor = "";
+        tablinks[i].style.color = "black";
+    }
+    document.getElementById(pageName).style.display = "block";
+    elmnt.style.backgroundColor = color;
+    elmnt.style.color = "white";
+
+}
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
 function onLoad()
 {
     console.log("really?");
     var divDoc = document.getElementById("writeContent");
+    divDoc.style.visibility = 'hidden';
+    var divDoc = document.getElementById("remDiv");
     divDoc.style.visibility = 'hidden';
 }
 
@@ -18,62 +43,45 @@ function quotation(ele)
     document.getElementById("writeQuotation").value = '';
     document.getElementById("writeContent").style.visibility = "visible";
 }
-
-function ente(ele)
+function sendReminder(ele)
 {
-    console.log("lolol");
-}
+    var divDoc = document.getElementById("remDiv");
+    divDoc.style.visibility = 'hidden';
+    var reminder = new Object();
+    reminder.reminder_name = $(ele).parent().children(":first").val();
+    reminder.generated_by="Simran";
+    reminder.timestamp = $(ele).prev().prev().prev().val();
+    reminder.curr_timestamp = $(ele).prev().prev().prev().val();
+    reminder.reminder_message = $(ele).prev().prev().val();
+    reminder.mailing_list = $('#rem').val();
 
-function quot(ele)
-{
-    console.log("Inside quot")
-    var data = new Object();
-    data.type = $(ele).parent().prev().prev().prev().text();
-    data.time = $(ele).parent().prev().children(":first").val();
-    console.log(data.type);
-    console.log(data.time);
-    $.ajax({
+    console.log(reminder);
+    $.ajax({ 
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(data),
+        data: JSON.stringify(reminder),
         dataType: 'json',
-        url: '/quot',
-        success: function (data) 
-        {
-            console.log("Inside success")
-            //document.getElementById("reg_val").innerHTML=data.responseText
-            /*
-            response = JSON.parse(data)
-            document.getElementById("reg_val").innerHTML+=response.responseText
-            txt=response.responseText
-            console.log("--------------------------")
-            console.log(txt)
-            console.log("--------------------------")
-            console.log(data.state);
-            */
-            el=this.parent().next();
-            el.innerHTML=error.responseText
-            
+        url: '/reminder',
+        success: function (data) {
+            console.log(data);
         },
-        error: function(error) 
-        {
-            console.log("Inside error")
-            console.log(error.responseText);
-            //document.getElementById("reg_val").innerHTML=error.responseText
-            el=this.parent().next();
-            el.innerHTML=error.responseText
-        }
+        error: function(error) {
+        console.log(error);
+    }
     });
 }
-
+function createReminder(ele)
+{
+    var divDoc = document.getElementById("remDiv");
+    divDoc.style.visibility = "visible";
+}
 function enter(ele)
 {
     var data = new Object();
-    data.type = $(ele).parent().prev().prev().prev().prev().prev().prev().text();
-    data.token = $(ele).parent().prev().prev().prev().prev().prev().prev().prev().text();
-    data.quotation = $(ele).parent().prev().children(":first").val();
-    data.time = $(ele).parent().prev().prev().prev().prev().children(":first").val();
-    $.ajax({
+    data.token = $(ele).parent().prev().prev().prev().prev().prev().text();
+    data.quotation = $(ele).parent().prev().prev().children(":first").val();
+    data.time = $(ele).parent().prev().children(":first").val();
+    $.ajax({ 
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(data),
@@ -193,14 +201,49 @@ function verify(ele)
 
 }
 
+
+$(function() {
+    $('.file-download').click(function() {
+        console.log("Here in download file")
+        var data={}
+        data["filename"]= $(this).text()
+        var row= $(this).parent().parent()[0]
+        console.log(row)
+        var Cells = row.getElementsByTagName("td");
+        var token = Cells[0].innerText;
+        data["token"] = token
+        data["desc"]= Cells[2].innerText;
+        console.log(data)
+        console.log(data)
+        $.ajax({
+            url: '/filee',
+            data: JSON.stringify(data),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                console.log("ok")
+                alert("Your file is dowloaded in the FILES folder")
+            },
+            error: function(error) {
+                    console.log("error")
+                
+               
+            }
+        });
+    });
+});
+
+
+
 function viewDocs(ele)
 {
     var data = new Object();
     data.token = $(ele).parent().prev().prev().prev().text();
     console.log(data.token)
     
-    var divDoc = document.getElementById("writeContent");
-    divDoc.style.visibility = "visible";
+    //var divDoc = document.getElementById("writeContent");
+    //divDoc.style.visibility = "visible";
     $.ajax({
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
@@ -208,9 +251,11 @@ function viewDocs(ele)
         dataType: 'json',
         url: '/getDocs',
         success: function (data) {
+            console.log("its hereeee");
             console.log(data);
         },
         error: function(error) {
+        console.log("well here");
         console.log(error);
     }
     }); 
@@ -266,3 +311,4 @@ function checkbox(valuee){
        }
        });
    }
+  
