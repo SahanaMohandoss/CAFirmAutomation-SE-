@@ -326,6 +326,9 @@ $(function() {
                     if(response['type']==0){
                         window.location.href = "/clientHome"
                       }
+                    else if(response['type']==1){
+                    	window.location.href = "/EmployeeHome"
+                    }
                     else{
                         window.location.href = "/partner"   
                         }

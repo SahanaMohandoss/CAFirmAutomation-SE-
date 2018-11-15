@@ -75,7 +75,6 @@ function createReminder(ele)
     var divDoc = document.getElementById("remDiv");
     divDoc.style.visibility = "visible";
 }
-/*
 function enter(ele)
 {
     var data = new Object();
@@ -96,7 +95,7 @@ function enter(ele)
     }
     });
 }
-*/
+
 
 
 function quot(ele)
@@ -158,6 +157,7 @@ function enter(ele)
     }
     });
 }
+
 
 function allocate(ele)
 {
