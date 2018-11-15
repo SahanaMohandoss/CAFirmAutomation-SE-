@@ -1,0 +1,182 @@
+<!doctype html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  .container{
+    width:95%;
+    margin:2.5%;
+  }
+</style>
+<script src="{{ url_for('static', filename='EmployeeHome.js') }}"> </script>
+<link rel="stylesheet" href="{{url_for('static', filename='ClientHome.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='TableStyle.css')}}">
+</head>
+   <body onload ="onLoad()">   
+
+            <br>
+            <br>
+<button class="tablink" onclick="openPage('ViewTasks', this, 'black')" id="DefaultOpen">View Tasks for the day</button>
+<button class="tablink" onclick="openPage('messages', this, 'black')" >Messages</button>
+
+
+<p align = "center" id="uname" >Hi {{username}} ! Here's your work for the day! </p>
+
+
+<div id="ViewTasks" class="tabcontent">
+
+  <input type="text" id="myInput" class = "searchByToken" onkeyup="searchByToken()" placeholder="Search for service by Token number.."/>
+
+<br>
+      Services not Completed<br><br>
+      <table border = 1 id = "myTable" onload="sortTable(4)" class="table table-hover">
+          <thead>
+            <th  onclick="sortTable(0)">Token Number</th>
+            <th onclick="sortTable(1)">Type of Service</th>
+            <th onclick="sortTable(2)">Description</th>
+            <th onclick="sortTable(4)">Estimated Date of Completion</th>
+            <th onclick="sortTable(3)">Time Remaining</th>
+            <th>Mark Completed</th>
+            <th>Return Task to Partner</th>
+            <th>Set Task Status for Partner</th>
+            <th>Download Client's Files</th>
+               
+         
+          </thead>
+          
+          {% for row in rows4 %}
+             <tr>
+                <td>{{row["TOKEN_NO"] }} </td>
+                <td>{{row["TYPE_OF_SERVICE"]}}</td>
+                <td>{{row["DESCRIPTION"]}}</td>
+                <td>{{row["ESTIMATED_TIME_OF_COMPLETION"]}}</td>
+                <td onload = getdatediff()>{{row["ESTIMATED_TIME_OF_COMPLETION - CURRENT_TIMESTAMP"]}}</td>   <!--EDIT HERE TO INPUT DATE DIFFERENCE CODE     -->
+                <td><button type="button" class = "button"  value="MarkCompleted" onclick="MarkCompleted({{row['TOKEN_NO'] }} )"> Mark Completed </button></td>
+                <td><button type="button" class = "button"  value="ReturnPartner" onclick="RejectTask({{row['TOKEN_NO']}})"> Return Task to Partner </button></td>
+                <td><input type="text" id = "SetPartnerStatus"><button type="button" class = "button"  value="SubmitPartnerStatus" onclick="SetPartnerStatus(this)"> </button></td><
+                <td><input type="text" id = "SetClientStatus"><button type="button" class = "button"   value="SubmitClientStatus" onclick="SetClientStatus(this)"></button></td> 
+                <td>{% for rowinner in files if rowinner[0] == row["TOKEN_NO"] %}
+            		<tr >
+               			<td>  <a class = "file-download" href="#myTable" > {{rowinner[1]}}</a></td>
+            		</tr>
+         			{% endfor %}
+     			</td> 
+
+             </tr>
+          {% endfor %}
+       </table>
+
+      <br>
+      <br>
+      Services Completed but not Verified<br><br>
+      <table border = 1 class="table table-hover">
+          <thead>
+             <td>Token Number</td>
+             <td>Type of Service</td>
+             <td>Description</td>
+       
+          </thead>
+          
+          {% for row in rows5 %}
+             <tr>
+                <td>{{row["TOKEN_NO"]}}</td>
+                <td>{{row["TYPE_OF_SERVICE"]}}</td>
+                <td>{{row["DESCRIPTION"]}}</td>
+             </tr>
+          {% endfor %}
+       </table>
+
+
+
+  </div>
+
+
+
+<div id="messages" class="tabcontent" style="height:100%">
+<div class="parts">
+ <div class="part">
+  <div>
+    <h3>Messages</h3>
+    
+  <a id="button-for-compose-mail" href="#compose-mail">Send New Message</a>
+  </div>
+  <div class = "Messages">
+  <table border = 1 id = "myTable">
+         <thead>
+            <th>From</th>
+            <th>Message</th>
+            <th>Time</th>
+         </thead>
+         <tbody>
+         {% for row in messages %}
+            <tr >
+              <td>{{row[0]}}</td>
+               <td>{{row[2]}}  <a id = "compose-mail-reply" href="#compose-mail"> Reply</a></td>
+               <td >{{row[1]}}</td>
+            </tr>
+         {% endfor %}
+     </tbody>
+     </table> 
+  </div>
+  
+    <div id="compose-mail-container">
+      <div id="compose-mail" class="hidden">
+        <form action="example.com">
+          <fieldset>
+            <label >Compose your message</label>
+          </fieldset>
+          <br/><br/>
+          <fieldset>
+            <label for="to">To</label>
+            <br/><br/>
+            <input type="text" id="to">
+            <label for="from">From</label>
+            <br/><br/>
+            <input type="text" id="from">
+          </fieldset>
+          <fieldset>
+            <label for="content">Content</label>
+            <br/><br/>
+            <textarea name="content" id="content" style="height:50px"></textarea>
+          </fieldset>
+          <fieldset>
+            <br/><br/>
+            <button type="button" class = "button" id="btnSendMessage"  value="Send Message"> Send Message </button>
+          </fieldset>
+        </form>
+        <br/><br/>
+        <a id="close-button" href="#">Close Dialog</a>
+      </div>
+    </div>
+  </div>
+  
+
+</div>
+</div>
+<!--
+			<div id = "filesdiv">
+
+              <div class="formelement" id = "onefile">
+                <input  type = file  name = "files[]" multiple="">
+                <img src="{{url_for('static', filename='x.gif')}}" class='remove'>
+                <input type = "text" name = "filedesc"  placeholder = "Enter a file description">
+              </div>
+
+              <br>
+              <div class="formelement" id ="onefile">
+                <input id = "files" type = file  name = "files[]" multiple="">
+                <img src="{{url_for('static', filename='x.gif')}}"  class='remove'>
+                <input type = "text" name = "filedesc"  placeholder = "Enter a file description">
+              </div>
+              <br><br>
+              </div>
+                <div class="formelement">
+                <button type="button" name="upload" class = "button" id="btnUpload" value="Upload another document"> Upload another document
+                </button>
+                </div>
+              <br/><br/>
+   </body>
+-->
+</html>
