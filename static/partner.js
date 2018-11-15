@@ -116,7 +116,7 @@ function quot(ele)
         success: function (data) 
         {
             console.log("Inside success")
-            $(ele).parent().next().innerHTML=data.responseText
+            $(ele).parent().next().html()=data.responseText
             /*
             response = JSON.parse(data)
             document.getElementById("reg_val").innerHTML+=response.responseText
@@ -129,10 +129,10 @@ function quot(ele)
         },
         error: function(error) 
         {
-            console.log("Inside error")
+            console.log("Inside error");
             console.log(error.responseText);
             //document.getElementById("reg_val").innerHTML=error.responseText
-            $(ele).parent().next().innerHTML=data.responseText
+            $(ele).parent().next().html(error.responseText);
         }
     });
 }
