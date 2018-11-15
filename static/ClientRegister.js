@@ -1,10 +1,12 @@
 
-
+//Prevent the file from going back
 window.onpopstate = function () {
         history.pushState(null, null, window.href);
         history.go(0);
     };
 
+
+//For dynamic change in label in form when user types in text area
 $('.form').find('input, textarea').on('keyup blur focus', function (e) {
   
   var $this = $(this),
@@ -38,7 +40,7 @@ $('.form').find('input, textarea').on('keyup blur focus', function (e) {
 
 
 
-
+//To enable tabs
 
 $('.tab a').on('click', function (e) {
   
@@ -56,18 +58,19 @@ $('.tab a').on('click', function (e) {
 });
 
 
-
+//Things to do as soon as the document is ready
 $(document).ready(function () {
 
     toggleFields(); //call this first so we start out with the correct visibility depending on the selected form values
     //this will call our toggleFields function every time the selection value of our underAge field changes
+    //Toggle fields is to change the form registration fields depending on type of user
     $("#usertype").change(function () {
         toggleFields();
         document.getElementById("aadhar_error").innerHTML = ""
         document.getElementById("pan_error").innerHTML = ""
         document.getElementById("employeeID_error").innerHTML = ""
     });
-
+    //clear out all the divs that display errors
     $("#aadhar").change(function () {
          document.getElementById("aadhar_error").innerHTML = ""
         
@@ -130,7 +133,7 @@ function toggleFields() {
 
 
 
-
+//sign up for client, employee, register
 $(function() {
     $('#btnSignUp').click(function() {
         console.log("Here")
@@ -154,21 +157,25 @@ $(function() {
                 }
                 else if(response["status"]==2)
                 {
+                  //username alrwady exists
                   if(response["username"]==1)
                   {
                      error = document.getElementById("username_error")
                       error.innerHTML = "This username already exists!"
                   }
+                  //email exists
                   if(response["email"]==1)
                   {
                      error = document.getElementById("email_error")
                       error.innerHTML = "This email ID already exists!"
                   }
+                  //aadhaar exists
                   if(response["aadhar"]==1)
                   {
                      error = document.getElementById("aadhar_error")
                       error.innerHTML = "This Aadhar number already exists!"
                   }
+                  //PAN exists
                   if(response["pan"]==1)
                   {
                      error = document.getElementById("pan_error")
@@ -178,9 +185,10 @@ $(function() {
                 }
                 else
                 {
+                  //Incase password or username or email is empty
                   console.log("Here")
                   uname = document.getElementById("username").value
-                  
+                  //username empty
                   if(!uname)
                   {
                     error = document.getElementById("username_error")
@@ -188,13 +196,13 @@ $(function() {
                   }
 
                   email = document.getElementById("email").value
-                  
+                  //email empty
                   if(!email)
                   {
                     error = document.getElementById("email_error")
 
                     error.innerHTML = "This field cant be empty! Please enter a valid email ID"
-                  }
+                  } //email wrong format
                   else
                     {var atposition=email.indexOf("@");  
                       var dotposition=email.lastIndexOf(".");  
@@ -206,7 +214,7 @@ $(function() {
                     }
 
                   firstname = document.getElementById("firstname").value
-                  
+                  //firstname empty
                   if(!firstname)
                   {
                     error = document.getElementById("firstname_error")
@@ -214,7 +222,7 @@ $(function() {
                   }
 
                   number = document.getElementById("number").value
-                  
+                  //number field empty
                   if(!number)
                   {
                     error = document.getElementById("number_error")
@@ -229,6 +237,7 @@ $(function() {
                     error = document.getElementById("lastname_error")
                     error.innerHTML = "This field cant be empty! Please enter a valid Lastname"
                   }
+                  //check for aadhaar and pan only for clients
                   if(document.getElementById("usertype").value == 0)
                   {
                     adhaar = document.getElementById("aadhar").value
@@ -250,6 +259,7 @@ $(function() {
                   }
                   else
                   {
+                      //employee id for partner and employee
                      employeeID = document.getElementById("employeeID").value
                   
                     if(!employeeID)
@@ -260,7 +270,7 @@ $(function() {
                   }
                   
                   password = document.getElementById("password").value
-                  
+                  //pass of min length 6
                   if(!password || password.length<6)
                   {
                     error = document.getElementById("password_error")
@@ -268,7 +278,7 @@ $(function() {
                   }
 
                   confpassword = document.getElementById("password").value
-                  
+                  //CCheck if pass === conf pass
                   if(!confpassword)
                   {
                     error = document.getElementById("confpassword_error")
@@ -296,7 +306,7 @@ $(function() {
 
 
 
-
+//Log in
 
 $(function() {
     $('#btnLogIn').click(function() {
@@ -306,6 +316,7 @@ $(function() {
             data: $('form').serialize(),
             type: 'POST',
             success: function(response) {
+              //Render template accordin to type of user
                 response = JSON.parse(response)
                 console.log(response["status"]);
                 if(response["status"]==0)
@@ -349,7 +360,7 @@ $(function() {
 $(document).ready(
     function(){
 
-    
+    //Prevent submit due to enter
 
     $(window).keydown(function(event){
     if(event.keyCode == 13) {
@@ -357,11 +368,12 @@ $(document).ready(
       return false;
     }
     });
+    //to cancel file upload
     $('.remove').click(function(){
         console.log($(this).closest('div'))
         $(this).closest('div').slideUp('slow', function(){$(this).remove();});
     });     
-
+    //To upload multiple files
     $('#btnUpload').click(function(){
        
 

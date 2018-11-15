@@ -2,8 +2,6 @@
 
 //On reload send new data from database
 
-
-
 window.onload =function () {
     acc = getData()
     console.log(acc)
@@ -308,7 +306,7 @@ function calc()
 
 //To submit request ajax
 $(document).ready(
-
+    //To get Datatables
     function(){
     $('#myTable').DataTable();
     $('#myTable2').DataTable();
@@ -331,7 +329,7 @@ $(document).ready(
         console.log($(this).closest('div'))
         $(this).closest('div').slideUp('slow', function(){$(this).remove();});
     });     
-
+    //To upload  multu=iple files
     $('#btnUpload').click(function(){
        
         console.log("here")
@@ -416,6 +414,7 @@ $(function() {
         console.log("Here in send message")
         var data={}
         data["content"]= $('#content').val()
+        //set from to username
          data["from"]= uname
           data["to"]= $('#to').val()
         console.log(data)
@@ -568,7 +567,7 @@ function hideDialog() {
 // At the beginning, we hide the dialog:
 hideDialog();
 
-
+//To hide accept service button if already accepted or if quotation = 0.0
 function hide_accept()
 {
     acc = getData()
@@ -623,7 +622,7 @@ $(".compose-mail-reply").on("click", function(){
 
 
 
-
+//To close compose mesaage
 
 $("#close-button").on("click", function(){
   hideDialog();
@@ -706,7 +705,7 @@ $(function() {
 });
 
 
-
+//To filter by status of service
 
 $('#filterByStatus').change(function(){
     var criteria = $(this).val();
@@ -729,7 +728,7 @@ $('#filterByStatus').change(function(){
     }
 });
 
-
+//To search by token
 $('.searchByToken').keyup(function(){
     console.log("IT CHANGED")
     console.log($(this).parent())

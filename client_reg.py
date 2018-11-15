@@ -134,6 +134,7 @@ def signUp():
 
 
     print(_name, _lname, validate_email(_email) , (_password == _confpassword), flag)
+    #Check type of user and validation and accordingly insert into correct DB
     if _name and _lname and _num and _fname and  _email and _password and validate_email(_email) and (_password == _confpassword) and flag and not(exists[0]==1 or exists[1]==1 or exists[2] ==1 or exists[3] == 1):
         print("ALL OK")
     	#INSERT TO DATABASE
@@ -198,6 +199,8 @@ def logIn():
     password = request.form['pwd']
     print("In log in")
     print(name , password , t)
+    #ADPTER PATTERN: Check type of user and render the corresponding interface
+    #0: client , 1:employee , 2: partner
     if(t=="0"):
         a = query_db("SELECT * FROM client WHERE username = ?", [name], one=True)
         print("Values" , a)
@@ -245,7 +248,7 @@ def logIn():
 #To render client page and get the necessary data to display
 @app.route('/clientHome')
 def clientHome():
-    
+    #To pass username
     name = session['username'] 
     print(name)
     name = name.strip()
@@ -256,7 +259,7 @@ def clientHome():
     print(s)
     accepted=[]
     quotation=[]
-    #Handle null values in tables
+    #Handle null values in tables check the employee assigned and end date
     for i in range(len(s)):
         x = s[i]
         print(x[5])
@@ -275,14 +278,17 @@ def clientHome():
         else: 
             accepted.append(x[7])
         quotation.append(x[2])
+    #get clients' messages
     m = query_db("SELECT sender , current_timestamp ,message  FROM messages  \
          WHERE recepient = ? ORDER BY current_timestamp DESC", [name])
     print(m)
+    #Get completed docs
     files = query_db("SELECT token_no , filename , completed_service_docs.description   FROM completed_service_docs  \
                 JOIN service ON completed_service_docs.token = token_no \
          JOIN service_status ON service_status.token = token_no\
          WHERE user = ? AND verified = ?", [name, 1])
     print(files)
+    #Get invoice docs of client
     invoice = query_db("SELECT token_no, generated_by , current_timestamp ,filename, invoice_amount  FROM completed_service_invoice  \
          JOIN service ON completed_service_invoice.token = token_no \
          JOIN service_status ON service_status.token = token_no\
@@ -303,6 +309,7 @@ def submitFeedback():
     print(f)
     t = int(data["token"])
     print(t)
+    #Sentiment analysis of the feedbcak
     ob=SentimentAnalyzer()
     sentiment=ob.get_string([f])
     print(sentiment)
@@ -383,6 +390,8 @@ def fileDownload():
 
 @app.route('/acceptService', methods=['POST'])
 
+
+#For a client to accept a service given quotation
 def acceptService():
     data = request.json
     t = int(data["token"][0])
@@ -391,7 +400,7 @@ def acceptService():
     print("updated")
     return json.dumps("{'status':2}")
 
-
+#Download the invoice document to th invoice folder
 @app.route('/invoiceFileDownload', methods=['POST'])
 def invoiceFileDownload():
     data = request.json
@@ -433,13 +442,12 @@ def cover_str(cvr):
 @app.route('/submitRequest',methods=['POST'])
 def submitRequest():
     print("IN SUBMIT")
-    
-
+    #Get data from FE
 
     username =session['username']
     description = request.form['description']
     service = request.form['service']
-
+    #Insert  the request to services tab;e
     cols = ("user", "type_of_service", "description" , "quotation" , "accepted" , "allocated")
     vals = (username , service , description, 0.0 , 0, 0)
     print(username , service, description)
@@ -447,7 +455,7 @@ def submitRequest():
     token = query_db("SELECT * FROM service WHERE user = ? AND type_of_service LIKE ? AND description LIKE ?", [username , service, description], one=True)
     token = token[1]
     print(token)
-
+    #Add the following tokens to service status and allocation
     cols = ("token" , "completed", "verified", "remarks", "status_for_partner", "status_for_client")
     vals = (token , 0 , 0 , "", "" , "Not Accepted" )
     insert("service_status" , cols, vals)
@@ -457,7 +465,7 @@ def submitRequest():
     #Handling file uploads
     print("here in submit")
     print(service, description)
-
+    #handle storing blob files
     desc = request.form.getlist('filedesc')
     print(desc)
     file = request.files.getlist('files[]')
