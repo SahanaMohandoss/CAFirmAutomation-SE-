@@ -10,7 +10,14 @@ app = Flask(__name__)
 
 Database = 'ca_firm.db'
 
-
+def query_db(query, args=(), one=False):
+    con = sqlite3.connect(Database)
+    cur = con.execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    con.commit()
+    con.close()
+    return (rv[0] if rv else None) if one else rv
 
 @app.route('/EmployeeHome')
 def EmployeeHome():
