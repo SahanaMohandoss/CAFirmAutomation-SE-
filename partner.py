@@ -113,8 +113,8 @@ def reminder():
                 ids += id + ";"
         ids = ids[:-1]
 
-        exe = 'INSERT INTO REMINDERS (REMINDER_NAME,GENERATED_BY,REMINDER_TIMESTAMP,REMINDER_MESSAGE,MAILING_LIST) VALUES(?,?,?,?,?)'
-        param = (rem["reminder_name"],partner_name,rem["curr_timestamp"],rem["reminder_message"],ids)
+        exe = 'INSERT INTO REMINDERS (REMINDER_NAME,GENERATED_BY,REMINDER_TIMESTAMP,CURR_TIMESTAMP,REMINDER_MESSAGE,MAILING_LIST,SENT) VALUES(?,?,?,?,?,?,?)'
+        param = (rem["reminder_name"],partner_name,rem["curr_timestamp"],get_time(),rem["reminder_message"],ids,0)
         cur.execute(exe,param)
         con.commit()
         con.close()
@@ -149,7 +149,7 @@ def quotation():
         con.row_factory = sql.Row
         cur = con.cursor()
         print(enterDetail["quotation"])
-        exe = 'UPDATE SERVICE SET QUOTATION=%s ESTIMATED_HOURS =%s WHERE TOKEN_NO = %s' % (enterDetail["quotation"],enterDetail["time"],enterDetail["token"])
+        exe = 'UPDATE SERVICE SET QUOTATION=%f, ESTIMATED_HOURS =%f WHERE TOKEN_NO = %d' % (float(enterDetail["quotation"]),float(enterDetail["time"]),int(enterDetail["token"]))
         cur.execute(exe)
         con.commit()
         con.close()
@@ -174,9 +174,14 @@ def allocate():
         con = sql.connect(Database)
         con.row_factory = sql.Row
         cur = con.cursor()
-        exe = 'INSERT INTO SERVICE_ALLOCATION (TOKEN,EMP,ALLOCATED_BY) VALUES (?,?,?)'
-        params =  (allocateSer["token"],allocateSer["employee"],partner_name)
+        exe = 'UPDATE SERVICE_ALLOCATION SET EMP=?, ALLOCATED_BY=? WHERE TOKEN=?'
+        params=(str(allocateSer["employee"]),str(partner_name),int(allocateSer["token"]))
+        #params =  (allocateSer["token"],allocateSer["employee"],partner_name)
         cur.execute(exe,params)
+        con.commit() 
+        exe = 'UPDATE SERVICE SET ALLOCATED = 1 WHERE TOKEN_NO=%d' % (int(allocateSer["token"]))
+        #params=(int(allocateSer["token"]))
+        cur.execute(exe)
         con.commit() 
         con.close()
         return "done"
