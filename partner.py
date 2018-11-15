@@ -286,7 +286,7 @@ def sendMail():
         subjectAtt.append(token)
 
         # calling the mail API :D
-        mailTo('shivassv97@gmail.com', clientEmail[0]['EMAIL_ID'], 'supermouse97',fileList,fileNameList, subjectAtt, bodyAtt)
+        mailTo('', clientEmail[0]['EMAIL_ID'], '',fileList,fileNameList, subjectAtt, bodyAtt) # add the firm Email and password
 
         return "Sent mail"
 
