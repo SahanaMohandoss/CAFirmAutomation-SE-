@@ -75,7 +75,6 @@ function createReminder(ele)
     var divDoc = document.getElementById("remDiv");
     divDoc.style.visibility = "visible";
 }
-/*
 function enter(ele)
 {
     var data = new Object();
@@ -83,68 +82,6 @@ function enter(ele)
     data.quotation = $(ele).parent().prev().prev().children(":first").val();
     data.time = $(ele).parent().prev().children(":first").val();
     $.ajax({ 
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        url: '/quotation',
-        success: function (data) {
-            console.log(data);
-        },
-        error: function(error) {
-        console.log(error);
-    }
-    });
-}
-*/
-
-
-function quot(ele)
-{
-    console.log("Inside quot")
-    var data = new Object();
-    data.type = $(ele).parent().prev().prev().prev().text();
-    data.time = $(ele).parent().prev().children(":first").val();
-    console.log(data.type);
-    console.log(data.time);
-    $.ajax({
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        url: '/quot',
-        success: function (data) 
-        {
-            console.log("Inside success")
-            $(ele).parent().next().innerHTML=data.responseText
-            /*
-            response = JSON.parse(data)
-            document.getElementById("reg_val").innerHTML+=response.responseText
-            txt=response.responseText
-            console.log("--------------------------")
-            console.log(txt)
-            console.log("--------------------------")
-            console.log(data.state);
-            */
-        },
-        error: function(error) 
-        {
-            console.log("Inside error")
-            console.log(error.responseText);
-            //document.getElementById("reg_val").innerHTML=error.responseText
-            $(ele).parent().next().innerHTML=data.responseText
-        }
-    });
-}
-
-function enter(ele)
-{
-    var data = new Object();
-    data.type = $(ele).parent().prev().prev().prev().prev().prev().prev().text();
-    data.token = $(ele).parent().prev().prev().prev().prev().prev().prev().prev().text();
-    data.quotation = $(ele).parent().prev().children(":first").val();
-    data.time = $(ele).parent().prev().prev().prev().prev().children(":first").val();
-    $.ajax({
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(data),
