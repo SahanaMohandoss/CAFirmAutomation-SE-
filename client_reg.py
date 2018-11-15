@@ -6,7 +6,7 @@ from flask import json, session
 from validate_email import validate_email
 import re
 import flask
-from sentiment_analyzer import SentimentAnalyzer
+# from sentiment_analyzer import SentimentAnalyzer
 app = Flask(__name__)
 # from employee_reg import *
 from partner import *
@@ -273,6 +273,7 @@ def clientHome():
             x =list(x)
             x[6]="Not allocated yet"
             s[i] = tuple(x)
+        print("value of status is", x[4])
         if(x[2]==0.0):
             accepted.append(1) 
         else: 
@@ -300,29 +301,29 @@ def clientHome():
 
 #To submit feedbak of service on click of button
 
-@app.route('/submitFeedback', methods=['POST'])
-def submitFeedback():
-    data = request.json
-    print("Submitting feedback")
-    print(data)
-    f = data["feedback"]
-    print(f)
-    t = int(data["token"])
-    print(t)
-    #Sentiment analysis of the feedbcak
-    ob=SentimentAnalyzer()
-    sentiment=ob.get_string([f])
-    print(sentiment)
-    s = query_db("UPDATE service SET feedback = ? \
-         WHERE token_no = ?",[data['feedback'], data['token']])
-    s = query_db("UPDATE service SET sentiment = ? \
-         WHERE token_no = ?",[sentiment[0], data['token']])
-    print(s)
-    s= query_db("SELECT feedback FROM service  \
-         WHERE token_no = ?",[ data['token']])
-    print(s)
+# @app.route('/submitFeedback', methods=['POST'])
+# def submitFeedback():
+#     data = request.json
+#     print("Submitting feedback")
+#     print(data)
+#     f = data["feedback"]
+#     print(f)
+#     t = int(data["token"])
+#     print(t)
+#     #Sentiment analysis of the feedbcak
+#     ob=SentimentAnalyzer()
+#     sentiment=ob.get_string([f])
+#     print(sentiment)
+#     s = query_db("UPDATE service SET feedback = ? \
+#          WHERE token_no = ?",[data['feedback'], data['token']])
+#     s = query_db("UPDATE service SET sentiment = ? \
+#          WHERE token_no = ?",[sentiment[0], data['token']])
+#     print(s)
+#     s= query_db("SELECT feedback FROM service  \
+#          WHERE token_no = ?",[ data['token']])
+#     print(s)
 
-    return json.dumps({'status':2})
+#     return json.dumps({'status':2})
 
 
 #To upload files for a service for a user
@@ -388,16 +389,21 @@ def fileDownload():
            output_file.write(file[0][0])
     return json.dumps("{'status':2}")
 
-@app.route('/acceptService', methods=['POST'])
 
 
 #For a client to accept a service given quotation
+@app.route('/acceptService', methods=['POST'])
 def acceptService():
     data = request.json
     t = int(data["token"][0])
     s = query_db("UPDATE service SET accepted = ? \
          WHERE token_no = ?",[1, t])
     print("updated")
+    checkexistence = query_db("SELECT * FROM SERVICE_STATUS WHERE token = ?", [t])
+    if checkexistence is None:
+        query_db("INSERT INTO SERVICE_STATUS (TOKEN,COMPLETED,VERIFIED,status_for_partner, status_for_client) values(?,0,0,'NO COMMENTS', 'accepted')", t)
+    else:
+        query_db("UPDATE SERVICE_STATUS SET status_for_client = 'Accepted' WHERE token = ?", [t])
     return json.dumps("{'status':2}")
 
 #Download the invoice document to th invoice folder
