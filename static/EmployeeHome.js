@@ -4,9 +4,12 @@ window.onload = function() {
     if (reloading) {
         sessionStorage.removeItem("reloading");
         console.log("Reload")
-        window.location.href = "/clientHome"   
+        window.location.href = "/EmployeeHome"   
     }
 }
+
+var tab = document.getElementById('ViewTasks')
+
 
 
 function sortTable(n) {
@@ -65,7 +68,84 @@ function sortTable(n) {
 }
 
 
-   
+function MarkCompleted(token_no){
+    var data = new Object();
+    data.token = token_no;
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        url: '/complete',
+        success: function (data) {
+            console.log(data);
+        },
+        error: function(error) {
+        console.log(error);
+    }
+    });   
+}
+
+function RejectTask(token_no){
+    var data = new Object();
+    data.token = token_no;
+    data.status = 'Task Rejected'
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        url: '/partnerstatus',
+        success: function (data) {
+            console.log(data);
+        },
+        error: function(error) {
+        console.log(error);
+    }
+    });   
+}
+
+
+function SetPartnerStatus(ele){
+    var data = new Object();
+    data.token = $(ele).parent().prev().prev().prev().prev().prev().prev().prev().text()
+    data.status = $(ele).prev().value()
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        url: '/partnerstatus',
+        success: function (data) {
+            console.log(data);
+        },
+        error: function(error) {
+        console.log(error);
+    }
+    }); 
+}   
+
+function SetClientStatus(token_no){
+    var data = new Object();
+    data.token = $(ele).parent().prev().prev().prev().prev().prev().prev().prev().prev().text()
+    data.status = $(ele).prev().value()
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        url: '/clientstatus',
+        success: function (data) {
+            console.log(data);
+        },
+        error: function(error) {
+        console.log(error);
+    }
+    }); 
+} 
+
+
+
 
 function openPage(pageName,elmnt,color) {
     var i, tabcontent, tablinks;
