@@ -48,7 +48,9 @@ a:hover {
   display: block;
   text-decoration: none;
   padding: 15px;
+
   background: rgba(160, 179, 176, 0.25);
+  
   color: #a0b3b0;
   font-size: 20px;
   float: left;

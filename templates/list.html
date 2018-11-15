@@ -12,7 +12,16 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script>$('select').selectpicker();</script>
+<script>$('select').selectpicker();</script> 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+  </script>
 <style>
 .tablink {
      
@@ -257,7 +266,7 @@
         <button class="btn btn-primary" name = "reminder" onClick="createReminder(this);">Create Reminder</button>
         <div id="remDiv">
             Reminder Name: <input type="text" name="reminder_name">
-            Reminder Time: <input type="date" name="reminder_time">
+            Reminder Time: <input type="date" id="datepicker">  <!-- <input type="date" name="reminder_time">-->
             Reminder Message: <input type="text" name="reminder_message">
             Main IDs<select id="rem" class="selectpicker" multiple="multiple">
             {% for row in client_mail %}     

@@ -18,7 +18,8 @@ window.onload =function () {
 
 }
 
-   
+
+
 //Form main tabs control
 function openPage(pageName,elmnt,color) {
     var i, tabcontent, tablinks;
@@ -308,7 +309,10 @@ function calc()
 $(document).ready(
 
     function(){
-
+    $('#myTable').DataTable();
+    $('#myTable2').DataTable();
+    $('#myTable3').DataTable();
+    $('#myTable4').DataTable();
         
     $('form').on('submit', function(e){
 

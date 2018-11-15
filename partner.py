@@ -3,6 +3,7 @@ from flask import g
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import session
 import json
 import datetime
 app = Flask(__name__,template_folder='templates')
@@ -12,10 +13,13 @@ app = Flask(__name__,template_folder='templates')
 def home():
     return render_template('partner.html',)
 '''
-Database = "ca_firm"
-@app.route('/')
+Database = "ca_firm.db"
+@app.route('/partner')
 def list():
     #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
+
+    partner_name = session['username'] 
+    print(partner_name)
     con = sql.connect(Database)
     con.row_factory = sql.Row
   
@@ -94,6 +98,7 @@ def filee():
 @app.route('/reminder', methods=['GET', 'POST'])
 def reminder():
     if request.method == 'POST':
+        partner_name = session['username']
         print("ummmmmm?")
         rem = request.get_json()
         #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
@@ -105,8 +110,8 @@ def reminder():
                 ids += id + ";"
         ids = ids[:-1]
 
-        exe = 'INSERT INTO REMINDERS (REMINDER_NAME,GENERATED_BY,REMINDER_TIMESTAMP,CURR_TIMESTAMP,REMINDER_MESSAGE,MAILING_LIST) VALUES(?,?,?,?,?,?)'
-        param = (rem["reminder_name"],rem["generated_by"],get_time(),rem["curr_timestamp"],rem["reminder_message"],ids)
+        exe = 'INSERT INTO REMINDERS (REMINDER_NAME,GENERATED_BY,REMINDER_TIMESTAMP,REMINDER_MESSAGE,MAILING_LIST) VALUES(?,?,?,?,?)'
+        param = (rem["reminder_name"],partner_name,rem["curr_timestamp"],rem["reminder_message"],ids)
         cur.execute(exe,param)
         con.commit()
         con.close()
@@ -133,6 +138,7 @@ def quotation():
 @app.route('/allocate', methods=['GET', 'POST'])
 def allocate():
     if request.method == 'POST':
+        partner_name = session['username']
         allocateSer = request.get_json()
         print(allocateSer)
         
@@ -141,7 +147,7 @@ def allocate():
         con.row_factory = sql.Row
         cur = con.cursor()
         exe = 'INSERT INTO SERVICE_ALLOCATION (TOKEN,EMP,ALLOCATED_BY) VALUES (?,?,?)'
-        params =  (allocateSer["token"],allocateSer["employee"],allocateSer["partner"])
+        params =  (allocateSer["token"],allocateSer["employee"],partner_name)
         cur.execute(exe,params)
         con.commit() 
         con.close()
@@ -165,6 +171,7 @@ def verify():
 @app.route('/message', methods=['GET', 'POST'])
 def message():
     if request.method == 'POST':
+        partner_name = session['username']
         mess = request.get_json()
         #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
         con = sql.connect(Database)
@@ -178,7 +185,7 @@ def message():
         print("here")
         print(token)
         print(emp[0][0])
-        params =  (mess["sender"],emp[0][0],mess["message"],mess["token"])
+        params =  (partner_name,emp[0][0],mess["message"],mess["token"])
         exe = "INSERT INTO MESSAGES (SENDER,RECEPIENT,MESSAGE,TOKEN) VALUES(?,?,?,?)"
         cur.execute(exe,params)
         con.commit()

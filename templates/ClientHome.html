@@ -8,7 +8,9 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">-->
 
-	<script type="text/javascript" src="http://output71.rssinclude.com/output?type=js&amp;id=1198760&amp;hash=8f510fe9ecc18bb3735668dfd1e48b5f"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
 <script> history.pushState(null, null, location.href);
     window.onpopstate = function () {
@@ -25,8 +27,7 @@
     {
       return acc;
     }
-  </script> 
-
+  </script>
 
 </head>
 <!--<img src="{{url_for('static', filename='income.jpg')}} width='100%'' height='100%'" >-->
@@ -49,8 +50,8 @@
       <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('RequestService', this, 'grey')" id="defaultOpen">REQUEST A SERVICE</button></li>
       <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('ViewService', this, 'grey')" >VIEW STATUS OF SERVICE</button></li>
       <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('TaxCalculator', this, 'grey')">TAX CALCULATOR</button></li>
-      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('contact', this, 'grey')">CONTACTS</button></li>
-      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('contact', this, 'grey')">NOTIFICATIONS	</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('contact', this, 'grey')">MESSAGES AND DOCS</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('Notifications', this, 'grey')">NOTIFICATIONS	</button></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       
@@ -143,7 +144,7 @@
 
 <div id="ViewService" class="tabcontent">
 
-  <input type="text" id="myInput" class="col-sm-4" class = "searchByToken" placeholder="Search for service by Token number.."/>
+  <!--<input type="text" id="myInput" class="col-sm-4" class = "searchByToken" placeholder="Search for service by Token number.."/>-->
   <br/>
   <br/>
   <select class="col-sm-4" id="filterByStatus">
@@ -204,7 +205,9 @@
       <div id="outer" style="font-family:verdana;">
         <h1 class="col-sm-4"> Income Tax Calculator </h1>
         <br/><br/><br/><br/><br/>
-        <b class="col-sm-4">Choose your category:&nbsp;&nbsp;&nbsp;&nbsp;</b>
+        <br/>
+        <br/>
+        <b class="col-sm-4">Choose your category:&nbsp;&nbsp;</b>
        
         <select id="typ" onchange="new_elem()">
             <option value="ind1">Individual < 60 years of Age</option>
@@ -243,7 +246,7 @@
 	<a id="button-for-compose-mail" href="#compose-mail">Send New Message</a>
 	</div>
 	<div class = "Messages">
-	<table class="table table-bordered" id = "myTable">
+	<table class="table table-bordered" class="display" id = "myTable2">
          <thead>
             <th>From</th>
             <th>Message</th>
@@ -299,7 +302,7 @@
     <h3>Completed Service Documents</h3> 
   	
   	<br/><br/>
-	<table class="table table-bordered" id = "myTable">
+	<table class="table table-bordered" class="display" id = "myTable3">
          <thead>
             <th>Token</th>
             <th>Filename</th>
@@ -309,7 +312,7 @@
          {% for row in files %}
             <tr >
             	<td>{{row[0]}}</td>
-               <td>  <a class = "file-download" href="#myTable" > {{row[1]}}</a></td>
+               <td>  <a class = "file-download" href="#myTable3" > {{row[1]}}</a></td>
                <td >{{row[2]}}</td>
             </tr>
          {% endfor %}
@@ -321,7 +324,7 @@
      <br/><br/><br/>  
   	<h3>Completed Invoice Documents</h3> 
   	<br/><br/>
-	<table class="table table-bordered" id = "myTable" >
+	<table class="table table-bordered" class="display" id = "myTable4" >
          <thead>
             <th>Token</th>
             <th>Filename</th>
@@ -334,7 +337,7 @@
          {% for row in invoice %}
             <tr >
             	<td>{{row[0]}}</td>
-            	<td>  <a class = "invoice-file-download" href="#myTable"> {{row[3]}} </a></td>
+            	<td>  <a class = "invoice-file-download" href="#myTable4"> {{row[3]}} </a></td>
             	<td>{{row[1]}}</td>
             	<td>{{row[2]}}</td>
                
@@ -344,6 +347,10 @@
      </tbody>
      </table>	
 	</div> 
+  </div>
+
+  <div id="Notifications" class = "tabcontent" >
+    <script type="text/javascript" src="http://output71.rssinclude.com/output?type=js&amp;id=1198760&amp;hash=8f510fe9ecc18bb3735668dfd1e48b5f"></script>
   </div>
 
 <script src="{{ url_for('static', filename='ClientHome.js') }}">

@@ -300,7 +300,7 @@ $(function() {
 
 $(function() {
     $('#btnLogIn').click(function() {
-        console.log("Here")
+        console.log("Here IN LOG IN")
         $.ajax({
             url: '/logIn',
             data: $('form').serialize(),
@@ -321,12 +321,13 @@ $(function() {
                 }
                 else
                 { 
-
+                  
+                    console.log(response['type'])
                     if(response['type']==0){
                         window.location.href = "/clientHome"
                       }
                     else{
-                        window.location.href = "/clientHome"   
+                        window.location.href = "/partner"   
                         }
                 }
             },

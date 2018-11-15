@@ -8,7 +8,7 @@ import re
 import flask
 from sentiment_analyzer import SentimentAnalyzer
 app = Flask(__name__)
-
+from partner import *
 
 #one logged in instance
 
@@ -223,7 +223,7 @@ def logIn():
             else:
                 return json.dumps({'status':2})
     else:
-        a = query_db("SELECT * FROM client WHERE partner = ?", [name], one=True)
+        a = query_db("SELECT * FROM partner WHERE username = ?", [name], one=True)
         print("Values" , a)
         if(a is None):
             return json.dumps({'status':0})
@@ -274,7 +274,7 @@ def clientHome():
     files = query_db("SELECT token_no , filename , completed_service_docs.description   FROM completed_service_docs  \
                 JOIN service ON completed_service_docs.token = token_no \
          JOIN service_status ON service_status.token = token_no\
-         WHERE user = ? AND verified = ? ", [name, 1])
+         WHERE user = ? AND verified = ?", [name, 1])
     print(files)
     invoice = query_db("SELECT token_no, generated_by , current_timestamp ,filename, invoice_amount  FROM completed_service_invoice  \
          JOIN service ON completed_service_invoice.token = token_no \
@@ -443,7 +443,6 @@ def submitRequest():
 
     cols = ("token" , "completed", "verified", "remarks", "status_for_partner", "status_for_client")
     vals = (token , 0 , 0 , "", "" , "Not Accepted" )
-    insert("service_status" , cols, vals)
 
     cols = tuple(["token"])
     vals = tuple([token])
@@ -451,6 +450,7 @@ def submitRequest():
     #Handling file uploads
     print("here in submit")
     print(service, description)
+
     desc = request.form.getlist('filedesc')
     print(desc)
     file = request.files.getlist('files[]')
