@@ -48,16 +48,16 @@
           
           {% for row in rows4 %}
              <tr>
-                <td>{{row["TOKEN_NO"] }} </td>
-                <td>{{row["TYPE_OF_SERVICE"]}}</td>
-                <td>{{row["DESCRIPTION"]}}</td>
-                <td>{{row["ESTIMATED_TIME_OF_COMPLETION"]}}</td>
-                <td onload = getdatediff()>{{row["ESTIMATED_TIME_OF_COMPLETION - CURRENT_TIMESTAMP"]}}</td>   <!--EDIT HERE TO INPUT DATE DIFFERENCE CODE     -->
-                <td><button type="button" class = "button"  value="MarkCompleted" onclick="MarkCompleted({{row['TOKEN_NO'] }} )"> Mark Completed </button></td>
-                <td><button type="button" class = "button"  value="ReturnPartner" onclick="RejectTask({{row['TOKEN_NO']}})"> Return Task to Partner </button></td>
+                <td>{{row[0] }} </td>
+                <td>{{row[2]}}</td>
+                <td>{{row[1]}}</td>
+                <td>{{row[4]}}</td>
+                <td><!-- {{row["ESTIMATED_TIME_OF_COMPLETION - CURRENT_TIMESTAMP"]}} --></td>   <!--EDIT HERE TO INPUT DATE DIFFERENCE CODE     -->
+                <td><button type="button" class = "button"  value="MarkCompleted" onclick="MarkCompleted({{row[0] }} )"> Mark Completed </button></td>
+                <td><button type="button" class = "button"  value="ReturnPartner" onclick="RejectTask({{row[0]}})"> Return Task to Partner </button></td>
                 <td><input type="text" id = "SetPartnerStatus"><button type="button" class = "button"  value="SubmitPartnerStatus" onclick="SetPartnerStatus(this)"> </button></td><
                 <td><input type="text" id = "SetClientStatus"><button type="button" class = "button"   value="SubmitClientStatus" onclick="SetClientStatus(this)"></button></td> 
-                <td>{% for rowinner in files if rowinner[0] == row["TOKEN_NO"] %}
+                <td>{% for rowinner in files if rowinner[0] == row[0] %}
             		<tr >
                			<td>  <a class = "file-download" href="#myTable" > {{rowinner[1]}}</a></td>
             		</tr>
@@ -81,9 +81,9 @@
           
           {% for row in rows5 %}
              <tr>
-                <td>{{row["TOKEN_NO"]}}</td>
-                <td>{{row["TYPE_OF_SERVICE"]}}</td>
-                <td>{{row["DESCRIPTION"]}}</td>
+                <td>{{row[0]}}</td>
+                <td>{{row[1]}}</td>
+                <td>{{row[2]}}</td>
              </tr>
           {% endfor %}
        </table>
