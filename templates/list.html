@@ -1,13 +1,9 @@
 <!doctype html>
 <head>
-<<<<<<< HEAD
+
   <!--   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-=======
-  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 
-    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
->>>>>>> 51104b06be2c20c55b0a676821d4dfa6b07c83f6
   <script type="text/javascript" src="{{ url_for('static', filename='partner.js') }}"></script>
   
 
@@ -21,7 +17,7 @@
   <script>$('select').selectpicker();</script>  
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
-<<<<<<< HEAD
+
   <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
   <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
@@ -33,10 +29,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-=======
- <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>  -->
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
->>>>>>> 51104b06be2c20c55b0a676821d4dfa6b07c83f6
+
   <script>
   $( function() {
     $( "#datepicker" ).datepicker();
@@ -84,8 +77,11 @@
             <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('serviceNotAllocated', this, 'grey')" >VIEW SERVICES NOT ALLOCATED</button></li>
             <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('serviceNotCompleted', this, 'grey')">VIEW SERVICES NOT COMPLETED</button></li>
             <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('serviceNotVerified', this, 'grey')">VIEW SERVICES NOT VERIFIED</button></li>
+            <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('completedService', this, 'grey')">COMPLETED SERVICES</button></li>
             <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('sendReminders', this, 'grey')">SEND REMINDERS</button></li>
             <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('displayFeedback', this, 'grey')">DISPLAY FEEDBACK</button></li>
+
+
           </ul>
           <ul class="nav navbar-nav navbar-right">
             
@@ -96,25 +92,7 @@
       
 
      <div id="serviceNotAccepted" class="tabcontent">
-      Services not accepted
-      <table border = 1 id="example" class="display">
-         <thead>
-            <td>Token Number</td>
-            <td>Type of Service</td>
-            <td>Description</td>
-            <td>Quotation</td>
-            <td>Estimated time</td>
-            <td>Submit</td>
-         </thead>
-         
-         {% for row in rows1 %}
-            <tr>
-               <td>{{row["TOKEN_NO"]}}</td>
-               <td>{{row["TYPE_OF_SERVICE"]}}</td>
-               <td>{{row["DESCRIPTION"]}}</td>
-               <td><input type="text" name="quotation"></td>
-               <td><input type="text" name="time"></td>
-               <td><button class="btn btn-primary" name = "submit" onClick="enter(this);">submit</button></td>
+
 
           <table border = 1 class="display" >
          <thead>
@@ -343,6 +321,44 @@
                    </tr>
                 {% endfor %}
              </table>  
+        </div>
+        <div id="completedService" class="tabcontent">
+          <!--Completed and verified services table-->
+       <br>
+      Services Completed and Verified
+      <table border = 1>
+          <thead>
+             <td>Token Number</td>
+             <td>Type of Service</td>
+             <td>Description</td>
+             <td>View Documents</td>
+             <td>Invoice Details</td>
+            
+          </thead>
+          
+          {% for row in rows6 %}<!--change rows5 to rows6 function (done!) -->
+             <tr> <!-- !IMPORTANT - ANY CHANGES IN CELL POSITIONS TO BE REFLECTED APPROPRIATELY IN partner.js FUNCTION
+            DOM ELEMENT ACCESS-->
+                <td>{{row["TOKEN_NO"]}}</td>
+                <td>{{row["TYPE_OF_SERVICE"]}}</td>
+                <td>{{row["DESCRIPTION"]}}</td>
+                <td><button class="btn btn-primary" name = "submit" onClick="viewDocs(this)">View documents</button></td>
+                <!-- <td><input type="number" name="InvoiceAmount" placeholder="Enter Invoice"></td> -->
+                <td>
+                    <form class = "data" method="post" enctype="multipart/form-data">
+            
+                        <input type = "hidden" name="inv_tok" value="{{row["TOKEN_NO"]}}">
+                        <input type = "text" name="inv_amt" placeholder="Enter invoice amount">
+                        <input type="file" name="inv_doc" class= "inv_file" id="invDoc" name="Invoice Document"/>
+                        <button class="btnInvoiceFile" type="button" onClick="genInvoice(this)"> Add the selected invoice file </button>
+                        <button class="btnMailFile" type="button" onClick="sendMail(this)"> Email the completed service to the Client </button>
+                    </form>
+                    
+                </td> <!--invioce doc upload path (done)-->
+            </tr>
+          {% endfor %}
+       </table>
+
         </div>
 
          

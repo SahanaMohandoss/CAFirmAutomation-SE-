@@ -3,6 +3,17 @@ var emp;
 var sendCon = new Object();
 //when document loads
 
+window.onload =function () {
+    var reloading = sessionStorage.getItem("reloading");
+    if (reloading) {
+        console.log("Here in reloading")
+        sessionStorage.removeItem("reloading");
+        console.log("Reload")
+        window.location.href = "/partner"   
+    }
+
+}
+
 
 $(document).ready(function() {
     $('.display').DataTable();
@@ -26,13 +37,20 @@ function openPage(pageName,elmnt,color) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 
+
+function logOut()
+{
+    console.log("in logoutx")
+    window.location.href = "/logout"
+}
+
 function onLoad()
 {
     console.log("really?");
     var divDoc = document.getElementById("writeContent");
     divDoc.style.visibility = 'hidden';
     var divDoc = document.getElementById("remDiv");
-    divDoc.style.visibility = 'hidden';
+    divDoc.style.visibility = 'hidden'
 }
 
 // when either user is selected or task is selected for assigning
@@ -49,7 +67,7 @@ function sendReminder(ele)
     divDoc.style.visibility = 'hidden';
     var reminder = new Object();
     reminder.reminder_name = $(ele).parent().children(":first").val();
-    reminder.generated_by="Simran";
+    //reminder.generated_by="Simran";
     reminder.timestamp = $(ele).prev().prev().prev().val();
     reminder.curr_timestamp = $(ele).prev().prev().prev().val();
     reminder.reminder_message = $(ele).prev().prev().val();
@@ -207,7 +225,7 @@ function sendMes(ele)
     data.sender = "Simran"
     data.message = $(ele).parent().prev().children(":first").val();
     /*
-    var divDoc = document.getElementById("writeContent");
+    var divDoc = document.getElementById("writeContent"
     divDoc.style.visibility = 'hidden';*/
     $.ajax({
         type: 'POST',
@@ -375,3 +393,59 @@ function checkbox(valuee){
        });
    }
   
+
+  function genInvoice(button){
+    var data = new Object();
+    //data.token = $(button).parent().prev().prev().prev().prev().prev().prev().text();
+    //data.invAmt = $(button).parent().prev().prev().text();
+    //data.invDoc = $(button).parent().prev().html();
+    //data.invDoc = $(button).parent().prev().children("input:file");
+    //data.invDocN = $(button).parent().prev().children("input:file").val();
+    //data.invDocN = $(button).parent().prev().files[0].name;
+    var form = $(button).parent()
+    var formdata = new FormData(form[0]);
+    //data.partner = "shiv"; /* have to make this related to login creds, and not hard-coded */ 
+    $.ajax({
+        type: 'POST',
+        //data: {data:JSON.stringify(data), form: formdata},
+        data: formdata,
+        //dataType: 'json',
+        url: '/genInv',
+        success: function (data) {
+            console.log(data);
+            alert("The file has been uploaded")
+        },
+        contentType:false,
+        processData:false,
+        cache:false,
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+function sendMail(button){ /* should data be sent from DB or directly from table? :P */
+    var form = $(button).parent()
+    var formdata = new FormData(form[0]);
+    
+    //var data = new Object();
+    //data.token = $(button).parent().prev().prev().prev().prev().prev().prev().prev().text();
+    //data.invAmt = $(button).parent()prev().prev().prev().text();
+    $.ajax({
+        type: 'POST',
+        data: formdata,
+        //dataType: 'json',
+        url: '/sendMail',
+        success: function (data) {
+            console.log(data);
+            form[0].reset()
+        },
+        contentType:false,
+        processData:false,
+        cache:false,
+        error: function(error) {
+        console.log(error);
+    }
+    });
+
+}

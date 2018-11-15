@@ -7,6 +7,7 @@ from flask import session
 import json
 import datetime
 from regression import regModel
+from invoicemailer import mailTo
 app = Flask(__name__,template_folder='templates')
 
 '''
@@ -117,7 +118,7 @@ def reminder():
         con.commit()
         con.close()
         print(rem)
-        return "hey"
+        return partner_name
     #return render_template("partner.html")
 
 
@@ -244,6 +245,152 @@ def getDocs():
 query_string = "SELECT * FROM p_shahr WHERE os = %s"
     cursor.execute(query_string, (username,))
 '''
+
+
+# route to generate invoice
+@app.route('/genInv', methods=['GET', 'POST'])
+def genInv():
+    if request.method == 'POST':
+        #invDet = request.get_json()
+        DB = 'ca_firm.db'
+        con = sql.connect(DB)
+        cur = con.cursor()
+        #token = int(invDet["token"])
+        token = request.form['inv_tok']
+        invAmt = request.form['inv_amt']
+        invDoc = request.files.getlist('inv_doc')[0]
+        invDocN = invDoc.filename
+        print("the file name: %s"%invDocN)
+        #invDoc = invDet["invDoc"] #use insertfile() template in test.py for inserting the file to DB
+        #invDocN = invDet["invDocN"]
+        #invAmt = invDet["invAmt"]
+        genBy = partner_name
+
+        cur = con.cursor()
+        cur.execute('PRAGMA foreign_keys=ON;') # enabling foreign keys at runtime
+        print("retrieved data from html")
+        # processing filepath for the actual file
+        _f = open("samplepdf.pdf",'rb')
+        _split = os.path.split(invDocN)
+        _file = _split[1]
+        _blob = _f.read()
+
+        #con = sql.connect(DB)
+        con.row_factory = sql.Row
+
+
+        sqlQuer = "INSERT INTO COMPLETED_SERVICE_INVOICE (TOKEN, GENERATED_BY, INVOICE_DOCUMENT, FILENAME, INVOICE_AMOUNT) VALUES (?,?,?,?,?)"
+        #sqlQuer = "UPDATE COMPLETED_SERVICE_INVOICE SET (GENERATED_BY = ?, INVOICE_DOCUMENT = ?, FILENAME = ?, INVOICE_AMOUNT = ?) WHERE TOKEN = 2"
+        insertVal = (token, genBy, sql.Binary(invDoc.read()), invDocN, invAmt)
+        #insertVal = (token, genBy, invDoc, invDocN, invAmt)
+        cur.execute(sqlQuer, insertVal)
+        con.commit()
+        con.close()
+
+        con = sql.connect(DB)
+        cur = con.cursor()
+
+        invDoc.close()
+        cur.execute('''SELECT * FROM COMPLETED_SERVICE_INVOICE WHERE TOKEN = 2''')
+        invoiceEntry = cur.fetchall()
+        print(invoiceEntry,"inv entry")
+        cur.close()
+        con.close()
+        print("inserted data into invoice table")
+        return "Invoice generated and stored"
+
+
+# route for sending the mail consisting of completed service
+@app.route('/sendMail', methods=['GET', 'POST'])
+def sendMail():
+    if request.method == 'POST':
+        data = request.get_json()
+        DB = 'ca_firm.db'
+        con = sql.connect(DB)
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        token = request.form['inv_tok']
+        print(token)
+        fileList = []
+        fileNameList = []
+
+        
+
+        # fetching file list for the token
+        query = 'SELECT FILENAME FROM COMPLETED_SERVICE_DOCS WHERE TOKEN=?'
+        param = (token,)
+        cur.execute(query,param)
+        names = cur.fetchall()
+        print("names: ",names[0])
+        for n in names:
+            fileNameList.append(n[0])
+            print("n: ",n[0])
+
+        # fetching files for the token
+        query = 'SELECT DOCUMENT FROM COMPLETED_SERVICE_DOCS WHERE TOKEN=?'
+        param = (token,)
+        cur.execute(query,param)
+        files = cur.fetchall()
+        for f in files:
+            fileList.append(f['DOCUMENT'])
+
+        # fetching invoice document name
+        query = 'SELECT FILENAME FROM COMPLETED_SERVICE_INVOICE WHERE TOKEN=?'
+        param = (token,)
+        cur.execute(query,param)
+        names = cur.fetchall()
+        print("inv names: ",names[0])
+        for n in names:
+            print("inv n: ",n[0])
+            fileNameList.append(n['FILENAME'])
+
+        # fetching invoice doc file for the token
+        query = 'SELECT INVOICE_DOCUMENT FROM COMPLETED_SERVICE_INVOICE WHERE TOKEN=?'
+        param = (token,)
+        cur.execute(query,param)
+        files = cur.fetchall()
+        for f in files:
+            fileList.append(f['INVOICE_DOCUMENT'])
+
+        # fetching client email address
+        query = 'SELECT CLIENT.EMAIL_ID FROM CLIENT, SERVICE WHERE SERVICE.USER = CLIENT.USERNAME AND SERVICE.TOKEN_NO=?'
+        param = (token,)
+        cur.execute(query,param)
+        clientEmail = cur.fetchall()
+        
+        # fetching partner email address
+        query = 'SELECT PARTNER.EMAIL_ID FROM PARTNER,COMPLETED_SERVICE_INVOICE, SERVICE WHERE PARTNER.USERNAME=COMPLETED_SERVICE_INVOICE.GENERATED_BY AND SERVICE.TOKEN_NO=?'
+        param = (token,)
+        cur.execute(query,param)
+        partnerEmail = cur.fetchall()
+        print()
+
+        print(partnerEmail[1]['EMAIL_ID'])
+        print(clientEmail[0]['EMAIL_ID'])
+        #print(fileList)
+        print(fileNameList)
+
+        # fetching client username
+        query = 'SELECT CLIENT.USERNAME FROM CLIENT, SERVICE WHERE SERVICE.USER = CLIENT.USERNAME AND SERVICE.TOKEN_NO=?'
+        param = (token,)
+        cur.execute(query,param)
+        clientUser = cur.fetchall()
+        print(clientUser[0]['USERNAME'])
+
+        bodyAtt = []
+        subjectAtt = []
+
+        bodyAtt.append(clientUser[0]['USERNAME'])
+        bodyAtt.append(token)
+
+        subjectAtt.append(token)
+
+        # calling the mail API :D 
+        mailTo('', clientEmail[0]['EMAIL_ID'], '',fileList,fileNameList, subjectAtt, bodyAtt) #add the firm email and password
+
+        return "Sent mail"
+
+
 
 if __name__ == '__main__':
     app.run(debug=False)
