@@ -565,9 +565,12 @@ def clientstatus():
         cur = con.cursor()
         print(ReceivedValues["token"])
         checkexistence = query_db('SELECT * FROM SERVICE_STATUS WHERE TOKEN = ?', [ReceivedValues["token"]] )
+        print("checkexistence=", checkexistence)
         if checkexistence is None:
             query_db("INSERT INTO SERVICE_STATUS (TOKEN,COMPLETED,VERIFIED,status_for_partner) values(?,0,0,'NO COMMENTS')", [ReceivedValues["token"]])
-        exe = query_db('UPDATE SERVICE_STATUS SET STATUS_FOR_CLIENT = ? WHERE TOKEN = ?',[ReceivedValues["status"]], [ReceivedValues["token"]])
+            print("in the if statement")
+        exe = query_db('UPDATE SERVICE_STATUS SET STATUS_FOR_CLIENT = ? WHERE TOKEN = ?',[ReceivedValues["status"], ReceivedValues["token"]])
+        print(query_db('Select status_for_client from service_status where token = ?', [ReceivedValues["token"]]))
         con.close()
         return "done"
 
