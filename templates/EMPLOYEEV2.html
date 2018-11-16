@@ -1,9 +1,13 @@
 <!doctype html>
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">-->
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <style>
   .container{
     width:95%;
@@ -12,7 +16,6 @@
 </style>
 <script src="{{ url_for('static', filename='EmployeeHome.js') }}"> </script>
 <link rel="stylesheet" href="{{url_for('static', filename='ClientHome.css')}}">
-<link rel="stylesheet" href="{{url_for('static', filename='TableStyle.css')}}">
 </head>
    <body">   
 
@@ -26,8 +29,8 @@
       <a class="navbar-brand" href="#" style="color:white">EMPLOYEE</a>
     </div>
     <ul class="nav navbar-nav">
-      <li><button class="tablink" onclick="openPage('ViewTasks', this, 'black')" id="defaultOpen">View Tasks for the day</button></li>
-      <li><button class="tablink" onclick="openPage('messages', this, 'black')" >Messages</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('ViewTasks', this, 'black')" id="defaultOpen">View Tasks for the day</button></li>
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="openPage('UploadDocuments', this, 'black')" >Upload Completed Documents</button></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       
@@ -43,8 +46,6 @@
 
 <div id="ViewTasks" class="tabcontent">
 
-  <input type="text" id="myInput" class = "searchByToken" onkeyup="searchByToken()" placeholder="Search for service by Token number.."/>
-
 <br>
       Services not Completed<br><br>
       <table border = 1 id = "myTable" onload="sortTable(4)" class="table table-hover">
@@ -59,6 +60,7 @@
             <th>Set Task Status for Partner</th>
             <th>Set Task Status for Client</th>
             <th>Download Client's Files</th>
+            <th>Upload Completed Files</th>
                
          
           </thead>
@@ -75,17 +77,32 @@
                 <td><input type="text" id = "SetPartnerStatus"><button type="button" class = "button1" display="block"  value="SubmitPartnerStatus" onclick="SetPartnerStatus(this)">Set Partner Status </button></td><
                 <td><input type="text" id = "SetClientStatus"><button type="button" class = "button2" display="block"   value="SubmitClientStatus" onclick="SetClientStatus(this)">Set Client Status</button></td>
                 <td>
-                  <table>
+                  <table border=True>
+                    <tr>
+                      <th>
+                        Token Number
+                      </th>
+                      <th>
+                        File
+                      </th>    
+                      <th>
+                        Description
+                      </th>
+                    </tr>
                     {% for rowinner in files if rowinner[0] == row[0] %}
-                    
+
                       <tr>
-               			    <td>  <a class = "file-download" href="#myTable" > {{rowinner[1]}}</a></td>
+                        <td >{{rowinner[0]}}</td>
+               			    <td>  <a class = "file-download" href="#myTable" onclick="DownloadServiceDocs(this)"> {{rowinner[1]}}</a></td>
+                        <td >{{rowinner[2]}}</td>
             	        </tr>
            			    {% endfor %}
                   </table>
      			      </td> 
-
              </tr>
+
+
+
           {% endfor %}
        </table>
 
@@ -113,69 +130,19 @@
 
   </div>
 
+{% for row in items %}
 
+  <div id="UploadDocuments" class="tabcontent">
+                <form class="data" method="post" enctype="multipart/form-data">
 
-<div id="messages" class="tabcontent" style="height:100%">
-<div class="parts">
- <div class="part">
-  <div>
-    <h3>Messages</h3>
-    
-  <a id="button-for-compose-mail" href="#compose-mail">Send New Message</a>
-  </div>
-  <div class = "Messages">
-  <table border = 1 id = "myTable">
-         <thead>
-            <th>From</th>
-            <th>Message</th>
-            <th>Time</th>
-         </thead>
-         <tbody>
-         {% for row in messages %}
-            <tr >
-              <td>{{row[0]}}</td>
-               <td>{{row[2]}}  <a id = "compose-mail-reply" href="#compose-mail"> Reply</a></td>
-               <td >{{row[1]}}</td>
-            </tr>
-         {% endfor %}
-     </tbody>
-     </table> 
-  </div>
-  
-    <div id="compose-mail-container">
-      <div id="compose-mail" class="hidden">
-        <form action="example.com">
-          <fieldset>
-            <label >Compose your message</label>
-          </fieldset>
-          <br/><br/>
-          <fieldset>
-            <label for="to">To</label>
-            <br/><br/>
-            <input type="text" id="to">
-            <label for="from">From</label>
-            <br/><br/>
-            <input type="text" id="from">
-          </fieldset>
-          <fieldset>
-            <label for="content">Content</label>
-            <br/><br/>
-            <textarea name="content" id="content" style="height:50px"></textarea>
-          </fieldset>
-          <fieldset>
-            <br/><br/>
-            <button type="button" class = "button" id="btnSendMessage"  value="Send Message"> Send Message </button>
-          </fieldset>
-        </form>
-        <br/><br/>
-        <a id="close-button" href="#">Close Dialog</a>
-      </div>
-    </div>
-  </div>
-  
-
+                <input type="file" name="serv_file" class="serv_file">
+                <input type="text" name ="serv_desc" class = "serv_desc" placeholder="Description">
+                <input type="number" name ="serv_token" class = "serv_token" placeholder="Enter Token number">
+                <button class="btnServiceFile" type="button" onclick="UploadCompletedServiceFile(this)"> Add a file for this service </button>
+                </form>
 </div>
-</div>
+{% endfor %}
+
 <!--
 			<div id = "filesdiv">
 
