@@ -1,4 +1,4 @@
-var data; 
+
 
 /*This is client side javascript. 
 It will listen for any click on notification link prevent the default action, 
@@ -10,13 +10,56 @@ var obj = {
     linkclick: function(e){
         e.preventDefault();
         var update = function(response){
-            data = response;
-            localStorage.setItem('Data_for_table', data);
-            window.location.href= "notification.html";            
+            location.href= "#Notifications";   
+            obj.load(response);
         }
         obj.getData(update);
     },
-    
+    load: function(res){
+        console.log(res);
+        var data = JSON.parse(res);
+        var complete_data = data.data;
+        var table = this.buildPopulatedTable(complete_data);
+       // console.log(table);
+        document.body.appendChild(table);
+    },
+    buildPopulatedTable: function(complete_data){
+        var headers = ["Notification No. and Date of Issue", "PDF", "Subject"];
+
+        table = document.createElement("table");
+        var table_body = document.createElement("tbody");
+        table.setAttribute("class", "border_class");
+
+        var header_row = document.createElement("tr");
+        header_row.setAttribute("class", "header_class");
+
+        for(var i = 0; i < headers.length; i++){
+            var td = document.createElement("td");
+            td.appendChild(document.createTextNode(headers[i]));
+            header_row.appendChild(td);
+        }
+        table_body.appendChild(header_row); 
+        for(var i = 0;i < 8 ;i++){ 
+            var tr = document.createElement("tr");
+            tr.setAttribute("class", "tr_class");
+
+            var td1 = document.createElement("td");
+            td1.appendChild(document.createTextNode(complete_data[i][0]));
+            var td2 = document.createElement("td");
+            var link_to_pdf = document.createElement("a");
+            link_to_pdf.href = "http://www.cbic.gov.in"+ complete_data[i][1];
+            link_to_pdf.innerHTML = "View";
+            td2.appendChild(link_to_pdf);
+            var td3 = document.createElement("td");
+            td3.appendChild(document.createTextNode(complete_data[i][2]));
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            table_body.appendChild(tr);
+        }
+        table.appendChild(table_body);
+        return table;
+    },
     getData: function(callback){
         this.xhr.onreadystatechange= function(){
             if(this.readyState==4 && this.status==200){
