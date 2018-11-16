@@ -14,12 +14,28 @@
 <link rel="stylesheet" href="{{url_for('static', filename='ClientHome.css')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='TableStyle.css')}}">
 </head>
-   <body onload ="onLoad()">   
+   <body">   
 
             <br>
             <br>
-<button class="tablink" onclick="openPage('ViewTasks', this, 'black')" id="DefaultOpen">View Tasks for the day</button>
-<button class="tablink" onclick="openPage('messages', this, 'black')" >Messages</button>
+
+
+<nav class="navbar navbar-inverse" style="background-color:grey">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#" style="color:white">EMPLOYEE</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><button class="tablink" onclick="openPage('ViewTasks', this, 'black')" id="defaultOpen">View Tasks for the day</button></li>
+      <li><button class="tablink" onclick="openPage('messages', this, 'black')" >Messages</button></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      
+      <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="logOut()">LogOut</button></li>
+    </ul>
+  </div>
+</nav>
+
 
 
 <p align = "center" id="uname" >Hi {{username}} ! Here's your work for the day! </p>
@@ -41,6 +57,7 @@
             <th>Mark Completed</th>
             <th>Return Task to Partner</th>
             <th>Set Task Status for Partner</th>
+            <th>Set Task Status for Client</th>
             <th>Download Client's Files</th>
                
          
@@ -55,14 +72,18 @@
                 <td><!-- {{row["ESTIMATED_TIME_OF_COMPLETION - CURRENT_TIMESTAMP"]}} --></td>   <!--EDIT HERE TO INPUT DATE DIFFERENCE CODE     -->
                 <td><button type="button" class = "button"  value="MarkCompleted" onclick="MarkCompleted({{row[0] }} )"> Mark Completed </button></td>
                 <td><button type="button" class = "button"  value="ReturnPartner" onclick="RejectTask({{row[0]}})"> Return Task to Partner </button></td>
-                <td><input type="text" id = "SetPartnerStatus"><button type="button" class = "button"  value="SubmitPartnerStatus" onclick="SetPartnerStatus(this)"> </button></td><
-                <td><input type="text" id = "SetClientStatus"><button type="button" class = "button"   value="SubmitClientStatus" onclick="SetClientStatus(this)"></button></td> 
-                <td>{% for rowinner in files if rowinner[0] == row[0] %}
-            		<tr >
-               			<td>  <a class = "file-download" href="#myTable" > {{rowinner[1]}}</a></td>
-            		</tr>
-         			{% endfor %}
-     			</td> 
+                <td><input type="text" id = "SetPartnerStatus"><button type="button" class = "button1" display="block"  value="SubmitPartnerStatus" onclick="SetPartnerStatus(this)">Set Partner Status </button></td><
+                <td><input type="text" id = "SetClientStatus"><button type="button" class = "button2" display="block"   value="SubmitClientStatus" onclick="SetClientStatus(this)">Set Client Status</button></td>
+                <td>
+                  <table>
+                    {% for rowinner in files if rowinner[0] == row[0] %}
+                    
+                      <tr>
+               			    <td>  <a class = "file-download" href="#myTable" > {{rowinner[1]}}</a></td>
+            	        </tr>
+           			    {% endfor %}
+                  </table>
+     			      </td> 
 
              </tr>
           {% endfor %}
