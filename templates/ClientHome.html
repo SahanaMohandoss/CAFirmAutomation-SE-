@@ -354,66 +354,10 @@ send xhr async request to nodejs server asking to scrape the data from cbic webs
 	</div> 
   </div>
 
-  <div onload ="obj.load()" id="Notifications" class = "tabcontent" >
+  <div id="Notifications" class = "tabcontent" >
     <script type="text/javascript" src="http://output71.rssinclude.com/output?type=js&amp;id=1198760&amp;hash=8f510fe9ecc18bb3735668dfd1e48b5f"></script>
     <!--notifications from CBIC-->
-    <script>
-            /*
-                This is the target page which will open on clicking notification tab.
-				This will retrieve the stored data from local storage, parse the JSON string,
-				use the data to build table and populate it and finally add the table to the web page.
-            */
-            var obj = {
-                load: function(){
-                    var res = localStorage.getItem("Data_for_table");
-                    console.log(res);
-                    var data = JSON.parse(res);
-                    var complete_data = data.data;
-                    var table = this.buildPopulatedTable(complete_data);
-                   // console.log(table);
-                    document.body.appendChild(table);
-                },
-                buildPopulatedTable: function(complete_data){
-                    var headers = ["Notification No. and Date of Issue", "PDF", "Subject"];
-					
-                    table = document.createElement("table");
-                    var table_body = document.createElement("tbody");
-		    table.setAttribute("class", "border_class");
-
-					
-                    var header_row = document.createElement("tr");
-		    header_row.setAttribute("class", "header_class");
-					
-                    for(var i = 0; i < headers.length; i++){
-                        var td = document.createElement("td");
-                        td.appendChild(document.createTextNode(headers[i]));
-                        header_row.appendChild(td);
-                    }
-                    table_body.appendChild(header_row); 
-                    for(var i = 0;i < 8 ;i++){ 
-                        var tr = document.createElement("tr");
-						tr.setAttribute("class", "tr_class");
-						
-                        var td1 = document.createElement("td");
-                        td1.appendChild(document.createTextNode(complete_data[i][0]));
-                        var td2 = document.createElement("td");
-                        var link_to_pdf = document.createElement("a");
-                        link_to_pdf.href = "http://www.cbic.gov.in"+ complete_data[i][1];
-                        link_to_pdf.innerHTML = "View";
-                        td2.appendChild(link_to_pdf);
-                        var td3 = document.createElement("td");
-                        td3.appendChild(document.createTextNode(complete_data[i][2]));
-                        tr.appendChild(td1);
-                        tr.appendChild(td2);
-                        tr.appendChild(td3);
-                        table_body.appendChild(tr);
-                    }
-                    table.appendChild(table_body);
-                    return table;
-                }
-            }
-        </script>
-	
+   	
   </div>
 
 <script src="{{ url_for('static', filename='ClientHome.js') }}">
