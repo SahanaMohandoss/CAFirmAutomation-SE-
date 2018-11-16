@@ -14,7 +14,7 @@
 	
 <!--adding the client side javascript.It will listen for any click on notification link, prevent the default action, 
 send xhr async request to nodejs server asking to scrape the data from cbic website-->
-<script src="client.js"></script>
+<script src="{{ url_for('static', filename='client.js') }}">
 
 <script> history.pushState(null, null, location.href);
     window.onpopstate = function () {
