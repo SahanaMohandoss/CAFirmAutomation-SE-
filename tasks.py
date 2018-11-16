@@ -12,7 +12,9 @@ import sqlite3 as sql
 
 
 app=Celery('tasks',broker='amqp://localhost//',backend='amqp://localhost//')
-
+'''
+Returns the date in YYYY-MM-DD format
+'''
 def get_time():
 	now=datetime.datetime.now()
 	#today=str(today)
@@ -24,6 +26,9 @@ def get_time():
 	today=str(now.year)+"-"+str(now.month)+"-"+str(now.day)
 	return today
 
+'''
+Checks whether the current date is lesser than or equal to the reminder date.
+'''
 def isSame(curr_time,rem_time):
 	curr_toks=[int(i) for i in curr_time.split("-")]
 	rem_toks=[int(i) for i in rem_time.split("-")]
@@ -44,17 +49,22 @@ def isSame(curr_time,rem_time):
 			else: 
 				return 0
 
+'''
+Main code to send reminders
+'''
 @app.task
 def send_reminders():
 	Database = 'ca_firm.db'
 	con = sql.connect(Database)
 	con.row_factory = sql.Row
 	cur = con.cursor()
-	MY_ADDRESS="se.cafirm@gmail.com"
-	MY_PASSWORD="seaccount"
+	#Configure email id and password credentials
+	MY_ADDRESS="sidvin97@gmail.com"
+	MY_PASSWORD="Lenovo!@123"
 	s = smtplib.SMTP(host='smtp.gmail.com', port=587)
 	s.starttls()
 	s.login(MY_ADDRESS, MY_PASSWORD)
+	#Fetch the unsent reminders from database.
 	exe='SELECT * FROM REMINDERS WHERE SENT=0 ORDER BY REMINDER_TIMESTAMP ASC'
 	cur.execute(exe)
 	rows3 = cur.fetchall()
@@ -66,6 +76,7 @@ def send_reminders():
 		rem_time=i[3]
 		message=i[5]
 		mailing_list=i[6].split(";")
+		#Check if reminder needs to be sent by comparing the date right now with the date the reminder needs to go out.
 		send=isSame(curr_time,rem_time)
 		print("Mail Subject: ",subject)
 		print("Current Time: ",curr_time)
@@ -74,6 +85,8 @@ def send_reminders():
 		print("Reminder Message: ",message)
 		print("Mailing List: ",mailing_list)
 		print("\n\n")
+		#If the reminder should go out today, fill in the details for the mail and send it.
+		#Update the database to reflect the changes.
 		if(send): 
 			for j in mailing_list:
 				msg = MIMEMultipart()
@@ -93,7 +106,9 @@ def send_reminders():
 	con.close()
 	s.quit()
 
-
+'''
+Scheduler to run the send_reminders function every 2 minutes.
+'''
 app.conf.update(
 	beat_schedule=
 	{
