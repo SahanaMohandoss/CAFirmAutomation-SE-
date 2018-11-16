@@ -389,6 +389,77 @@ def fileDownload():
            output_file.write(file[0][0])
     return json.dumps("{'status':2}")
 
+@app.route('/fileDownloadEmployee', methods=['POST'])
+def fileDownloadEmployee():
+    print("called")
+    data = request.json
+    print("Downloading file...")
+    f = data["filename"]
+    f = f.strip()
+    t = int(data["token"])
+    d = data["desc"]
+    file = query_db("SELECT document   FROM service_docs  \
+               WHERE token = ? AND filename LIKE ? AND description LIKE ? ", [t,f,d])
+    with open("files/"+str(t)+"_"+f, 'wb') as output_file:
+           output_file.write(file[0][0])
+    return json.dumps("{'status':2}")
+
+# @app.route('/fileUploadEmployee', methods=['POST'])
+# def fileUploaddEmployee():
+#     print("called")
+#     data = request.json
+#     print("Uploading file...")
+#     f = data["filename"]
+#     f = f.strip()
+#     t = int(data["token"])
+#     d = data["desc"]
+#     file = query_db("SELECT document   FROM service_docs  \
+#                WHERE token = ? AND filename LIKE ? AND description LIKE ? ", [t,f,d])
+#     with open("files/"+str(t)+"_"+f, 'wb') as output_file:
+#            output_file.write(file[0][0])
+#     return json.dumps("{'status':2}")
+
+# @app.route('/fileUploadEmployee', methods=['POST'])
+# def fileUploadEmployee():
+#     try:
+#         data = request.json
+#         _filename = data["filename"].strip()
+#         con = sqlite3.connect('ca_firm.db', detect_types=sqlite3.PARSE_DECLTYPES)
+#         con.row_factory = sqlite3.Row
+#         cur = con.cursor()
+#         cur.execute('PRAGMA foreign_keys=ON;')
+#         _f = open(_filename,'rb')
+#         _split = os.path.split(_filename)
+#         _file = _split[1]
+#         _blob = _f.read()
+#         t = int(data["token"])
+#         d = data["desc"]
+#         cur.execute('INSERT INTO completed_service_docs VALUES (?,?,?,?)', (t,sqlite3.Binary(_blob),_file,d))
+#         _f.close()
+#         con.commit()
+#         cur.close()
+#         con.close()
+#         print("upload seccessful")
+#     except Exception as ex:
+#         print (ex)
+#     return json.dumps("{'status':2}")
+
+@app.route('/fileUploadEmployee', methods=['POST'])
+def fileUploadEmployee():
+    #data = request.json
+    d= request.form['serv_desc']
+    t= request.form['serv_token']
+    print(d)
+    f = request.files.getlist('serv_file')[0]
+    filename =f.filename
+    print(filename)
+    cols = ("token" , "document", "description" , "filename")
+    vals = (t , sqlite3.Binary(f.read()), d, filename)
+    insert("completed_service_docs" , cols, vals)
+    print("Uploaded")
+    return json.dumps({'status':2})
+
+
 
 
 #For a client to accept a service given quotation
