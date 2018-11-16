@@ -165,7 +165,6 @@ def signUp():
 
 
             print("done")
-	    	#print(rows1)
         elif(request.form['usertype']=="1"):
             print("here in employee")
             cols = ("username", "password", "first_name", "last_name","email_id", "contact_no", "employee_id")
@@ -193,7 +192,6 @@ def signUp():
 #Login and check type of user to redirect to correct page
 @app.route('/logIn',methods=['POST'])
 def logIn():
-    #print(request.form)
     t = request.form['typeofuser']
     name = request.form['uname']
     password = request.form['pwd']
@@ -201,7 +199,7 @@ def logIn():
     print(name , password , t)
     #ADPTER PATTERN: Check type of user and render the corresponding interface
     #0: client , 1:employee , 2: partner
-    if(t=="0"):
+    if(t=="0"):         #client signup
         a = query_db("SELECT * FROM client WHERE username = ?", [name], one=True)
         print("Values" , a)
         if(a is None):
@@ -209,13 +207,12 @@ def logIn():
         else:
             if(a[1]==password):
                 
-                #render_template("ClientHome.html")
                 session['username'] = name
                 return json.dumps({'status':1 , 'type':int(a[5]) })
 
             else:
                 return json.dumps({'status':2})
-    elif(t=="1"):
+    elif(t=="1"):     #employee signup
         a = query_db("SELECT * FROM employee WHERE username = ?", [name], one=True)
         print("Values" , a)
         if(a is None):
@@ -223,13 +220,12 @@ def logIn():
         else:
             if(a[1]==password):
                 
-                #render_template("ClientHome.html")
                 session['username'] = name
                 return json.dumps({'status':1 , 'type':int(t) })
 
             else:
                 return json.dumps({'status':2})
-    else:
+    else:        #partner signup
         a = query_db("SELECT * FROM partner WHERE username = ?", [name], one=True)
         print("Values" , a)
         if(a is None):
@@ -237,7 +233,6 @@ def logIn():
         else:
             if(a[1]==password):
                 
-                #render_template("ClientHome.html")
                 session['username'] = name
                 return json.dumps({'status':1 , 'type':int(t) })
 
@@ -328,6 +323,8 @@ def clientHome():
 
 #To upload files for a service for a user
 
+
+#client files uploaded through here
 @app.route('/serviceFileUpload', methods=['POST'])
 def serviceFileUpload():
     #data = request.json
@@ -343,8 +340,8 @@ def serviceFileUpload():
     print("Uploaded")
     return json.dumps({'status':2})
 
-#To send messages from one user to another
 
+#To send messages from one user to another
 @app.route('/sendMessage', methods=['POST'])
 def sendMessage():
     data = request.json
@@ -372,6 +369,7 @@ def sendMessage():
 
         return json.dumps({'status':2})
 
+
 #To download files and invoice documents
 @app.route('/fileDownload', methods=['POST'])
 def fileDownload():
@@ -389,6 +387,8 @@ def fileDownload():
            output_file.write(file[0][0])
     return json.dumps("{'status':2}")
 
+
+#To download client files on the employee side
 @app.route('/fileDownloadEmployee', methods=['POST'])
 def fileDownloadEmployee():
     print("called")
@@ -404,46 +404,9 @@ def fileDownloadEmployee():
            output_file.write(file[0][0])
     return json.dumps("{'status':2}")
 
-# @app.route('/fileUploadEmployee', methods=['POST'])
-# def fileUploaddEmployee():
-#     print("called")
-#     data = request.json
-#     print("Uploading file...")
-#     f = data["filename"]
-#     f = f.strip()
-#     t = int(data["token"])
-#     d = data["desc"]
-#     file = query_db("SELECT document   FROM service_docs  \
-#                WHERE token = ? AND filename LIKE ? AND description LIKE ? ", [t,f,d])
-#     with open("files/"+str(t)+"_"+f, 'wb') as output_file:
-#            output_file.write(file[0][0])
-#     return json.dumps("{'status':2}")
 
-# @app.route('/fileUploadEmployee', methods=['POST'])
-# def fileUploadEmployee():
-#     try:
-#         data = request.json
-#         _filename = data["filename"].strip()
-#         con = sqlite3.connect('ca_firm.db', detect_types=sqlite3.PARSE_DECLTYPES)
-#         con.row_factory = sqlite3.Row
-#         cur = con.cursor()
-#         cur.execute('PRAGMA foreign_keys=ON;')
-#         _f = open(_filename,'rb')
-#         _split = os.path.split(_filename)
-#         _file = _split[1]
-#         _blob = _f.read()
-#         t = int(data["token"])
-#         d = data["desc"]
-#         cur.execute('INSERT INTO completed_service_docs VALUES (?,?,?,?)', (t,sqlite3.Binary(_blob),_file,d))
-#         _f.close()
-#         con.commit()
-#         cur.close()
-#         con.close()
-#         print("upload seccessful")
-#     except Exception as ex:
-#         print (ex)
-#     return json.dumps("{'status':2}")
 
+#To upload completed service documents
 @app.route('/fileUploadEmployee', methods=['POST'])
 def fileUploadEmployee():
     #data = request.json
@@ -508,6 +471,7 @@ def logout():
    return render_template("ClientRegister.html"  )
 
 
+#helper function to set upload folder (acts as a decorator)
 def cover_str(cvr):
     cvr = request.files['cover']
     if cvr and allowed_file(cvr.filename):
@@ -520,7 +484,6 @@ def cover_str(cvr):
 def submitRequest():
     print("IN SUBMIT")
     #Get data from FE
-
     username =session['username']
     description = request.form['description']
     service = request.form['service']
@@ -559,6 +522,7 @@ def submitRequest():
     print(request.files)
     return json.dumps({"status":0, "token":token})    
 
+
 #EMPLOYEE STARTS HERE
 @app.route('/EmployeeHome')
 def EmployeeHome():
@@ -586,7 +550,7 @@ def EmployeeHome():
     rows5 = query_db("select S.TOKEN_NO,S.DESCRIPTION,S.TYPE_OF_SERVICE, S.current_timestamp, ESTIMATED_HOURS FROM SERVICE S JOIN SERVICE_STATUS SS ON S.TOKEN_NO = SS.TOKEN JOIN SERVICE_ALLOCATION ON S.TOKEN_NO = SERVICE_ALLOCATION.TOKEN WHERE SS.COMPLETED=1 AND SS.VERIFIED=0 AND SERVICE_ALLOCATION.EMP = ?", [name])
     return render_template("EMPLOYEEV2.html", username=name, items = s, messages= m, files=files, invoice=invoice,rows4=rows4, rows5=rows5)
 
-
+#handles employee calls to complete a service request and sends it to partner for approval/verification
 @app.route('/complete', methods=['GET', 'POST'])
 def complete():
     if request.method == 'POST':
@@ -607,7 +571,7 @@ def complete():
 
 
 
-
+#interface for user to edit status visible to partner
 @app.route('/partnerstatus', methods=['GET', 'POST'])
 def partnerstatus():
     if request.method == 'POST':
@@ -626,6 +590,8 @@ def partnerstatus():
         con.close()
         return "done"
 
+
+#interface for user to edit status visible to client
 @app.route('/clientstatus', methods=['GET', 'POST'])
 def clientstatus():
     if request.method == 'POST':
@@ -645,6 +611,7 @@ def clientstatus():
         con.close()
         return "done"
 
+#main function, uses key to secure connection
 if __name__ == '__main__':
     app.secret_key = 'super secret key'
     app.run(debug=True, port = 5002)
