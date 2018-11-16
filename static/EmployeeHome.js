@@ -109,7 +109,7 @@ function RejectTask(token_no){
 function SetPartnerStatus(ele){
     var data = new Object();
     data.token = $(ele).parent().prev().prev().prev().prev().prev().prev().prev().text()
-    data.status = $(ele).prev().value()
+    data.status = $(ele).prev().val()
     $.ajax({
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
@@ -125,10 +125,11 @@ function SetPartnerStatus(ele){
     }); 
 }   
 
-function SetClientStatus(token_no){
+function SetClientStatus(ele){
     var data = new Object();
-    data.token = $(ele).parent().prev().prev().prev().prev().prev().prev().prev().prev().text()
-    data.status = $(ele).prev().value()
+    data.token = $(ele).parent().prev().prev().prev().prev().prev().prev().prev().prev().text();
+
+    data.status = $(ele).prev().val();
     $.ajax({
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
@@ -488,7 +489,7 @@ $(function() {
 
 $(function() {
     $('.file-download').click(function() {
-        console.log("Here in download file")
+        print("in the file download function\n")
         var data={}
         data["filename"]= $(this).text()
         var row= $(this).parent().parent()[0]
