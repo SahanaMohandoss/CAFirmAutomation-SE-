@@ -12,6 +12,29 @@ var tab = document.getElementById('ViewTasks')
 
 
 
+ function UploadCompletedServiceFile(ele){
+        var data={}
+        var form = $(ele).parent()
+        console.log(form[0])
+        var formData = new FormData(form[0]);
+        console.log(formData)
+    $.ajax({
+        url: '/fileUploadEmployee',
+        type: 'POST',
+        data: formData,
+        success: function (data) {
+            alert("The file has been uploaded")
+            form[0].reset()
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+};
+
+
+
+
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");
@@ -486,38 +509,32 @@ $(function() {
 });
 
 
+function DownloadServiceDocs(ele)
+{
+    var data={}
+    data["filename"]= $(ele).text()
+    var row= $(ele).parent().parent()[0]
+    console.log(row)
+    var Cells = row.getElementsByTagName("td");
+    var token = Cells[0].innerText;
+    data["token"] = token
+    data["desc"]= Cells[2].innerText;
 
-$(function() {
-    $('.file-download').click(function() {
-        print("in the file download function\n")
-        var data={}
-        data["filename"]= $(this).text()
-        var row= $(this).parent().parent()[0]
-        console.log(row)
-        var Cells = row.getElementsByTagName("td");
-        var token = Cells[0].innerText;
-        data["token"] = token
-        data["desc"]= Cells[2].innerText;
-        console.log(data)
-        console.log(data)
-        $.ajax({
-            url: '/fileDownload',
-            data: JSON.stringify(data),
-            type: 'POST',
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function(response) {
-                console.log("ok")
-                alert("Your file is dowloaded in the FILES folder")
-            },
-            error: function(error) {
-                    console.log("error")
-                
-               
-            }
-        });
-    });
-});
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        url: '/fileDownloadEmployee',
+        success: function (data) {
+            console.log(data);
+        },
+        error: function(error) {
+        console.log(error);
+    }
+    }); 
+}
+
 
 $(function() {
     $('.invoice-file-download').click(function() {
