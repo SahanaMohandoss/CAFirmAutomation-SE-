@@ -63,11 +63,51 @@
      padding: 100px 20px;
      height: 100%;
  }
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li button {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 11px;
+    background-color: #111;
+    background-color: black;
+}
+
+li button:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+  display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 11px;
+    background-color: #111;
+    background-color: black;
+}
+
+ 
 </style>
 </head>
 <html>
-   <body>   
-    <nav class="navbar navbar-inverse" style="background-color:grey">
+   <body style="height: 100%;background-color:white; background-size: cover;background-image:url('{{url_for('static', filename='partner.jpg')}}'">   
+    <!--<nav class="navbar navbar-inverse" style="background-color:grey">
         <div class="container-fluid">
           <div class="navbar-header">
             <a class="navbar-brand" href="#" style="color:white">PARTNER</a>
@@ -88,14 +128,29 @@
             <li><button class="btn btn-lg" style="color: white;background-color:grey;font-size:15px" onclick="logOut()">LogOut</button></li>
           </ul>
         </div>
-      </nav>
-      
+      </nav>-->
+
+      <ul>
+  <li><a class="active" href="#">Partner</a></li>
+  <li><button onclick="openPage('serviceNotAccepted', this, 'black')" id="defaultOpen">VIEW SERVICES NOT ACCEPTED</button></li>
+  <li><button onclick="openPage('serviceNotAllocated', this, 'black')" >VIEW SERVICES NOT ALLOCATED</button></li>
+  <li><button onclick="openPage('serviceNotCompleted', this, 'black')" >VIEW SERVICES NOT COMPLETED</button></li>
+  <li><button onclick="openPage('serviceNotVerified', this, 'black')" >VIEW SERVICES NOT VERIFIED</button></li>
+  <li><button onclick="openPage('completedService', this, 'black')" >COMPLETED SERVICES</button></li>
+  <li><button onclick="openPage('sendReminders', this, 'black')" >SEND REMINDERS</button></li>
+  <li><button onclick="openPage('displayFeedback', this, 'black')">DISPLAY FEEDBACK</button></li>
+  <li><button onclick="logOut()" style="position: relative;left:40px;">LogOut</button></li>
+</ul>
+
+
+
+
 
      <div id="serviceNotAccepted" class="tabcontent">
 
 
-          <table border = 1 class="display" >
-         <thead>
+          <table class="table table-bordered" >  <!--class="display"-->
+         <thead style="color:white;font-size:14px;font-weight: bold;">
             <td>Token Number</td>
             <td>Type of Service</td>
             <td>Description</td>
@@ -107,7 +162,7 @@
          </thead>
          
          {% for row in rows1 %}
-            <tr>
+            <tr style="color:white;font-size:14px;">
                <td>{{row["TOKEN_NO"]}}</td>
                <td>{{row["TYPE_OF_SERVICE"]}}</td>
                <td>{{row["DESCRIPTION"]}}</td>
@@ -123,10 +178,10 @@
          {% endfor %}
       </table>
       </div>
-      <div id="serviceNotAllocated" class="tabcontent">
+      <div id="serviceNotAllocated" class="tabcontent" style="color:white">
       Services not allocated
-      <table border = 1 class='display'>
-         <thead>
+      <table class="table table-bordered" > <!--class='display'-->
+         <thead style="color:white;font-size:14px;font-weight: bold;">
             <td>Token Number</td>
             <td>Type of Service</td>
             <td>Description</td>
@@ -136,7 +191,7 @@
          </thead>
          
          {% for row in rows3 %}
-            <tr>
+            <tr style="color:white;font-size:14px;">
                <td>{{row["TOKEN_NO"]}}</td>
                <td>{{row["TYPE_OF_SERVICE"]}}</td>
                <td>{{row["DESCRIPTION"]}}</td>
@@ -152,10 +207,10 @@
          {% endfor %}
       </table>
       </div>
-     <div id="serviceNotCompleted" class="tabcontent">
+     <div id="serviceNotCompleted" style="color:white" class="tabcontent">
       Services not Completed
-      <table border = 1 class="display">
-          <thead>
+      <table class="table table-bordered" > <!--class="display"-->
+          <thead style="color:white;font-size:14px;font-weight: bold;">
              <td>Token Number</td>
              <td>Type of Service</td>
              <td>Description</td>
@@ -163,7 +218,7 @@
           </thead>
           
           {% for row in rows4 %}
-             <tr>
+             <tr style="color:white;font-size:14px;">
                 <td>{{row["TOKEN_NO"]}}</td>
                 <td>{{row["TYPE_OF_SERVICE"]}}</td>
                 <td>{{row["DESCRIPTION"]}}</td>
@@ -171,10 +226,10 @@
           {% endfor %}
        </table>
   </div>
-  <div id="serviceNotVerified" class="tabcontent">
+  <div id="serviceNotVerified" style="color:white" class="tabcontent">
       Services Completed but not Verified
-      <table border = 1 class="display">
-          <thead>
+      <table class="table table-bordered" ><!--class="display"-->
+          <thead style="color:white;font-size:14px;font-weight: bold;">
              <td>Token Number</td>
              <td>Type of Service</td>
              <td>Description</td>
@@ -184,7 +239,7 @@
           </thead>
           
           {% for row in rows5 %}
-             <tr>
+             <tr style="color:white;font-size:14px;">
                 <td>{{row["TOKEN_NO"]}}</td>
                 <td>{{row["TYPE_OF_SERVICE"]}}</td>
                 <td>{{row["DESCRIPTION"]}}</td>
@@ -284,13 +339,16 @@
          </div>
         -->
         <div id="sendReminders" class="tabcontent">
-        Send reminder
+        <p style="color:white">Send reminder</p>
         <br>
         <button class="btn btn-primary" name = "reminder" onClick="createReminder(this);">Create Reminder</button>
-        <div id="remDiv">
+        <div id="remDiv" style="color: white;font-size:14px;" >
             Reminder Name: <input type="text" name="reminder_name">
+            
             Reminder Time: <input type="date" id="datepicker">  <!-- <input type="date" name="reminder_time">-->
+            
             Reminder Message: <input type="text" name="reminder_message">
+            
             Main IDs<select id="rem" class="selectpicker" multiple="multiple">
             {% for row in client_mail %}     
                 <option>{{row["EMAIL_ID"]}}</option>                   
@@ -301,8 +359,8 @@
         </div>
         <div id="displayFeedback" class="tabcontent">
 
-            <table border = 1 class="display">
-                <thead>
+            <table class="table table-bordered" > <!--class="display"-->
+                <thead style="color:white;font-size:14px;font-weight: bold;">
                    <td>Token_No</td>
                    <td>Description</td>
                    <td>Document</td>
@@ -311,7 +369,7 @@
                 </thead>
                 
                 {% for row in feedback %}
-                   <tr>
+                   <tr style="color:white;font-size:14px;">
                       <td>{{row["Token_No"]}}</td>
                       <td>{{row["Description"]}}</td>
                       <td>{{row["Document"]}}</td>
@@ -325,9 +383,9 @@
         <div id="completedService" class="tabcontent">
           <!--Completed and verified services table-->
        <br>
-      Services Completed and Verified
-      <table border = 1>
-          <thead>
+      <p style="color:white">Services Completed and Verified</p>
+      <table class="table table-bordered">
+          <thead style="color:white;font-size:14px;font-weight: bold;">
              <td>Token Number</td>
              <td>Type of Service</td>
              <td>Description</td>
@@ -337,7 +395,7 @@
           </thead>
           
           {% for row in rows6 %}<!--change rows5 to rows6 function (done!) -->
-             <tr> <!-- !IMPORTANT - ANY CHANGES IN CELL POSITIONS TO BE REFLECTED APPROPRIATELY IN partner.js FUNCTION
+             <tr style="color:white;font-size:14px;"> <!-- !IMPORTANT - ANY CHANGES IN CELL POSITIONS TO BE REFLECTED APPROPRIATELY IN partner.js FUNCTION
             DOM ELEMENT ACCESS-->
                 <td>{{row["TOKEN_NO"]}}</td>
                 <td>{{row["TYPE_OF_SERVICE"]}}</td>
@@ -360,12 +418,5 @@
        </table>
 
         </div>
-
-         
-
-
-
-    
-
    </body>
 </html>
