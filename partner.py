@@ -16,18 +16,18 @@ app = Flask(__name__,template_folder='templates')
 def home():
     return render_template('partner.html',)
 '''
+#database 
 Database = "ca_firm.db"
 @app.route('/partner')
 def partner():
-    #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
-
+    #get the partner that is logged in
     partner_name = session['username'] 
-    print(partner_name)
+    #print(partner_name)
     con = sql.connect(Database)
     con.row_factory = sql.Row
   
     cur = con.cursor()
-    
+    #Get the data required when the app loads for the first time
     cur.execute("select USERNAME from EMPLOYEE")
     rows2 = cur.fetchall()
     
@@ -50,7 +50,7 @@ def partner():
     con.close()
     return render_template("list.html",rows1=rows1,rows2=rows2,rows3=rows3,rows4=rows4,rows5=rows5,client_mail=client_mail,service_docs=service_docs)#,feedback=feedback)
 
-
+#function used to query the db to get documents
 def query_db(query, args=(), one=False):
     con = sql.connect(Database)
     cur = con.execute(query, args)
@@ -59,7 +59,7 @@ def query_db(query, args=(), one=False):
     con.commit()
     return (rv[0] if rv else None) if one else rv
 
-
+#get current time to log to db
 def get_time():
 	now=datetime.datetime.now()
 	#today=str(today)
@@ -70,12 +70,13 @@ def get_time():
 	#print(toks1)
 	today=str(now.year)+"-"+str(now.month)+"-"+str(now.day)
 	return today
+
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        print("ummmmmm?")
+        #print("ummmmmm?")
         asd = request.get_json()
-        print(asd)
+        #print(asd)
         return "hey"
     #return render_template("partner.html")
 
@@ -97,35 +98,35 @@ def filee():
     return json.dumps("{'status':2}")
 
 
-
+#function call to log in a reminder to the database created by partner
 @app.route('/reminder', methods=['GET', 'POST'])
 def reminder():
     if request.method == 'POST':
         partner_name = session['username']
-        print("ummmmmm?")
+        #print("ummmmmm?")
         rem = request.get_json()
         #Database = '/Users/simrandhinwa/Desktop/SE/ca_firm.db'
         con = sql.connect(Database)
         con.row_factory = sql.Row
         cur = con.cursor()
+	#get the list of mailing ids ; separated 
         ids = ""
         for id in rem["mailing_list"]:
                 ids += id + ";"
         ids = ids[:-1]
-
         exe = 'INSERT INTO REMINDERS (REMINDER_NAME,GENERATED_BY,REMINDER_TIMESTAMP,CURR_TIMESTAMP,REMINDER_MESSAGE,MAILING_LIST,SENT) VALUES(?,?,?,?,?,?,?)'
         param = (rem["reminder_name"],partner_name,rem["curr_timestamp"],get_time(),rem["reminder_message"],ids,0)
         cur.execute(exe,param)
         con.commit()
         con.close()
-        print(rem)
+        #print(rem)
         return partner_name
     #return render_template("partner.html")
 
-
+#get the estimated quotation
 @app.route('/quot', methods=['GET', 'POST'])
 def quot():
-    print("Here")
+    #print("Here")
     if request.method == 'POST':
         enterDetail = request.get_json()
         print(enterDetail)
@@ -138,7 +139,7 @@ def quot():
         print(out_txt)
         return out_txt
 
-
+#update the quotation and estimated hours given by partner
 @app.route('/quotation', methods=['GET', 'POST'])
 def quotation():
     if request.method == 'POST':
@@ -163,6 +164,7 @@ def quotation():
         '''
         return "done"
 
+#once service is accepted, allocate it to employee
 @app.route('/allocate', methods=['GET', 'POST'])
 def allocate():
     if request.method == 'POST':
@@ -186,6 +188,7 @@ def allocate():
         con.close()
         return "done"
 
+#once the employee claims to complete a service, verify it if completed
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
     if request.method == 'POST':
@@ -199,8 +202,9 @@ def verify():
         exe = "UPDATE SERVICE_STATUS SET VERIFIED=1 WHERE TOKEN= %s" % (toVerify["token"])
         cur.execute(exe)
         con.commit()
-        return "cutes"
+        return "verified"
 
+#if partner needs any fixes, a message is sent to employee to rectify it
 @app.route('/message', methods=['GET', 'POST'])
 def message():
     if request.method == 'POST':
@@ -222,9 +226,9 @@ def message():
         exe = "INSERT INTO MESSAGES (SENDER,RECEPIENT,MESSAGE,TOKEN) VALUES(?,?,?,?)"
         cur.execute(exe,params)
         con.commit()
-        return "cutes"
+        return "message_updated"
 
-
+#get all documents and description for the selected token number
 @app.route('/getDocs', methods=['GET', 'POST'])
 def getDocs():
     if request.method == 'POST':
