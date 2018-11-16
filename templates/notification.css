@@ -1,0 +1,26 @@
+.border_class {
+	border: 1px solid black;
+	width: 600px;
+	height: 400px;
+	padding: 0px;
+	border-spacing: 0px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.tr_class {
+	background-color: #F3F3F3;
+	color: #333333;
+	font-size: 13px;
+	text-align: center;
+	padding: 5px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.header_class {
+	background-color: #969696;
+	font-size: 15px;
+	border: 1px solid black;
+	text-align: center;
+	font-weight: bold;
+	color: #FFFFFF;
+}
